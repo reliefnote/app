@@ -3366,209 +3366,141 @@
 
         // データ定義（既存のものを維持）
         const questions = [
-            { id: "Q-REL-01", domain: "ADMIN", text: "亡くなられた方とのご関係を教えてください", type: "single", options: [
-                {value: "SPOUSE", label: "配偶者（夫・妻）"},
-                {value: "CHILD", label: "子"},
-                {value: "PARENT", label: "親"},
-                {value: "SIBLING", label: "兄弟姉妹"},
-                {value: "OTHER_RELATIVE", label: "その他の親族"},
-                {value: "NON_RELATIVE", label: "親族以外"},
-                {value: "UNKNOWN", label: "わからない"}
+            { id: "Q-REL-01", domain: "ADMIN", text: "亡くなった方とあなたの関係を教えてください", type: "single", options: [
+                {value: "SPOUSE", label: "配偶者（夫・妻）"}, {value: "CHILD", label: "子"}, {value: "PARENT", label: "親"}, {value: "SIBLING", label: "兄弟姉妹"}, {value: "OTHER_RELATIVE", label: "その他の親族"}, {value: "NON_RELATIVE", label: "親族以外"}, {value: "UNKNOWN", label: "わからない"}
             ]},
-            { id: "Q-DOD-01", domain: "ADMIN", text: "お亡くなりになった日を教えてください", type: "date" },
-            { id: "Q-DIG-01", domain: "DIGITAL", text: "故人名義の携帯電話・ネット回線・サブスク・SNS等のアカウントはありますか？", type: "multi", options: [
-                {value: "MOBILE", label: "携帯電話"},
-                {value: "NET", label: "ネット回線"},
-                {value: "SUBSCRIPTIONS", label: "サブスクリプション"},
-                {value: "ACCOUNTS", label: "SNS・その他アカウント"},
-                {value: "NONE", label: "なし"},
-                {value: "UNKNOWN", label: "わからない"}
+            { id: "Q-DOD-01", domain: "ADMIN", text: "亡くなった日はいつですか？", type: "date" },
+            { id: "Q-DIG-01", domain: "DIGITAL", text: "故人名義の携帯電話やネット契約、サブスクはありますか？", type: "multi", options: [
+                {value: "MOBILE", label: "携帯電話"}, {value: "NET", label: "ネット回線"}, {value: "SUBSCRIPTIONS", label: "サブスク（動画・音楽等）"}, {value: "ACCOUNTS", label: "SNS・メールなどのアカウント"}, {value: "NONE", label: "どれもない"}, {value: "UNKNOWN", label: "わからない"}
             ]},
             { id: "Q-FUN-STATUS-01", domain: "FUNERAL", text: "葬儀の状況を教えてください", type: "single", options: [
-                {value: "NOT_DECIDED", label: "まだ決まっていない"},
-                {value: "ARRANGING", label: "手配中"},
-                {value: "SCHEDULED", label: "日程決定済み"},
-                {value: "COMPLETED", label: "葬儀は済んだ"},
-                {value: "DIRECT_CREMATION", label: "直葬にした"},
-                {value: "NO_FUNERAL", label: "葬儀は行わない"},
-                {value: "UNKNOWN", label: "わからない"}
+                {value: "NOT_DECIDED", label: "まだ決めていない"}, {value: "ARRANGING", label: "準備中"}, {value: "SCHEDULED", label: "日程が決まった"}, {value: "COMPLETED", label: "すでに終わった"}, {value: "DIRECT_CREMATION", label: "火葬のみ行う（直葬）"}, {value: "NO_FUNERAL", label: "葬儀は行わない"}, {value: "UNKNOWN", label: "わからない"}
             ]},
-            { id: "Q-ADMIN-DN-01", domain: "ADMIN", text: "死亡届は提出されましたか？", type: "single", options: [
-                {value: "YES", label: "はい"},
-                {value: "NO", label: "いいえ"},
-                {value: "IN_PROGRESS", label: "手続き中"},
-                {value: "UNKNOWN", label: "わからない"}
+            { id: "Q-ADMIN-DN-01", domain: "ADMIN", text: "死亡届はもう出しましたか？", type: "single", options: [
+                {value: "YES", label: "はい"}, {value: "NO", label: "いいえ"}, {value: "IN_PROGRESS", label: "手続き中"}, {value: "UNKNOWN", label: "わからない"}
             ]},
-            { id: "Q-EMP-01", domain: "EMPLOYMENT", text: "あなた（届出をする方）は現在、勤務先がありますか？", type: "single", options: [
-                {value: "YES", label: "はい"},
-                {value: "NO", label: "いいえ"},
-                {value: "UNKNOWN", label: "わからない"}
+            { id: "Q-EMP-01", domain: "EMPLOYMENT", text: "あなたは現在、会社や団体にお勤めですか？", type: "single", options: [
+                {value: "YES", label: "はい"}, {value: "NO", label: "いいえ"}, {value: "UNKNOWN", label: "わからない"}
             ]},
-            { id: "Q-DECEASED-EMP-01", domain: "EMPLOYMENT", text: "故人はお亡くなりになった時点で勤務先がありましたか？（パート・アルバイト含む）", type: "single", options: [
-                {value: "YES", label: "はい"},
-                {value: "NO", label: "いいえ"},
-                {value: "UNKNOWN", label: "わからない"}
+            { id: "Q-DECEASED-EMP-01", domain: "EMPLOYMENT", text: "故人は亡くなった時点で働いていましたか？", type: "single", options: [
+                {value: "YES", label: "はい（パート・アルバイト含む）"}, {value: "NO", label: "いいえ"}, {value: "UNKNOWN", label: "わからない"}
             ]},
             { id: "Q-HOUSEHOLD-01", domain: "ADMIN", text: "故人は世帯主でしたか？", type: "single", options: [
-                {value: "YES", label: "はい"},
-                {value: "NO", label: "いいえ"},
-                {value: "UNKNOWN", label: "わからない"}
+                {value: "YES", label: "はい"}, {value: "NO", label: "いいえ"}, {value: "UNKNOWN", label: "わからない"}
             ]},
             { id: "Q-HI-01", domain: "PENSION", text: "故人の健康保険はどれですか？", type: "single", options: [
-                {value: "NHI", label: "国民健康保険"},
-                {value: "EHI", label: "社会保険（会社の健康保険）"},
-                {value: "LATTER", label: "後期高齢者医療制度"},
-                {value: "UNKNOWN", label: "わからない"}
+                {value: "NHI", label: "国民健康保険"}, {value: "EHI", label: "会社の健康保険（社会保険）"}, {value: "LATTER", label: "後期高齢者医療（75歳以上）"}, {value: "UNKNOWN", label: "わからない"}
             ]},
             { id: "Q-DEPENDENT-01", domain: "PENSION", text: "故人の健康保険の扶養に入っていた方はいますか？", type: "single", options: [
-                {value: "YES", label: "はい"},
-                {value: "NO", label: "いいえ"},
-                {value: "UNKNOWN", label: "わからない"}
+                {value: "YES", label: "いる"}, {value: "NO", label: "いない"}, {value: "UNKNOWN", label: "わからない"}
             ]},
-            { id: "Q-CARE-01", domain: "PENSION", text: "故人は介護保険サービスを受けていましたか？", type: "single", options: [
-                {value: "YES", label: "はい"},
-                {value: "NO", label: "いいえ"},
-                {value: "UNKNOWN", label: "わからない"}
+            { id: "Q-PEN-01", domain: "PENSION", text: "故人は年金を受け取っていましたか？", type: "single", options: [
+                {value: "YES", label: "はい"}, {value: "NO", label: "いいえ"}, {value: "UNKNOWN", label: "わからない"}
             ]},
-            { id: "Q-PEN-01", domain: "PENSION", text: "故人は年金を受給していましたか？", type: "single", options: [
-                {value: "YES", label: "はい"},
-                {value: "NO", label: "いいえ"},
-                {value: "UNKNOWN", label: "わからない"}
-            ]},
-            { id: "Q-PEN-EMP-01", domain: "PENSION", text: "故人に厚生年金または共済年金の加入歴はありそうですか？", type: "single", options: [
-                {value: "YES", label: "はい"},
-                {value: "NO", label: "いいえ"},
-                {value: "UNKNOWN", label: "わからない"}
+            { id: "Q-PEN-EMP-01", domain: "PENSION", text: "故人は会社員や公務員として働いていたことがありますか？", type: "single", options: [
+                {value: "YES", label: "はい"}, {value: "NO", label: "いいえ"}, {value: "UNKNOWN", label: "わからない"}
             ]},
             { id: "Q-SPOUSE-01", domain: "PENSION", text: "故人に配偶者（夫または妻）はいますか？", type: "single", options: [
-                {value: "YES", label: "はい"},
-                {value: "NO", label: "いいえ"}
+                {value: "YES", label: "いる"}, {value: "NO", label: "いない"}
             ]},
-            { id: "Q-CHILD-U18-01", domain: "PENSION", text: "18歳到達年度末までのお子さんはいますか？", type: "single", options: [
-                {value: "YES", label: "はい"},
-                {value: "NO", label: "いいえ"}
+            { id: "Q-CHILD-U18-01", domain: "PENSION", text: "高校卒業までのお子さん（18歳の年度末まで）はいますか？", type: "single", options: [
+                {value: "YES", label: "いる"}, {value: "NO", label: "いない"}
             ]},
-            { id: "Q-FIN-01", domain: "FINANCE", text: "故人名義の金融関連の契約はありますか？", type: "multi", options: [
-                {value: "BANK", label: "銀行口座"},
-                {value: "CARD", label: "クレジットカード"},
-                {value: "SECURITIES", label: "証券口座"},
-                {value: "NONE", label: "なし"},
-                {value: "UNKNOWN", label: "わからない"}
+            { id: "Q-CARE-01", domain: "PENSION", text: "故人は介護保険のサービスを使っていましたか？", type: "single", options: [
+                {value: "YES", label: "はい"}, {value: "NO", label: "いいえ"}, {value: "UNKNOWN", label: "わからない"}
             ]},
-            { id: "Q-INS-01", domain: "INSURANCE", text: "故人が加入していた民間保険はありますか？", type: "multi", options: [
-                {value: "LIFE", label: "生命保険"},
-                {value: "MEDICAL", label: "医療保険"},
-                {value: "COOP", label: "共済"},
-                {value: "NONE", label: "なし"},
-                {value: "UNKNOWN", label: "わからない"}
+            { id: "Q-FIN-01", domain: "FINANCE", text: "故人名義の銀行口座・クレジットカード・証券口座はありますか？", type: "multi", options: [
+                {value: "BANK", label: "銀行口座"}, {value: "CARD", label: "クレジットカード"}, {value: "SECURITIES", label: "証券口座"}, {value: "NONE", label: "どれもない"}, {value: "UNKNOWN", label: "わからない"}
             ]},
-            { id: "Q-INS-DAMAGE-01", domain: "INSURANCE", text: "故人名義の損害保険（自動車保険・火災保険など）はありますか？", type: "single", options: [
-                {value: "YES", label: "はい"},
-                {value: "NO", label: "いいえ"},
-                {value: "UNKNOWN", label: "わからない"}
+            { id: "Q-INS-01", domain: "INSURANCE", text: "故人が加入していた生命保険・医療保険・共済はありますか？", type: "multi", options: [
+                {value: "LIFE", label: "生命保険"}, {value: "MEDICAL", label: "医療保険・がん保険"}, {value: "COOP", label: "共済（JA・県民共済等）"}, {value: "NONE", label: "どれもない"}, {value: "UNKNOWN", label: "わからない"}
+            ]},
+            { id: "Q-INS-DAMAGE-01", domain: "INSURANCE", text: "故人名義の自動車保険や火災保険はありますか？", type: "single", options: [
+                {value: "YES", label: "はい"}, {value: "NO", label: "いいえ"}, {value: "UNKNOWN", label: "わからない"}
             ]},
             { id: "Q-UTIL-01", domain: "HOUSING", text: "故人名義の電気・ガス・水道の契約はありますか？", type: "single", options: [
-                {value: "YES", label: "はい"},
-                {value: "NO", label: "いいえ"},
-                {value: "UNKNOWN", label: "わからない"}
+                {value: "YES", label: "はい"}, {value: "NO", label: "いいえ"}, {value: "UNKNOWN", label: "わからない"}
             ]},
-            { id: "Q-RENT-01", domain: "HOUSING", text: "故人名義の賃貸住宅の契約はありますか？", type: "single", options: [
-                {value: "YES", label: "はい"},
-                {value: "NO", label: "いいえ"},
-                {value: "UNKNOWN", label: "わからない"}
+            { id: "Q-RENT-01", domain: "HOUSING", text: "故人名義の賃貸住宅（町営住宅含む）はありますか？", type: "single", options: [
+                {value: "YES", label: "はい"}, {value: "NO", label: "いいえ"}, {value: "UNKNOWN", label: "わからない"}
             ]},
             { id: "Q-WILL-01", domain: "INHERITANCE", text: "遺言書は見つかっていますか？", type: "single", options: [
-                {value: "YES", label: "はい"},
-                {value: "NO", label: "いいえ"},
-                {value: "UNKNOWN", label: "わからない"}
+                {value: "YES", label: "見つかった"}, {value: "NO", label: "見つかっていない"}, {value: "UNKNOWN", label: "わからない"}
             ]},
             { id: "Q-AGRI-01", domain: "INHERITANCE", text: "故人名義の農地（田・畑）はありますか？", type: "single", options: [
-                {value: "YES", label: "はい"},
-                {value: "NO", label: "いいえ"},
-                {value: "UNKNOWN", label: "わからない"}
+                {value: "YES", label: "はい"}, {value: "NO", label: "いいえ"}, {value: "UNKNOWN", label: "わからない"}
             ]},
-            { id: "Q-LOAN-01", domain: "FINANCE", text: "故人名義の住宅ローン・借入金はありますか？", type: "single", options: [
-                {value: "YES", label: "はい"},
-                {value: "NO", label: "いいえ"},
-                {value: "UNKNOWN", label: "わからない"}
+            { id: "Q-LOAN-01", domain: "FINANCE", text: "故人名義の住宅ローンや借入金はありますか？", type: "single", options: [
+                {value: "YES", label: "はい"}, {value: "NO", label: "いいえ"}, {value: "UNKNOWN", label: "わからない"}
             ]},
-            { id: "Q-TAX-01", domain: "TAX", text: "故人に収入はありましたか？（複数選択可）", type: "multi", options: [
-                {value: "SALARY", label: "給与"},
-                {value: "PENSION", label: "年金"},
-                {value: "BUSINESS", label: "事業収入"},
-                {value: "REALESTATE", label: "不動産収入"},
-                {value: "NONE", label: "なし"},
-                {value: "UNKNOWN", label: "わからない"}
+            { id: "Q-TAX-01", domain: "TAX", text: "故人には収入がありましたか？", type: "multi", options: [
+                {value: "SALARY", label: "給与"}, {value: "PENSION", label: "年金"}, {value: "BUSINESS", label: "事業（自営業・農業等）"}, {value: "REALESTATE", label: "不動産収入"}, {value: "NONE", label: "なかった"}, {value: "UNKNOWN", label: "わからない"}
             ]},
-            { id: "Q-RE-01", domain: "INHERITANCE", text: "故人名義の不動産（土地・建物）はありますか？", type: "single", options: [
-                {value: "YES", label: "はい"},
-                {value: "NO", label: "いいえ"},
-                {value: "UNKNOWN", label: "わからない"}
+            { id: "Q-RE-01", domain: "INHERITANCE", text: "故人名義の土地や建物はありますか？", type: "single", options: [
+                {value: "YES", label: "はい"}, {value: "NO", label: "いいえ"}, {value: "UNKNOWN", label: "わからない"}
             ]},
             { id: "Q-CAR-01", domain: "CAR", text: "故人名義の自動車はありますか？", type: "single", options: [
-                {value: "YES", label: "はい"},
-                {value: "NO", label: "いいえ"},
-                {value: "UNKNOWN", label: "わからない"}
+                {value: "YES", label: "はい"}, {value: "NO", label: "いいえ"}, {value: "UNKNOWN", label: "わからない"}
             ]}
         ];
 
         const tasks = [
             {id:"RN-H24-01", title:"死亡診断書を受け取る", domain:"ADMIN", phase:"H24", priority:95, dependsOn:[], requiredQuestions:[], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"OPEN"},
-            {id:"RN-H24-02", title:"死亡診断書をコピーする（5部以上推奨）", domain:"ADMIN", phase:"H24", priority:85, dependsOn:["RN-H24-01"], requiredQuestions:[], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"OPEN"},
+            {id:"RN-H24-02", title:"死亡診断書を5部以上コピーする", domain:"ADMIN", phase:"H24", priority:85, dependsOn:["RN-H24-01"], requiredQuestions:[], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"OPEN"},
             {id:"RN-H24-03", title:"ご遺体の搬送・安置先を手配する", domain:"FUNERAL", phase:"H24", priority:98, dependsOn:[], requiredQuestions:[], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"OPEN"},
-            {id:"RN-H24-04", title:"貴重品（通帳・印鑑・証券等）を保管する", domain:"ADMIN", phase:"H24", priority:90, dependsOn:[], requiredQuestions:[], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"OPEN"},
-            {id:"RN-H24-05", title:"故人宅の戸締まりを確認する", domain:"HOUSING", phase:"H24", priority:80, dependsOn:[], requiredQuestions:[], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"OPEN"},
+            {id:"RN-H24-04", title:"通帳・印鑑・保険証券などをまとめて保管する", domain:"ADMIN", phase:"H24", priority:90, dependsOn:[], requiredQuestions:[], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"OPEN"},
+            {id:"RN-H24-05", title:"故人の自宅の戸締まり・火の元を確認する", domain:"HOUSING", phase:"H24", priority:80, dependsOn:[], requiredQuestions:[], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"OPEN"},
             {id:"RN-H24-06", title:"喪主を決める", domain:"FUNERAL", phase:"H24", priority:70, dependsOn:[], requiredQuestions:[], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"OPEN"},
-            {id:"RN-H24-11", title:"故人のスマホ・PCを保全する（電源維持）", domain:"DIGITAL", phase:"H24", priority:88, dependsOn:[], requiredQuestions:["Q-DIG-01"], ruleType:"CONFIRMED", appliesWhen:"Q-DIG-01.containsAny('MOBILE','NET','SUBSCRIPTIONS','ACCOUNTS')", notApplicableWhen:"Q-DIG-01.includes('NONE')", fallbackStatus:"NEED_CONFIRM"},
+            {id:"RN-H24-11", title:"故人のスマホ・PCを充電したまま保管する", domain:"DIGITAL", phase:"H24", priority:88, dependsOn:[], requiredQuestions:["Q-DIG-01"], ruleType:"CONFIRMED", appliesWhen:"Q-DIG-01.containsAny('MOBILE','NET','SUBSCRIPTIONS','ACCOUNTS')", notApplicableWhen:"Q-DIG-01=='NONE'", fallbackStatus:"NEED_CONFIRM"},
             {id:"RN-D7-01", title:"葬儀社を決める", domain:"FUNERAL", phase:"D7", priority:85, dependsOn:["RN-H24-03"], requiredQuestions:["Q-FUN-STATUS-01"], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:"Q-FUN-STATUS-01=='COMPLETED'", fallbackStatus:"OPEN"},
-            {id:"RN-D7-02", title:"葬儀の日程・式場・形式・予算を決める", domain:"FUNERAL", phase:"D7", priority:85, dependsOn:["RN-D7-01"], requiredQuestions:["Q-FUN-STATUS-01"], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:"Q-FUN-STATUS-01=='COMPLETED'", fallbackStatus:"OPEN"},
-            {id:"RN-D7-04", title:"訃報を連絡する", domain:"FUNERAL", phase:"D7", priority:65, dependsOn:["RN-D7-02"], requiredQuestions:["Q-FUN-STATUS-01"], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:"['COMPLETED','NO_FUNERAL'].includes(Q-FUN-STATUS-01)", fallbackStatus:"OPEN"},
-            {id:"RN-D7-05", title:"遺影写真を準備する", domain:"FUNERAL", phase:"D7", priority:60, dependsOn:["RN-D7-02"], requiredQuestions:["Q-FUN-STATUS-01"], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:"['COMPLETED','NO_FUNERAL'].includes(Q-FUN-STATUS-01)", fallbackStatus:"OPEN"},
-            {id:"RN-D7-06", title:"死亡届を提出し火葬許可証を取得する【届出期限7日】", domain:"ADMIN", phase:"D7", priority:100, dependsOn:["RN-H24-01"], requiredQuestions:["Q-ADMIN-DN-01"], ruleType:"CONFIRMED", appliesWhen:"['NO','IN_PROGRESS','UNKNOWN'].includes(Q-ADMIN-DN-01)", notApplicableWhen:"Q-ADMIN-DN-01=='YES'", fallbackStatus:"NEED_CONFIRM"},
-            {id:"RN-D7-07", title:"埋葬許可証を保管する（火葬後）", domain:"ADMIN", phase:"D7", priority:80, dependsOn:["RN-D7-06"], requiredQuestions:[], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"OPEN"},
-            {id:"RN-D7-10", title:"【口座凍結前】直近の引落し予定を確認する", domain:"FINANCE", phase:"D7", priority:90, dependsOn:[], requiredQuestions:[], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"OPEN"},
+            {id:"RN-D7-02", title:"葬儀の日程・形式・予算を決める", domain:"FUNERAL", phase:"D7", priority:85, dependsOn:["RN-D7-01"], requiredQuestions:["Q-FUN-STATUS-01"], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:"Q-FUN-STATUS-01=='COMPLETED'", fallbackStatus:"OPEN"},
+            {id:"RN-D7-04", title:"親族・関係者へ訃報を知らせる", domain:"FUNERAL", phase:"D7", priority:65, dependsOn:["RN-D7-02"], requiredQuestions:["Q-FUN-STATUS-01"], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:"['COMPLETED','NO_FUNERAL'].includes(Q-FUN-STATUS-01)", fallbackStatus:"OPEN"},
+            {id:"RN-D7-05", title:"遺影用の写真を選ぶ", domain:"FUNERAL", phase:"D7", priority:60, dependsOn:["RN-D7-02"], requiredQuestions:["Q-FUN-STATUS-01"], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:"['COMPLETED','NO_FUNERAL'].includes(Q-FUN-STATUS-01)", fallbackStatus:"OPEN"},
+            {id:"RN-D7-06", title:"役場に死亡届を出す【届出期限7日】", domain:"ADMIN", phase:"D7", priority:100, dependsOn:["RN-H24-01"], requiredQuestions:["Q-ADMIN-DN-01"], ruleType:"CONFIRMED", appliesWhen:"['NO','IN_PROGRESS','UNKNOWN'].includes(Q-ADMIN-DN-01)", notApplicableWhen:"Q-ADMIN-DN-01=='YES'", fallbackStatus:"NEED_CONFIRM"},
+            {id:"RN-D7-07", title:"火葬後の埋葬許可証を保管する", domain:"ADMIN", phase:"D7", priority:80, dependsOn:["RN-D7-06"], requiredQuestions:[], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"OPEN"},
+            {id:"RN-D7-10", title:"口座凍結の前に引落し予定を確認する", domain:"FINANCE", phase:"D7", priority:90, dependsOn:[], requiredQuestions:[], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"OPEN"},
             {id:"RN-D7-11", title:"役場でまとめてできる手続きを確認する", domain:"ADMIN", phase:"D7", priority:75, dependsOn:["RN-D7-06"], requiredQuestions:[], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"OPEN"},
-            {id:"RN-D7-12", title:"自分の勤務先へ届出をする（忌引休暇・弔慰金・団体保険等の確認）", domain:"EMPLOYMENT", phase:"D7", priority:75, dependsOn:[], requiredQuestions:["Q-EMP-01"], ruleType:"CONFIRMED", appliesWhen:"Q-EMP-01=='YES'", notApplicableWhen:"Q-EMP-01=='NO'", fallbackStatus:"OPEN"},
+            {id:"RN-D7-12", title:"自分の勤務先に届け出る", domain:"EMPLOYMENT", phase:"D7", priority:75, dependsOn:[], requiredQuestions:["Q-EMP-01"], ruleType:"CONFIRMED", appliesWhen:"Q-EMP-01=='YES'", notApplicableWhen:"Q-EMP-01=='NO'", fallbackStatus:"OPEN"},
             {id:"RN-D7-13", title:"故人の住民票の除票を取得する", domain:"ADMIN", phase:"D7", priority:78, dependsOn:["RN-D7-06"], requiredQuestions:[], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"OPEN"},
-            {id:"RN-D7-14", title:"故人の勤務先へ届出をする（退職手続き・死亡退職金・貸与品返却等）", domain:"EMPLOYMENT", phase:"D7", priority:80, dependsOn:[], requiredQuestions:["Q-DECEASED-EMP-01"], ruleType:"CONFIRMED", appliesWhen:"Q-DECEASED-EMP-01=='YES'", notApplicableWhen:"Q-DECEASED-EMP-01=='NO'", fallbackStatus:"NEED_CONFIRM"},
-            {id:"RN-D14-01", title:"世帯主変更届を提出する【届出期限14日】", domain:"ADMIN", phase:"D14", priority:85, dependsOn:["RN-D7-06"], requiredQuestions:["Q-HOUSEHOLD-01"], ruleType:"CONFIRMED", appliesWhen:"Q-HOUSEHOLD-01=='YES'", notApplicableWhen:"Q-HOUSEHOLD-01=='NO'", fallbackStatus:"NEED_CONFIRM"},
-            {id:"RN-D14-02", title:"健康保険の資格喪失届を提出する【届出期限14日】", domain:"HEALTH", phase:"D14", priority:90, dependsOn:["RN-D7-06"], requiredQuestions:["Q-HI-01"], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"NEED_CONFIRM"},
+            {id:"RN-D7-14", title:"故人の勤務先に届け出る", domain:"EMPLOYMENT", phase:"D7", priority:80, dependsOn:[], requiredQuestions:["Q-DECEASED-EMP-01"], ruleType:"CONFIRMED", appliesWhen:"Q-DECEASED-EMP-01=='YES'", notApplicableWhen:"Q-DECEASED-EMP-01=='NO'", fallbackStatus:"NEED_CONFIRM"},
+            {id:"RN-D14-01", title:"世帯主を変更する【届出期限14日】", domain:"ADMIN", phase:"D14", priority:85, dependsOn:["RN-D7-06"], requiredQuestions:["Q-HOUSEHOLD-01"], ruleType:"CONFIRMED", appliesWhen:"Q-HOUSEHOLD-01=='YES'", notApplicableWhen:"Q-HOUSEHOLD-01=='NO'", fallbackStatus:"NEED_CONFIRM"},
+            {id:"RN-D14-02", title:"故人の健康保険証を返す【届出期限14日】", domain:"HEALTH", phase:"D14", priority:90, dependsOn:["RN-D7-06"], requiredQuestions:["Q-HI-01"], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"NEED_CONFIRM"},
             {id:"RN-D14-03", title:"葬祭費・埋葬料を申請する（約5万円）", domain:"HEALTH", phase:"D14", priority:85, dependsOn:["RN-D7-06"], requiredQuestions:["Q-HI-01"], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"NEED_CONFIRM"},
-            {id:"RN-D14-04", title:"高額療養費の還付申請を確認する", domain:"HEALTH", phase:"D14", priority:70, dependsOn:["RN-D7-06"], requiredQuestions:["Q-HI-01"], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"NEED_CONFIRM"},
-            {id:"RN-D14-05", title:"介護保険の届出と最終精算を確認する", domain:"HEALTH", phase:"D14", priority:70, dependsOn:[], requiredQuestions:["Q-CARE-01"], ruleType:"CONFIRMED", appliesWhen:"Q-CARE-01=='YES'", notApplicableWhen:"Q-CARE-01=='NO'", fallbackStatus:"NEED_CONFIRM"},
-            {id:"RN-D14-06", title:"年金受給停止届を提出する【届出期限14日】※厚生年金は10日以内", domain:"PENSION", phase:"D14", priority:90, dependsOn:["RN-D7-06"], requiredQuestions:["Q-PEN-01"], ruleType:"CONFIRMED", appliesWhen:"Q-PEN-01=='YES'", notApplicableWhen:"Q-PEN-01=='NO'", fallbackStatus:"NEED_CONFIRM"},
-            {id:"RN-D14-07", title:"未支給年金を請求する", domain:"PENSION", phase:"D14", priority:75, dependsOn:["RN-D14-06"], requiredQuestions:["Q-PEN-01"], ruleType:"CONFIRMED", appliesWhen:"Q-PEN-01=='YES'", notApplicableWhen:"Q-PEN-01=='NO'", fallbackStatus:"NEED_CONFIRM"},
-            {id:"RN-D14-08", title:"遺族年金の受給資格を確認する", domain:"PENSION", phase:"D14", priority:85, dependsOn:["RN-D7-06"], requiredQuestions:["Q-SPOUSE-01","Q-CHILD-U18-01","Q-PEN-EMP-01","Q-PEN-01"], ruleType:"CONFIRMED", appliesWhen:"Q-SPOUSE-01=='YES'||Q-CHILD-U18-01=='YES'||Q-PEN-EMP-01=='YES'||Q-PEN-01=='YES'", notApplicableWhen:"Q-SPOUSE-01=='NO'&&Q-CHILD-U18-01=='NO'&&Q-PEN-EMP-01=='NO'&&Q-PEN-01=='NO'", fallbackStatus:"NEED_CONFIRM"},
-            {id:"RN-D14-09", title:"銀行へ死亡を届け出る", domain:"FINANCE", phase:"D14", priority:88, dependsOn:["RN-D7-06","RN-D7-10"], requiredQuestions:["Q-FIN-01"], ruleType:"CONFIRMED", appliesWhen:"Q-FIN-01.containsAny('BANK')", notApplicableWhen:"Q-FIN-01.includes('NONE')", fallbackStatus:"NEED_CONFIRM"},
-            {id:"RN-D14-10", title:"証券口座の届出・名義変更をする", domain:"FINANCE", phase:"D14", priority:75, dependsOn:["RN-D7-06"], requiredQuestions:["Q-FIN-01"], ruleType:"CONFIRMED", appliesWhen:"Q-FIN-01.containsAny('SECURITIES')", notApplicableWhen:"Q-FIN-01.includes('NONE')", fallbackStatus:"NEED_CONFIRM"},
-            {id:"RN-D14-11", title:"生命保険の死亡保険金を請求する", domain:"INSURANCE", phase:"D14", priority:85, dependsOn:["RN-D7-06"], requiredQuestions:["Q-INS-01"], ruleType:"CONFIRMED", appliesWhen:"Q-INS-01.containsAny('LIFE','MEDICAL','COOP')", notApplicableWhen:"Q-INS-01.includes('NONE')", fallbackStatus:"NEED_CONFIRM"},
-            {id:"RN-D14-12", title:"損害保険（自動車保険・火災保険等）の届出・名義変更をする", domain:"INSURANCE", phase:"D14", priority:70, dependsOn:[], requiredQuestions:["Q-INS-DAMAGE-01"], ruleType:"CONFIRMED", appliesWhen:"Q-INS-DAMAGE-01=='YES'", notApplicableWhen:"Q-INS-DAMAGE-01=='NO'", fallbackStatus:"NEED_CONFIRM"},
-            {id:"RN-D14-15", title:"電気・ガス・水道の名義変更または解約をする", domain:"HOUSING", phase:"D14", priority:75, dependsOn:[], requiredQuestions:["Q-UTIL-01"], ruleType:"CONFIRMED", appliesWhen:"Q-UTIL-01=='YES'", notApplicableWhen:"Q-UTIL-01=='NO'", fallbackStatus:"NEED_CONFIRM"},
-            {id:"RN-D14-16", title:"携帯電話・サブスクの解約または名義変更をする", domain:"DIGITAL", phase:"D14", priority:78, dependsOn:["RN-H24-11"], requiredQuestions:["Q-DIG-01"], ruleType:"CONFIRMED", appliesWhen:"Q-DIG-01.containsAny('MOBILE','SUBSCRIPTIONS','ACCOUNTS')", notApplicableWhen:"Q-DIG-01.includes('NONE')", fallbackStatus:"NEED_CONFIRM"},
-            {id:"RN-D14-17", title:"クレジットカードの届出・解約をする", domain:"FINANCE", phase:"D14", priority:77, dependsOn:[], requiredQuestions:["Q-FIN-01"], ruleType:"CONFIRMED", appliesWhen:"Q-FIN-01.containsAny('CARD')", notApplicableWhen:"Q-FIN-01.includes('NONE')", fallbackStatus:"NEED_CONFIRM"},
-            {id:"RN-D14-18", title:"賃貸住宅の名義変更・解約をする（町営住宅含む）", domain:"HOUSING", phase:"D14", priority:65, dependsOn:[], requiredQuestions:["Q-RENT-01"], ruleType:"CONFIRMED", appliesWhen:"Q-RENT-01=='YES'", notApplicableWhen:"Q-RENT-01=='NO'", fallbackStatus:"NEED_CONFIRM"},
-            {id:"RN-D14-19", title:"NHK・固定電話の解約、郵便物の転送届を出す", domain:"HOUSING", phase:"D14", priority:55, dependsOn:[], requiredQuestions:[], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"OPEN"},
-            {id:"RN-D14-20", title:"遺言書の有無を確認する", domain:"INHERITANCE", phase:"D14", priority:80, dependsOn:[], requiredQuestions:["Q-WILL-01"], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"OPEN"},
-            {id:"RN-D14-22", title:"マイナンバーカード（通知カード）を返納する", domain:"ADMIN", phase:"D14", priority:50, dependsOn:["RN-D7-06"], requiredQuestions:[], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"OPEN"},
-            {id:"RN-D14-23", title:"故人の健康保険の被扶養者だった方は、保険の切替え手続きをする", domain:"HEALTH", phase:"D14", priority:88, dependsOn:["RN-D14-02"], requiredQuestions:["Q-HI-01","Q-DEPENDENT-01"], ruleType:"CONFIRMED", appliesWhen:"Q-HI-01=='EHI'&&Q-DEPENDENT-01=='YES'", notApplicableWhen:"Q-HI-01!='EHI'||Q-DEPENDENT-01=='NO'", fallbackStatus:"NEED_CONFIRM"},
-            {id:"RN-D14-24", title:"児童扶養手当・ひとり親関連の給付を確認する", domain:"GOVT_BENEFIT", phase:"D14", priority:80, dependsOn:["RN-D7-06"], requiredQuestions:["Q-CHILD-U18-01","Q-REL-01"], ruleType:"CONFIRMED", appliesWhen:"Q-CHILD-U18-01=='YES'&&Q-REL-01=='SPOUSE'", notApplicableWhen:"Q-CHILD-U18-01=='NO'", fallbackStatus:"NEED_CONFIRM"},
-            {id:"RN-D49-01", title:"納骨先を決め、墓地管理者・寺院に連絡する", domain:"FUNERAL", phase:"D49", priority:60, dependsOn:["RN-D7-07"], requiredQuestions:[], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"OPEN"},
-            {id:"RN-D49-02", title:"香典返し・会葬御礼の手配をする", domain:"FUNERAL", phase:"D49", priority:55, dependsOn:["RN-D7-02"], requiredQuestions:["Q-FUN-STATUS-01"], ruleType:"CONFIRMED", appliesWhen:"['NOT_DECIDED','ARRANGING','SCHEDULED','COMPLETED'].includes(Q-FUN-STATUS-01)", notApplicableWhen:"['DIRECT_CREMATION','NO_FUNERAL'].includes(Q-FUN-STATUS-01)", fallbackStatus:"NEED_CONFIRM"},
-            {id:"RN-M3-01", title:"相続放棄・限定承認の要否を判断する【期限3か月】", domain:"INHERITANCE", phase:"M3", priority:90, dependsOn:["RN-D14-20"], requiredQuestions:[], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"OPEN"},
-            {id:"RN-M3-02", title:"負債（借金・保証・連帯債務）を調査する", domain:"FINANCE", phase:"M3", priority:85, dependsOn:[], requiredQuestions:[], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"OPEN"},
-            {id:"RN-M3-03", title:"故人の戸籍（出生〜死亡）と相続人全員の戸籍・印鑑証明書を収集する", domain:"INHERITANCE", phase:"M3", priority:80, dependsOn:["RN-D7-06"], requiredQuestions:[], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"OPEN"},
-            {id:"RN-M3-04", title:"住宅ローン・借入金の届出をする（団信の適用確認含む）", domain:"FINANCE", phase:"M3", priority:75, dependsOn:["RN-M3-02"], requiredQuestions:["Q-LOAN-01"], ruleType:"CONFIRMED", appliesWhen:"Q-LOAN-01=='YES'", notApplicableWhen:"Q-LOAN-01=='NO'", fallbackStatus:"NEED_CONFIRM"},
-            {id:"RN-M3-05", title:"法定相続情報一覧図を取得する（法務局）", domain:"INHERITANCE", phase:"M3", priority:70, dependsOn:["RN-M3-03"], requiredQuestions:[], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"OPEN"},
-            {id:"RN-M3-07", title:"相続財産目録を作成する", domain:"INHERITANCE", phase:"M3", priority:90, dependsOn:[], requiredQuestions:[], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"OPEN"},
-            {id:"RN-M3-10", title:"相続手続きの代表者を決める（財産管理も担う）", domain:"INHERITANCE", phase:"M3", priority:60, dependsOn:[], requiredQuestions:[], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"OPEN"},
-            {id:"RN-M3-11", title:"遺産分割協議書を作成する（相続人全員の合意・署名・実印）", domain:"INHERITANCE", phase:"M3", priority:85, dependsOn:["RN-M3-07","RN-M3-03"], requiredQuestions:[], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"OPEN"},
-            {id:"RN-M3-12", title:"農地の相続届出を行う（農業委員会への届出）【届出期限おおむね10か月】", domain:"INHERITANCE", phase:"M3", priority:70, dependsOn:["RN-D7-06"], requiredQuestions:["Q-AGRI-01"], ruleType:"CONFIRMED", appliesWhen:"Q-AGRI-01=='YES'", notApplicableWhen:"Q-AGRI-01=='NO'", fallbackStatus:"NEED_CONFIRM"},
-            {id:"RN-M4-01", title:"準確定申告を行う【申告期限4か月】", domain:"TAX", phase:"M4", priority:75, dependsOn:["RN-M3-07"], requiredQuestions:["Q-TAX-01"], ruleType:"POSSIBLE", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"NEED_CONFIRM"},
-            {id:"RN-M10-01", title:"相続税申告の要否を判定する", domain:"TAX", phase:"M10", priority:60, dependsOn:["RN-M3-07"], requiredQuestions:[], ruleType:"POSSIBLE", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"NEED_CONFIRM"},
-            {id:"RN-M10-05", title:"銀行口座の解約・払戻しを行う", domain:"FINANCE", phase:"M10", priority:75, dependsOn:["RN-M3-07","RN-M3-11"], requiredQuestions:["Q-FIN-01"], ruleType:"POSSIBLE", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"NEED_CONFIRM"},
-            {id:"RN-M10-07", title:"自動車の名義変更または廃車手続きをする", domain:"CAR", phase:"M10", priority:60, dependsOn:[], requiredQuestions:["Q-CAR-01"], ruleType:"POSSIBLE", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"NEED_CONFIRM"},
-            {id:"RN-M10-08", title:"故人の運転免許証を返納する", domain:"ADMIN", phase:"M10", priority:30, dependsOn:[], requiredQuestions:["Q-CAR-01"], ruleType:"CONFIRMED", appliesWhen:"Q-CAR-01=='YES'", notApplicableWhen:"Q-CAR-01=='NO'", fallbackStatus:"NEED_CONFIRM"},
-            {id:"RN-Y3-01", title:"不動産の相続登記を申請する【期限3年】※固定資産評価証明書の取得含む", domain:"INHERITANCE", phase:"Y3", priority:65, dependsOn:["RN-M3-11"], requiredQuestions:["Q-RE-01"], ruleType:"POSSIBLE", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"NEED_CONFIRM"}
+            {id:"RN-D14-04", title:"高額な医療費が戻るか確認する", domain:"HEALTH", phase:"D14", priority:70, dependsOn:["RN-D7-06"], requiredQuestions:["Q-HI-01"], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"NEED_CONFIRM"},
+            {id:"RN-D14-05", title:"介護保険の届出と精算をする", domain:"HEALTH", phase:"D14", priority:70, dependsOn:[], requiredQuestions:["Q-CARE-01"], ruleType:"CONFIRMED", appliesWhen:"Q-CARE-01=='YES'", notApplicableWhen:"Q-CARE-01=='NO'", fallbackStatus:"NEED_CONFIRM"},
+            {id:"RN-D14-06", title:"故人の年金を止める【届出期限14日】", domain:"PENSION", phase:"D14", priority:90, dependsOn:["RN-D7-06"], requiredQuestions:["Q-PEN-01"], ruleType:"CONFIRMED", appliesWhen:"Q-PEN-01=='YES'", notApplicableWhen:"Q-PEN-01=='NO'", fallbackStatus:"NEED_CONFIRM"},
+            {id:"RN-D14-07", title:"まだ届いていない年金を受け取る", domain:"PENSION", phase:"D14", priority:75, dependsOn:["RN-D14-06"], requiredQuestions:["Q-PEN-01"], ruleType:"CONFIRMED", appliesWhen:"Q-PEN-01=='YES'", notApplicableWhen:"Q-PEN-01=='NO'", fallbackStatus:"NEED_CONFIRM"},
+            {id:"RN-D14-08", title:"遺族年金をもらえるか確認する", domain:"PENSION", phase:"D14", priority:85, dependsOn:["RN-D7-06"], requiredQuestions:["Q-SPOUSE-01", "Q-CHILD-U18-01", "Q-PEN-EMP-01", "Q-PEN-01"], ruleType:"CONFIRMED", appliesWhen:"Q-SPOUSE-01=='YES'", notApplicableWhen:"Q-SPOUSE-01=='NO'", fallbackStatus:"NEED_CONFIRM"},
+            {id:"RN-D14-09", title:"銀行に届け出る", domain:"FINANCE", phase:"D14", priority:88, dependsOn:["RN-D7-06", "RN-D7-10"], requiredQuestions:["Q-FIN-01"], ruleType:"CONFIRMED", appliesWhen:"Q-FIN-01.containsAny('BANK')", notApplicableWhen:"Q-FIN-01=='NONE'", fallbackStatus:"NEED_CONFIRM"},
+            {id:"RN-D14-10", title:"証券会社に届け出る", domain:"FINANCE", phase:"D14", priority:75, dependsOn:["RN-D7-06"], requiredQuestions:["Q-FIN-01"], ruleType:"CONFIRMED", appliesWhen:"Q-FIN-01.containsAny('SECURITIES')", notApplicableWhen:"Q-FIN-01=='NONE'", fallbackStatus:"NEED_CONFIRM"},
+            {id:"RN-D14-11", title:"生命保険の保険金を請求する", domain:"INSURANCE", phase:"D14", priority:85, dependsOn:["RN-D7-06"], requiredQuestions:["Q-INS-01"], ruleType:"CONFIRMED", appliesWhen:"Q-INS-01.containsAny('LIFE','MEDICAL','COOP')", notApplicableWhen:"Q-INS-01=='NONE'", fallbackStatus:"NEED_CONFIRM"},
+            {id:"RN-D14-12", title:"自動車保険・火災保険の名義を変える", domain:"INSURANCE", phase:"D14", priority:70, dependsOn:[], requiredQuestions:["Q-INS-DAMAGE-01"], ruleType:"CONFIRMED", appliesWhen:"Q-INS-DAMAGE-01=='YES'", notApplicableWhen:"Q-INS-DAMAGE-01=='NO'", fallbackStatus:"NEED_CONFIRM"},
+            {id:"RN-D14-15", title:"電気・ガス・水道の名義を変える", domain:"HOUSING", phase:"D14", priority:75, dependsOn:[], requiredQuestions:["Q-UTIL-01"], ruleType:"CONFIRMED", appliesWhen:"Q-UTIL-01=='YES'", notApplicableWhen:"Q-UTIL-01=='NO'", fallbackStatus:"NEED_CONFIRM"},
+            {id:"RN-D14-16", title:"携帯電話・サブスクを解約する", domain:"DIGITAL", phase:"D14", priority:78, dependsOn:["RN-H24-11"], requiredQuestions:["Q-DIG-01"], ruleType:"CONFIRMED", appliesWhen:"Q-DIG-01.containsAny('MOBILE','SUBSCRIPTIONS','ACCOUNTS')", notApplicableWhen:"Q-DIG-01=='NONE'", fallbackStatus:"NEED_CONFIRM"},
+            {id:"RN-D14-17", title:"クレジットカードを解約する", domain:"FINANCE", phase:"D14", priority:77, dependsOn:[], requiredQuestions:["Q-FIN-01"], ruleType:"CONFIRMED", appliesWhen:"Q-FIN-01.containsAny('CARD')", notApplicableWhen:"Q-FIN-01=='NONE'", fallbackStatus:"NEED_CONFIRM"},
+            {id:"RN-D14-18", title:"賃貸住宅の名義変更・解約をする", domain:"HOUSING", phase:"D14", priority:65, dependsOn:[], requiredQuestions:["Q-RENT-01"], ruleType:"CONFIRMED", appliesWhen:"Q-RENT-01=='YES'", notApplicableWhen:"Q-RENT-01=='NO'", fallbackStatus:"NEED_CONFIRM"},
+            {id:"RN-D14-19", title:"NHK・固定電話の解約と郵便の転送届を出す", domain:"HOUSING", phase:"D14", priority:55, dependsOn:[], requiredQuestions:[], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"OPEN"},
+            {id:"RN-D14-20", title:"遺言書があるか探す", domain:"INHERITANCE", phase:"D14", priority:80, dependsOn:[], requiredQuestions:["Q-WILL-01"], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"OPEN"},
+            {id:"RN-D14-22", title:"マイナンバーカードを返す", domain:"ADMIN", phase:"D14", priority:50, dependsOn:["RN-D7-06"], requiredQuestions:[], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"OPEN"},
+            {id:"RN-D14-23", title:"故人の保険の扶養に入っていた方の保険を切り替える", domain:"HEALTH", phase:"D14", priority:88, dependsOn:["RN-D14-02"], requiredQuestions:["Q-HI-01", "Q-DEPENDENT-01"], ruleType:"CONFIRMED", appliesWhen:"Q-HI-01=='EHI'", notApplicableWhen:"Q-DEPENDENT-01=='NO'", fallbackStatus:"NEED_CONFIRM"},
+            {id:"RN-D14-24", title:"ひとり親向けの手当を確認する", domain:"GOVT_BENEFIT", phase:"D14", priority:80, dependsOn:["RN-D7-06"], requiredQuestions:["Q-CHILD-U18-01", "Q-REL-01"], ruleType:"CONFIRMED", appliesWhen:"Q-CHILD-U18-01=='YES'", notApplicableWhen:"Q-CHILD-U18-01=='NO'", fallbackStatus:"NEED_CONFIRM"},
+            {id:"RN-D49-01", title:"納骨先を決めて寺院・霊園に連絡する", domain:"FUNERAL", phase:"D49", priority:60, dependsOn:["RN-D7-07"], requiredQuestions:[], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"OPEN"},
+            {id:"RN-D49-02", title:"香典返しを手配する", domain:"FUNERAL", phase:"D49", priority:55, dependsOn:["RN-D7-02"], requiredQuestions:["Q-FUN-STATUS-01"], ruleType:"CONFIRMED", appliesWhen:"['NOT_DECIDED','ARRANGING','SCHEDULED','COMPLETED'].includes(Q-FUN-STATUS-01)", notApplicableWhen:"['DIRECT_CREMATION','NO_FUNERAL'].includes(Q-FUN-STATUS-01)", fallbackStatus:"NEED_CONFIRM"},
+            {id:"RN-M3-01", title:"相続するか放棄するかを決める【期限3か月】", domain:"INHERITANCE", phase:"M3", priority:90, dependsOn:["RN-D14-20"], requiredQuestions:[], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"OPEN"},
+            {id:"RN-M3-02", title:"故人の借金・保証人を調べる", domain:"FINANCE", phase:"M3", priority:85, dependsOn:[], requiredQuestions:[], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"OPEN"},
+            {id:"RN-M3-03", title:"故人の戸籍と相続人全員の戸籍・印鑑証明を集める", domain:"INHERITANCE", phase:"M3", priority:80, dependsOn:["RN-D7-06"], requiredQuestions:[], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"OPEN"},
+            {id:"RN-M3-04", title:"住宅ローンの届出と団信の確認をする", domain:"FINANCE", phase:"M3", priority:75, dependsOn:["RN-M3-02"], requiredQuestions:["Q-LOAN-01"], ruleType:"CONFIRMED", appliesWhen:"Q-LOAN-01=='YES'", notApplicableWhen:"Q-LOAN-01=='NO'", fallbackStatus:"NEED_CONFIRM"},
+            {id:"RN-M3-05", title:"法定相続情報一覧図を法務局で取得する", domain:"INHERITANCE", phase:"M3", priority:70, dependsOn:["RN-M3-03"], requiredQuestions:[], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"OPEN"},
+            {id:"RN-M3-07", title:"故人の財産と負債を一覧にまとめる", domain:"INHERITANCE", phase:"M3", priority:90, dependsOn:[], requiredQuestions:[], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"OPEN"},
+            {id:"RN-M3-10", title:"相続手続きの代表者を決める", domain:"INHERITANCE", phase:"M3", priority:60, dependsOn:[], requiredQuestions:[], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"OPEN"},
+            {id:"RN-M3-11", title:"遺産の分け方を決めて協議書を作る", domain:"INHERITANCE", phase:"M3", priority:85, dependsOn:["RN-M3-07", "RN-M3-03"], requiredQuestions:[], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"OPEN"},
+            {id:"RN-M3-12", title:"農地の届出を農業委員会に出す【届出期限約10か月】", domain:"INHERITANCE", phase:"M3", priority:70, dependsOn:["RN-D7-06"], requiredQuestions:["Q-AGRI-01"], ruleType:"CONFIRMED", appliesWhen:"Q-AGRI-01=='YES'", notApplicableWhen:"Q-AGRI-01=='NO'", fallbackStatus:"NEED_CONFIRM"},
+            {id:"RN-M4-01", title:"故人の確定申告をする【申告期限4か月】", domain:"TAX", phase:"M4", priority:75, dependsOn:["RN-M3-07"], requiredQuestions:["Q-TAX-01"], ruleType:"POSSIBLE", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"NEED_CONFIRM"},
+            {id:"RN-M10-01", title:"相続税がかかるか確認する", domain:"TAX", phase:"M10", priority:60, dependsOn:["RN-M3-07"], requiredQuestions:[], ruleType:"POSSIBLE", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"NEED_CONFIRM"},
+            {id:"RN-M10-05", title:"銀行口座を解約して預金を受け取る", domain:"FINANCE", phase:"M10", priority:75, dependsOn:["RN-M3-07", "RN-M3-11"], requiredQuestions:["Q-FIN-01"], ruleType:"POSSIBLE", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"NEED_CONFIRM"},
+            {id:"RN-M10-07", title:"自動車の名義変更または廃車をする", domain:"CAR", phase:"M10", priority:60, dependsOn:[], requiredQuestions:["Q-CAR-01"], ruleType:"POSSIBLE", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"NEED_CONFIRM"},
+            {id:"RN-M10-08", title:"運転免許証を返す", domain:"ADMIN", phase:"M10", priority:30, dependsOn:[], requiredQuestions:["Q-CAR-01"], ruleType:"CONFIRMED", appliesWhen:"Q-CAR-01=='YES'", notApplicableWhen:"Q-CAR-01=='NO'", fallbackStatus:"NEED_CONFIRM"},
+            {id:"RN-Y3-01", title:"土地・建物の名義を変える【期限3年】", domain:"INHERITANCE", phase:"Y3", priority:65, dependsOn:["RN-M3-11"], requiredQuestions:["Q-RE-01"], ruleType:"POSSIBLE", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"NEED_CONFIRM"}
         ];
 
         const phases = {
