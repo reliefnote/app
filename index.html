@@ -3029,8 +3029,8 @@
                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
                 >
                 <div class="splash-logo-fallback">R</div>
-                <div class="splash-title">ReliefNote</div>
-                <div class="splash-tagline">遺族のためのGPS</div>
+                <div class="splash-title" id="splashTitle">ReliefNote</div>
+                <div class="splash-tagline" id="splashTagline">遺族のためのGPS</div>
                 <div class="splash-message">悲しみの中でも、<br>迷わず前へ。</div>
                 <button class="btn-splash btn-primary" onclick="startOnboarding()">はじめる</button>
                 <div class="splash-footer">
@@ -3081,7 +3081,7 @@
                 </div>
             </div>
 
-            <div id="unansweredQuestionsCard" class="unanswered-questions-card" onclick="showScreen('screen-confirm')" style="display: none;"></div>
+            <div id="unansweredQuestionsCard" class="unanswered-questions-card" onclick="openConfirmFromHome()" style="display: none;"></div>
 
             <div class="home-consult-section">
                 <div class="consult-section-title">サポート</div>
@@ -3607,6 +3607,138 @@
             M10: "10ヶ月以内",
             Y3: "3年以内"
         };
+
+        // チャネル定義
+        const CHANNELS = {
+            hokuryu: {
+                name: 'ReliefNote',
+                subtitle: '北竜町 おくやみ手続きナビ',
+                presetAnswers: {},
+                destinations: {
+                    ADMIN:   { name: '北竜町役場 1F 住民課', address: '北海道雨竜郡北竜町字和11-1', phone: '0164-34-2111', hours: '平日 8:30-17:15' },
+                    PENSION: { name: '深川年金事務所', address: '北海道深川市2条18番36号', phone: '0164-23-1299／0570-05-1165', hours: '平日 8:30-17:15' },
+                    LEGAL:   { name: '旭川地方法務局深川支局', address: '北海道深川市3条2番1号', phone: '0164-23-3269', hours: '平日 8:30-17:15' },
+                    COURT:   { name: '旭川家庭裁判所深川支部', address: '北海道深川市3条2番1号', phone: '0164-23-3269', hours: '平日 8:30-17:00' },
+                    TAX:     { name: '深川税務署', address: '北海道深川市2条17番17号', phone: '0164-23-2191', hours: '平日 8:30-17:00' },
+                    POLICE:  { name: '深川警察署', address: '北海道深川市4条8番20号', phone: '0164-22-0110', hours: '平日 8:30-17:15' },
+                    TRANSPORT: { name: '旭川運輸支局', address: '北海道旭川市春光町10番地', phone: '050-5540-2003', hours: '平日 8:45-16:00' }
+                }
+            },
+            funeral: {
+                name: 'ReliefNote',
+                subtitle: '遺族のためのGPS',
+                presetAnswers: {
+                    'Q-FUN-STATUS-01': 'ARRANGING',
+                    'Q-AGRI-01': 'NO'
+                },
+                destinations: {
+                    ADMIN:   { name: 'お住まいの市区町村役場', address: null, phone: null, hours: '平日 8:30-17:15（一般的な開庁時間）' },
+                    PENSION: { name: '最寄りの年金事務所', address: null, phone: '0570-05-1165（ねんきんダイヤル）', hours: '平日 8:30-17:15' },
+                    LEGAL:   { name: '最寄りの法務局', address: null, phone: null, hours: '平日 8:30-17:15' },
+                    COURT:   { name: '最寄りの家庭裁判所', address: null, phone: null, hours: '平日 8:30-17:00' },
+                    TAX:     { name: '最寄りの税務署', address: null, phone: null, hours: '平日 8:30-17:00' },
+                    POLICE:  { name: '最寄りの警察署', address: null, phone: null, hours: null },
+                    TRANSPORT: { name: '最寄りの運輸支局', address: null, phone: null, hours: '平日 8:45-16:00' }
+                }
+            }
+        };
+
+        // タスクと届出先タイプのマッピング
+        const TASK_DESTINATION_MAP = {
+            'RN-H24-03': null,
+            'RN-D7-01':  null,
+            'RN-D7-02':  null,
+            'RN-D7-06':  'ADMIN',
+            'RN-D7-07':  null,
+            'RN-D7-11':  'ADMIN',
+            'RN-D7-13':  'ADMIN',
+            'RN-D14-01': 'ADMIN',
+            'RN-D14-02': 'ADMIN',
+            'RN-D14-03': 'ADMIN',
+            'RN-D14-04': 'ADMIN',
+            'RN-D14-05': 'ADMIN',
+            'RN-D14-06': 'PENSION',
+            'RN-D14-07': 'PENSION',
+            'RN-D14-08': 'PENSION',
+            'RN-D14-09': null,
+            'RN-D14-16': null,
+            'RN-D14-18': 'ADMIN',
+            'RN-D14-22': 'ADMIN',
+            'RN-D14-23': 'ADMIN',
+            'RN-D14-24': 'ADMIN',
+            'RN-M3-01':  'COURT',
+            'RN-M3-03':  'ADMIN',
+            'RN-M3-05':  'LEGAL',
+            'RN-M3-12':  'ADMIN',
+            'RN-M4-01':  'TAX',
+            'RN-M10-01': 'TAX',
+            'RN-M10-05': null,
+            'RN-M10-07': 'TRANSPORT',
+            'RN-M10-08': 'POLICE',
+            'RN-Y3-01':  'LEGAL'
+        };
+
+        // チャネルに基づくテキスト置換マップを生成
+        function getChannelReplacementMap() {
+            const ch = window.currentChannel;
+            if (!ch || window.currentChannelId === 'hokuryu') return {};
+            const hokuryu = CHANNELS.hokuryu;
+            const map = {};
+            for (const [type, dest] of Object.entries(hokuryu.destinations)) {
+                if (ch.destinations[type]) {
+                    map[dest.name] = ch.destinations[type].name;
+                }
+            }
+            return map;
+        }
+
+        // 北竜町固有テキストをチャネルに応じて置換
+        function replaceChannelText(text) {
+            if (!text || window.currentChannelId === 'hokuryu') return text;
+            const map = getChannelReplacementMap();
+            let result = text;
+            // 長い文字列から置換（部分一致の誤置換を防止）
+            const sorted = Object.entries(map).sort((a, b) => b[0].length - a[0].length);
+            for (const [from, to] of sorted) {
+                result = result.replace(new RegExp(from.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), to);
+            }
+            return result;
+        }
+
+        // タスクIDからチャネル定義に基づいて届出先情報を解決
+        function resolveDestination(taskId, detail) {
+            const destType = TASK_DESTINATION_MAP[taskId];
+            const ch = window.currentChannel;
+
+            // 複合届出先（"/"を含む）はテキスト置換で対応
+            if (detail.destination && detail.destination.includes('/')) {
+                return {
+                    name: replaceChannelText(detail.destination),
+                    address: detail.address ? replaceChannelText(detail.address) : null,
+                    phone: detail.phone ? replaceChannelText(detail.phone) : null,
+                    hours: detail.officeHours ? replaceChannelText(detail.officeHours) : null
+                };
+            }
+
+            // マッピングがありチャネル定義に届出先がある場合
+            if (destType && ch && ch.destinations[destType]) {
+                const resolved = ch.destinations[destType];
+                return {
+                    name: resolved.name,
+                    address: resolved.address,
+                    phone: resolved.phone,
+                    hours: resolved.hours
+                };
+            }
+
+            // マッピングなし：テキスト置換のみ
+            return {
+                name: replaceChannelText(detail.destination),
+                address: detail.address ? replaceChannelText(detail.address) : null,
+                phone: detail.phone ? replaceChannelText(detail.phone) : null,
+                hours: detail.officeHours ? replaceChannelText(detail.officeHours) : null
+            };
+        }
 
         // 用語辞書データ
         const glossary = {
@@ -4575,6 +4707,8 @@
         let confirmReturnPhase = null; // 確認センターから戻る時のスクロール先フェーズ
         let savedScrollPosition = 0; // タスク詳細から戻る時のスクロール位置
         let detailReturnScreen = ''; // タスク詳細から戻る先の画面ID
+        let confirmSavedScrollPosition = 0; // 質問画面から戻る時のスクロール位置
+        let confirmSavedReturnScreen = ''; // 質問画面に遷移する前の画面ID
 
         // ローカルストレージから復元
         function loadData() {
@@ -4587,6 +4721,31 @@
         function saveData() {
             localStorage.setItem('answers', JSON.stringify(answers));
             localStorage.setItem('taskStatuses', JSON.stringify(taskStatuses));
+        }
+
+        // チャネル初期化
+        function initChannel() {
+            const params = new URLSearchParams(window.location.search);
+            let channelId = params.get('ch');
+            if (!channelId || !CHANNELS[channelId]) {
+                channelId = localStorage.getItem('reliefnote_channel') || 'hokuryu';
+            }
+            if (!CHANNELS[channelId]) channelId = 'hokuryu';
+            localStorage.setItem('reliefnote_channel', channelId);
+            window.currentChannel = CHANNELS[channelId];
+            window.currentChannelId = channelId;
+        }
+
+        // プリセット回答の適用（新規ユーザーのみ）
+        function applyPresetAnswers() {
+            const existing = localStorage.getItem('answers');
+            if (existing) return; // 既存ユーザーは上書きしない
+            const presets = window.currentChannel.presetAnswers;
+            if (!presets || Object.keys(presets).length === 0) return;
+            for (const [qId, value] of Object.entries(presets)) {
+                answers[qId] = value;
+            }
+            saveData();
         }
 
         // 画面遷移
@@ -4708,13 +4867,18 @@
 
         // オンボーディング（質問）
         function startOnboarding() {
-            // オンボーディング用の7問をフィルタ
-            onboardingQuestions = questions.filter(q => onboardingQuestionIds.includes(q.id));
+            // オンボーディング用の7問をフィルタ（プリセット済み質問は除外）
+            const presets = window.currentChannel ? window.currentChannel.presetAnswers : {};
+            onboardingQuestions = questions.filter(q => {
+                if (!onboardingQuestionIds.includes(q.id)) return false;
+                if (presets && presets[q.id] !== undefined) return false; // プリセット済みはスキップ
+                return true;
+            });
             // onboardingQuestionIds の順番通りにソート
             onboardingQuestions.sort((a, b) => {
                 return onboardingQuestionIds.indexOf(a.id) - onboardingQuestionIds.indexOf(b.id);
             });
-            // Index -1 = name input step, Index 0-6 = 7 questions (total 8 steps)
+            // Index -1 = name input step, Index 0+ = questions (total = name + questions)
             currentQuestionIndex = -1;
             showScreen('screen-onboarding');
             renderQuestion();
@@ -6350,12 +6514,13 @@
             }
 
             if (detail) {
-                // 届出先・届出場所（destination が存在する場合のみ表示）
-                if (detail.destination && detail.destination.trim() !== '' && detail.destination !== '—') {
+                // 届出先・届出場所（チャネルに基づき動的解決）
+                const resolved = resolveDestination(taskId, detail);
+                if (resolved.name && resolved.name.trim() !== '' && resolved.name !== '—') {
                     // 「/」で分割して改行表示
-                    const destinations = detail.destination.includes('/')
-                        ? detail.destination.split('/').map(s => s.trim()).filter(s => s !== '')
-                        : [detail.destination];
+                    const destinations = resolved.name.includes('/')
+                        ? resolved.name.split('/').map(s => s.trim()).filter(s => s !== '')
+                        : [resolved.name];
 
                     html += `
                         <div class="task-detail-destination">
@@ -6363,13 +6528,17 @@
                             <div class="destination-values">
                                 ${destinations.map(dest => `<div class="destination-value">${markGlossaryTerms(dest)}</div>`).join('')}
                             </div>
+                            ${resolved.address ? `<div class="detail-dest-address">${resolved.address}</div>` : ''}
+                            ${resolved.phone ? `<div class="detail-dest-phone"><a href="tel:${resolved.phone.split(/[／\/（]/)[0].replace(/[^0-9+-]/g, '')}" style="color: var(--accent); text-decoration: none;">${resolved.phone}</a></div>` : ''}
+                            ${resolved.hours ? `<div class="detail-dest-hours">${resolved.hours}</div>` : ''}
                         </div>
                     `;
                 }
 
-                // やること（手順）- 常に展開、シンプルな番号リスト
-                if (detail.steps && detail.steps !== '—') {
-                    const stepsList = detail.steps.split(/(?=[①②③④⑤⑥⑦⑧⑨⑩])/).filter(s => s.trim() !== '');
+                // やること（手順）- 常に展開、シンプルな番号リスト（チャネルテキスト置換適用）
+                const resolvedSteps = replaceChannelText(detail.steps);
+                if (resolvedSteps && resolvedSteps !== '—') {
+                    const stepsList = resolvedSteps.split(/(?=[①②③④⑤⑥⑦⑧⑨⑩])/).filter(s => s.trim() !== '');
                     if (stepsList.length > 0) {
                         html += `<div class="detail-steps-simple">`;
                         stepsList.forEach((step, index) => {
@@ -6426,9 +6595,10 @@
                     `;
                 }
 
-                // アコーディオン: よくある質問
-                if (detail.faq && detail.faq !== '—') {
-                    const faqList = detail.faq.split(/(?=Q\.)/).filter(f => f.trim() !== '');
+                // アコーディオン: よくある質問（チャネルテキスト置換適用）
+                const resolvedFaq = replaceChannelText(detail.faq);
+                if (resolvedFaq && resolvedFaq !== '—') {
+                    const faqList = resolvedFaq.split(/(?=Q\.)/).filter(f => f.trim() !== '');
                     if (faqList.length > 0) {
                         html += `
                             <div class="detail-accordion-section" data-accordion="faq">
@@ -6623,6 +6793,10 @@
             const filteredQuestions = questions.filter(q => questionIds.includes(q.id));
             if (filteredQuestions.length === 0) return;
 
+            // 遷移前のスクロール位置を保存
+            confirmSavedScrollPosition = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+            confirmSavedReturnScreen = returnScreen || 'screen-guide';
+
             // フィルタモードの状態変数を設定
             window._filteredMode = true;
             window._filteredQuestions = filteredQuestions;
@@ -6700,6 +6874,9 @@
 
         // フェーズフィルター付き確認センター遷移関数
         function openConfirmCenterWithPhaseFilter(phaseId) {
+            // 遷移前のスクロール位置を保存
+            confirmSavedScrollPosition = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+            confirmSavedReturnScreen = 'screen-guide';
             // そのフェーズに属するタスクを取得
             const phaseTasks = tasks.filter(t => t.phase === phaseId);
 
@@ -6756,7 +6933,15 @@
             startConfirmCenter('screen-guide');
         }
 
+        // ホーム画面の未回答カードからの遷移
+        function openConfirmFromHome() {
+            confirmSavedScrollPosition = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+            confirmSavedReturnScreen = 'screen-home';
+            showScreen('screen-confirm');
+        }
+
         function startConfirmCenter(sourceScreen = 'screen-home') {
+
             // フィルタモードかどうかで分岐
             if (window._filteredMode === true && window._filteredQuestions) {
                 // フィルタモード: 指定された質問のみ表示
@@ -6938,14 +7123,35 @@
             renderConfirmQuestion();
         }
 
+        // 質問画面から戻る時のスクロール復元
+        function restoreConfirmScrollPosition() {
+            const returnScreen = confirmSavedReturnScreen;
+            const scrollPos = confirmSavedScrollPosition;
+
+            // 状態をクリア
+            confirmSavedReturnScreen = '';
+            confirmSavedScrollPosition = 0;
+
+            // confirmReturnPhaseがある場合はそちらを優先（より正確なフェーズスクロール）
+            if (confirmReturnPhase && returnScreen === 'screen-guide') {
+                scrollToReturnPhase();
+                return;
+            }
+
+            // 保存されたスクロール位置に復元
+            if (scrollPos > 0) {
+                requestAnimationFrame(function() {
+                    requestAnimationFrame(function() {
+                        window.scrollTo(0, scrollPos);
+                    });
+                });
+            }
+        }
+
         // 確認センター完了画面から戻る
         function returnFromConfirmCenter() {
             showScreen(confirmSourceScreen);
-
-            // ガイド画面に戻る場合、遷移元フェーズまでスクロール
-            if (confirmSourceScreen === 'screen-guide') {
-                scrollToReturnPhase();
-            }
+            restoreConfirmScrollPosition();
         }
 
         function nextConfirmQuestion() {
@@ -7013,11 +7219,7 @@
                     window._filteredPhaseId = null;
                 }
                 showScreen(confirmSourceScreen);
-
-                // ガイド画面に戻る場合、遷移元フェーズまでスクロール
-                if (confirmSourceScreen === 'screen-guide') {
-                    scrollToReturnPhase();
-                }
+                restoreConfirmScrollPosition();
             }
         }
 
@@ -7036,11 +7238,7 @@
                 window._filteredPhaseId = null;
             }
             showScreen(confirmSourceScreen);
-
-            // ガイド画面に戻る場合、遷移元フェーズまでスクロール
-            if (confirmSourceScreen === 'screen-guide') {
-                scrollToReturnPhase();
-            }
+            restoreConfirmScrollPosition();
         }
 
         // カレンダー機能
@@ -7991,7 +8189,17 @@
             }
 
             // 通常の初期化処理
+            initChannel();
             loadData();
+            applyPresetAnswers();
+
+            // スプラッシュ画面のタイトルをチャネルに合わせて更新
+            if (window.currentChannel) {
+                const splashTitle = document.getElementById('splashTitle');
+                const splashTagline = document.getElementById('splashTagline');
+                if (splashTitle) splashTitle.textContent = window.currentChannel.name;
+                if (splashTagline) splashTagline.textContent = window.currentChannel.subtitle;
+            }
 
             const userName = localStorage.getItem('rn_user_name');
             const hasAnswers = Object.keys(answers).length > 0;
@@ -8006,7 +8214,12 @@
                 // 名前あり、質問未回答 → 質問画面（名前入力スキップして質問から開始）
                 generateTasks();
                 updateUserNameDisplay();
-                onboardingQuestions = questions.filter(q => onboardingQuestionIds.includes(q.id));
+                const presets = window.currentChannel ? window.currentChannel.presetAnswers : {};
+                onboardingQuestions = questions.filter(q => {
+                    if (!onboardingQuestionIds.includes(q.id)) return false;
+                    if (presets && presets[q.id] !== undefined) return false;
+                    return true;
+                });
                 onboardingQuestions.sort((a, b) => {
                     return onboardingQuestionIds.indexOf(a.id) - onboardingQuestionIds.indexOf(b.id);
                 });
