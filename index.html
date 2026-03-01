@@ -3147,7 +3147,7 @@
         <!-- 画面4: タスク詳細 -->
         <div id="screen-detail" class="screen">
             <div class="detail-header">
-                <button class="detail-back-btn" onclick="showScreen('screen-guide')">← 戻る</button>
+                <button class="detail-back-btn" onclick="showScreen(detailReturnScreen || 'screen-guide')">← 戻る</button>
             </div>
             <div class="detail-content" id="detailContent"></div>
             <div class="detail-footer">
@@ -3546,11 +3546,11 @@
             {id:"RN-H24-05", title:"故人の自宅の戸締まり・火の元を確認する", domain:"HOUSING", phase:"H24", priority:80, dependsOn:[], requiredQuestions:[], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"OPEN"},
             {id:"RN-H24-06", title:"喪主を決める", domain:"FUNERAL", phase:"H24", priority:70, dependsOn:[], requiredQuestions:[], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"OPEN"},
             {id:"RN-H24-11", title:"故人のスマホ・PCを充電したまま保管する", domain:"DIGITAL", phase:"H24", priority:88, dependsOn:[], requiredQuestions:["Q-DIG-01"], ruleType:"CONFIRMED", appliesWhen:"Q-DIG-01.containsAny('MOBILE','NET','SUBSCRIPTIONS','ACCOUNTS')", notApplicableWhen:"Q-DIG-01=='NONE'", fallbackStatus:"NEED_CONFIRM"},
-            {id:"RN-D7-01", title:"葬儀社を決める", domain:"FUNERAL", phase:"D7", priority:85, dependsOn:["RN-H24-03"], requiredQuestions:["Q-FUN-STATUS-01"], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:"Q-FUN-STATUS-01=='COMPLETED'", fallbackStatus:"OPEN"},
-            {id:"RN-D7-02", title:"葬儀の日程・形式・予算を決める", domain:"FUNERAL", phase:"D7", priority:85, dependsOn:["RN-D7-01"], requiredQuestions:["Q-FUN-STATUS-01"], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:"Q-FUN-STATUS-01=='COMPLETED'", fallbackStatus:"OPEN"},
-            {id:"RN-D7-04", title:"親族・関係者へ訃報を知らせる", domain:"FUNERAL", phase:"D7", priority:65, dependsOn:["RN-D7-02"], requiredQuestions:["Q-FUN-STATUS-01"], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:"['COMPLETED','NO_FUNERAL'].includes(Q-FUN-STATUS-01)", fallbackStatus:"OPEN"},
-            {id:"RN-D7-05", title:"遺影用の写真を選ぶ", domain:"FUNERAL", phase:"D7", priority:60, dependsOn:["RN-D7-02"], requiredQuestions:["Q-FUN-STATUS-01"], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:"['COMPLETED','NO_FUNERAL'].includes(Q-FUN-STATUS-01)", fallbackStatus:"OPEN"},
-            {id:"RN-D7-06", title:"役場に死亡届を出す【届出期限7日】", domain:"ADMIN", phase:"D7", priority:100, dependsOn:["RN-H24-01"], requiredQuestions:["Q-ADMIN-DN-01"], ruleType:"CONFIRMED", appliesWhen:"['NO','IN_PROGRESS','UNKNOWN'].includes(Q-ADMIN-DN-01)", notApplicableWhen:"Q-ADMIN-DN-01=='YES'", fallbackStatus:"NEED_CONFIRM"},
+            {id:"RN-D7-01", title:"葬儀社を決める", domain:"FUNERAL", phase:"D7", priority:85, dependsOn:["RN-H24-03"], requiredQuestions:["Q-FUN-STATUS-01"], ruleType:"GENERAL", appliesWhen:"['NOT_DECIDED','UNKNOWN'].includes(Q-FUN-STATUS-01)", notApplicableWhen:"['DIRECT_CREMATION','NO_FUNERAL'].includes(Q-FUN-STATUS-01)", fallbackStatus:"NEED_CONFIRM", autoDoneWhen:"['ARRANGING','SCHEDULED','COMPLETED'].includes(Q-FUN-STATUS-01)"},
+            {id:"RN-D7-02", title:"葬儀の日程・形式・予算を決める", domain:"FUNERAL", phase:"D7", priority:85, dependsOn:["RN-D7-01"], requiredQuestions:["Q-FUN-STATUS-01"], ruleType:"GENERAL", appliesWhen:"['NOT_DECIDED','ARRANGING','UNKNOWN'].includes(Q-FUN-STATUS-01)", notApplicableWhen:"['DIRECT_CREMATION','NO_FUNERAL'].includes(Q-FUN-STATUS-01)", fallbackStatus:"NEED_CONFIRM", autoDoneWhen:"['SCHEDULED','COMPLETED'].includes(Q-FUN-STATUS-01)"},
+            {id:"RN-D7-04", title:"親族・関係者へ訃報を知らせる", domain:"FUNERAL", phase:"D7", priority:65, dependsOn:["RN-D7-02"], requiredQuestions:["Q-FUN-STATUS-01"], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:"['DIRECT_CREMATION','NO_FUNERAL'].includes(Q-FUN-STATUS-01)", fallbackStatus:"OPEN"},
+            {id:"RN-D7-05", title:"遺影用の写真を選ぶ", domain:"FUNERAL", phase:"D7", priority:60, dependsOn:["RN-D7-02"], requiredQuestions:["Q-FUN-STATUS-01"], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:"['DIRECT_CREMATION','NO_FUNERAL'].includes(Q-FUN-STATUS-01)", fallbackStatus:"OPEN"},
+            {id:"RN-D7-06", title:"役場に死亡届を出す【届出期限7日】", domain:"ADMIN", phase:"D7", priority:100, dependsOn:["RN-H24-01"], requiredQuestions:["Q-ADMIN-DN-01"], ruleType:"CONFIRMED", appliesWhen:"['NO','IN_PROGRESS','UNKNOWN'].includes(Q-ADMIN-DN-01)", notApplicableWhen:null, fallbackStatus:"NEED_CONFIRM", autoDoneWhen:"Q-ADMIN-DN-01=='YES'"},
             {id:"RN-D7-07", title:"火葬後の埋葬許可証を保管する", domain:"ADMIN", phase:"D7", priority:80, dependsOn:["RN-D7-06"], requiredQuestions:[], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"OPEN"},
             {id:"RN-D7-10", title:"口座凍結の前に引落し予定を確認する", domain:"FINANCE", phase:"D7", priority:90, dependsOn:[], requiredQuestions:[], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"OPEN"},
             {id:"RN-D7-11", title:"役場でまとめてできる手続きを確認する", domain:"ADMIN", phase:"D7", priority:75, dependsOn:["RN-D7-06"], requiredQuestions:[], ruleType:"GENERAL", appliesWhen:"true", notApplicableWhen:null, fallbackStatus:"OPEN"},
@@ -4573,6 +4573,8 @@
         let currentGuideView = 'phase';
         let currentTaskId = null;
         let confirmReturnPhase = null; // 確認センターから戻る時のスクロール先フェーズ
+        let savedScrollPosition = 0; // タスク詳細から戻る時のスクロール位置
+        let detailReturnScreen = ''; // タスク詳細から戻る先の画面ID
 
         // ローカルストレージから復元
         function loadData() {
@@ -4642,20 +4644,31 @@
                 document.querySelectorAll('.nav-item')[0].classList.add('active');
                 updateUserNameDisplay();
                 renderHome();
+
+                // タスク詳細から戻った場合、スクロール位置を復元
+                if (detailReturnScreen === 'screen-home' && savedScrollPosition > 0) {
+                    requestAnimationFrame(() => {
+                        window.scrollTo(0, savedScrollPosition);
+                        savedScrollPosition = 0;
+                        detailReturnScreen = '';
+                    });
+                }
             } else if (screenId === 'screen-guide') {
                 document.querySelectorAll('.nav-item')[1].classList.add('active');
                 renderGuide();
 
-                // スクロール位置を復元
-                requestAnimationFrame(() => {
-                    const guideScreen = document.getElementById('screen-guide');
-                    if (guideScreen && window._guideScrollTop) {
-                        guideScreen.scrollTop = window._guideScrollTop;
-                    }
-                });
+                // タスク詳細から戻った場合、スクロール位置を復元
+                if (detailReturnScreen === 'screen-guide' && savedScrollPosition > 0) {
+                    requestAnimationFrame(() => {
+                        window.scrollTo(0, savedScrollPosition);
+                        savedScrollPosition = 0;
+                        detailReturnScreen = '';
+                    });
+                }
             } else if (screenId === 'screen-detail') {
                 // タスク詳細画面はスクロール位置を先頭にリセット
                 requestAnimationFrame(() => {
+                    window.scrollTo(0, 0);
                     const detailScreen = document.getElementById('screen-detail');
                     if (detailScreen) {
                         detailScreen.scrollTop = 0;
@@ -4990,6 +5003,7 @@
         function determineTaskStatus(task) {
             // 既にDONEなら維持
             if (taskStatuses[task.id] === 'DONE') return 'DONE';
+            // 既にAUTO_DONEなら再評価（回答が変わった可能性があるため、以下で再判定）
 
             // Step 1: required_questionsの回答有無を確認
             if (task.requiredQuestions && task.requiredQuestions.length > 0) {
@@ -5010,6 +5024,13 @@
                 }
             }
 
+            // Step 2.5: auto_done_whenを評価
+            if (task.autoDoneWhen) {
+                if (evaluateCondition(task.autoDoneWhen, answers)) {
+                    return 'AUTO_DONE';
+                }
+            }
+
             // Step 3: applies_whenを評価
             if (task.appliesWhen) {
                 if (evaluateCondition(task.appliesWhen, answers)) {
@@ -5020,7 +5041,7 @@
                     if (task.dependsOn && task.dependsOn.length > 0) {
                         const hasIncompleteDepends = task.dependsOn.some(depId => {
                             const depStatus = taskStatuses[depId];
-                            return depStatus !== 'DONE';
+                            return depStatus !== 'DONE' && depStatus !== 'AUTO_DONE' && depStatus !== 'NOT_APPLICABLE';
                         });
                         if (hasIncompleteDepends) {
                             status = 'BLOCKED';
@@ -5052,8 +5073,21 @@
             }
         }
 
+        // AUTO_DONEタスクの元となる質問IDを取得
+        function getAutoDoneQuestionId(task) {
+            if (!task.autoDoneWhen) return null;
+            // autoDoneWhen条件式から質問IDを抽出（Q-で始まるID）
+            const match = task.autoDoneWhen.match(/(Q-[A-Z0-9-]+)/);
+            return match ? match[1] : null;
+        }
+
+        // AUTO_DONEタスクの回答変更画面へ遷移
+        function openAutoDoneQuestion(taskId, questionId) {
+            showFilteredQuestions([questionId], 'screen-detail', taskId);
+        }
+
         function generateTasks() {
-            // 全タスクのステータスを生成（DONEは維持）
+            // 全タスクのステータスを生成（DONEは維持、AUTO_DONEは再評価）
             tasks.forEach(task => {
                 if (taskStatuses[task.id] !== 'DONE') {
                     taskStatuses[task.id] = determineTaskStatus(task);
@@ -5259,7 +5293,7 @@
             })).filter(t => t.status !== 'NOT_APPLICABLE');
 
             // 修正6：プログレスバーを横バーに変更
-            const completedCount = allTasks.filter(t => t.status === 'DONE').length;
+            const completedCount = allTasks.filter(t => t.status === 'DONE' || t.status === 'AUTO_DONE').length;
             const totalCount = allTasks.length;
             const progressPercent = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
 
@@ -5322,7 +5356,7 @@
 
             // 修正2：「次にやること」の新しいロジック
 
-            // 全OPEN/NEED_CONFIRMタスクを取得
+            // 全OPEN/NEED_CONFIRMタスクを取得（DONE, AUTO_DONE, NOT_APPLICABLEは除外）
             const activeTasks = tasks.filter(t => {
                 const status = taskStatuses[t.id] || determineTaskStatus(t);
                 return status === 'OPEN' || status === 'NEED_CONFIRM';
@@ -5523,15 +5557,15 @@
                 if (phaseTasks.length === 0) return;
 
                 // ステータス順 + priority降順でソート
-                const statusOrder = { 'OPEN': 1, 'NEED_CONFIRM': 2, 'BLOCKED': 3, 'DONE': 4 };
+                const statusOrder = { 'OPEN': 1, 'NEED_CONFIRM': 2, 'BLOCKED': 3, 'DONE': 4, 'AUTO_DONE': 4 };
                 phaseTasks.sort((a, b) => {
-                    const statusDiff = statusOrder[a.status] - statusOrder[b.status];
+                    const statusDiff = (statusOrder[a.status] || 5) - (statusOrder[b.status] || 5);
                     if (statusDiff !== 0) return statusDiff;
                     return b.priority - a.priority; // 同一ステータス内でpriority降順
                 });
 
-                const incompleteTasks = phaseTasks.filter(t => t.status !== 'DONE');
-                const completedTasks = phaseTasks.filter(t => t.status === 'DONE');
+                const incompleteTasks = phaseTasks.filter(t => t.status !== 'DONE' && t.status !== 'AUTO_DONE');
+                const completedTasks = phaseTasks.filter(t => t.status === 'DONE' || t.status === 'AUTO_DONE');
 
                 // 開閉状態を復元（デフォルトは最初のフェーズのみ開く）
                 const key = 'deadline_' + phaseId;
@@ -5610,15 +5644,15 @@
                 if (groupTasks.length === 0) return;
 
                 // ステータス順 + priority降順でソート
-                const statusOrder = { 'OPEN': 1, 'NEED_CONFIRM': 2, 'BLOCKED': 3, 'DONE': 4 };
+                const statusOrder = { 'OPEN': 1, 'NEED_CONFIRM': 2, 'BLOCKED': 3, 'DONE': 4, 'AUTO_DONE': 4 };
                 groupTasks.sort((a, b) => {
-                    const statusDiff = statusOrder[a.status] - statusOrder[b.status];
+                    const statusDiff = (statusOrder[a.status] || 5) - (statusOrder[b.status] || 5);
                     if (statusDiff !== 0) return statusDiff;
                     return b.priority - a.priority; // 同一ステータス内でpriority降順
                 });
 
-                const incompleteTasks = groupTasks.filter(t => t.status !== 'DONE');
-                const completedTasks = groupTasks.filter(t => t.status === 'DONE');
+                const incompleteTasks = groupTasks.filter(t => t.status !== 'DONE' && t.status !== 'AUTO_DONE');
+                const completedTasks = groupTasks.filter(t => t.status === 'DONE' || t.status === 'AUTO_DONE');
 
                 // ヒントカード（北竜町役場のみ）
                 let hintCard = '';
@@ -5724,7 +5758,8 @@
 
             // タスクカードを生成
             const tasksHTML = pinnedTasks.map(t => {
-                const isDone = t.status === 'DONE';
+                const isAutoDone = t.status === 'AUTO_DONE';
+                const isDone = t.status === 'DONE' || isAutoDone;
                 let checkboxDisabled = '';
                 let clickHandler = `showTaskDetail('${t.id}')`;
                 let extraInfo = '';
@@ -5755,6 +5790,11 @@
                         borderStyle = 'border-color: var(--border); opacity: 0.6;';
                         clickHandler = `showBlockingTask('${t.id}')`;
                     }
+                }
+
+                if (isAutoDone) {
+                    extraInfo = '<div class="task-confirm-hint" style="color: var(--text-tertiary); font-size: 11px;">質問の回答に基づき完了しました</div>';
+                    checkboxDisabled = 'disabled';
                 }
 
                 // 期限表示（バッジ風）
@@ -5824,6 +5864,8 @@
                 let clickHandler = `showTaskDetail('${t.id}')`;
                 let extraInfo = '';
                 let borderStyle = '';
+                const isAutoDone = t.status === 'AUTO_DONE';
+                const isCompleted = isDone || isAutoDone;
 
                 // Extract deadline from task title
                 let taskTitle = t.title;
@@ -5840,7 +5882,7 @@
                     ? '<span style="display: inline-block; font-size: 10px; font-weight: 600; color: #c45a3c; background: #fef0ec; padding: 1px 6px; border-radius: 8px; margin-left: 4px;">優先</span>'
                     : '';
 
-                if (!isDone) {
+                if (!isCompleted) {
                     if (t.status === 'NEED_CONFIRM') {
                         extraInfo = '<div class="task-confirm-hint">→ 質問に回答してください</div>';
                         checkboxDisabled = 'disabled';
@@ -5851,6 +5893,11 @@
                         borderStyle = 'border-color: var(--border); opacity: 0.6;';
                         clickHandler = `showBlockingTask('${t.id}')`;
                     }
+                }
+
+                if (isAutoDone) {
+                    extraInfo = '<div class="task-confirm-hint" style="color: var(--text-tertiary); font-size: 11px;">質問の回答に基づき完了しました</div>';
+                    checkboxDisabled = 'disabled';
                 }
 
                 // 改修B：バッジ風期限表示
@@ -5902,9 +5949,9 @@
 
                 return `
                     <div class="task-item" style="${borderStyle}" onclick="event.stopPropagation(); ${clickHandler}">
-                        <input type="checkbox" class="task-checkbox" ${isDone ? 'checked' : ''} ${checkboxDisabled} onclick="event.stopPropagation(); toggleTaskStatus('${t.id}')">
+                        <input type="checkbox" class="task-checkbox" ${isCompleted ? 'checked' : ''} ${checkboxDisabled} onclick="event.stopPropagation(); toggleTaskStatus('${t.id}')">
                         <div class="task-info">
-                            <div class="task-name ${isDone ? 'done' : ''}">${taskTitle}${priorityBadge}</div>
+                            <div class="task-name ${isCompleted ? 'done' : ''}">${taskTitle}${priorityBadge}</div>
                             ${deadlineDisplayText ? `<div class="task-deadline ${deadlineBadgeClass}">${deadlineDisplayText}</div>` : ''}
                             ${extraInfo}
                         </div>
@@ -5980,7 +6027,14 @@
             const task = tasks.find(t => t.id === taskId);
             const currentStatus = taskStatuses[taskId] || determineTaskStatus(task);
 
-            if (currentStatus === 'DONE') {
+            if (currentStatus === 'AUTO_DONE') {
+                // AUTO_DONE → 回答変更画面へ遷移
+                const autoDoneQuestionId = getAutoDoneQuestionId(task);
+                if (autoDoneQuestionId) {
+                    openAutoDoneQuestion(taskId, autoDoneQuestionId);
+                }
+                return;
+            } else if (currentStatus === 'DONE') {
                 // DONE → 確認ダイアログを表示
                 showRevertModal(taskId);
             } else if (currentStatus === 'OPEN') {
@@ -5988,8 +6042,8 @@
                 taskStatuses[taskId] = 'DONE';
                 saveData();
 
-                // 完了数をカウント（DONEのみ、NOT_APPLICABLEは除外）
-                const doneCount = Object.values(taskStatuses).filter(s => s === 'DONE').length;
+                // 完了数をカウント（DONE + AUTO_DONE、NOT_APPLICABLEは除外）
+                const doneCount = Object.values(taskStatuses).filter(s => s === 'DONE' || s === 'AUTO_DONE').length;
 
                 // トースト通知
                 let message = '';
@@ -6003,7 +6057,7 @@
                 });
                 const phaseAllDone = phaseDisplayTasks.length > 0 && phaseDisplayTasks.every(t => {
                     const status = taskStatuses[t.id] || determineTaskStatus(t);
-                    return status === 'DONE';
+                    return status === 'DONE' || status === 'AUTO_DONE';
                 });
 
                 // 全タスク完了チェック
@@ -6013,7 +6067,7 @@
                 });
                 const allTasksDone = allDisplayTasks.length > 0 && allDisplayTasks.every(t => {
                     const status = taskStatuses[t.id] || determineTaskStatus(t);
-                    return status === 'DONE';
+                    return status === 'DONE' || status === 'AUTO_DONE';
                 });
 
                 if (allTasksDone) {
@@ -6117,7 +6171,7 @@
         }
 
         function regenerateAllTaskStatuses() {
-            // 全タスクのステータスを再評価（DONEは維持）
+            // 全タスクのステータスを再評価（DONEは維持、AUTO_DONEは再評価）
             tasks.forEach(task => {
                 if (taskStatuses[task.id] !== 'DONE') {
                     taskStatuses[task.id] = determineTaskStatus(task);
@@ -6226,10 +6280,11 @@
         }
 
         function showTaskDetail(taskId) {
-            // ガイド画面のスクロール位置を保存
-            const guideScreen = document.getElementById('screen-guide');
-            if (guideScreen) {
-                window._guideScrollTop = guideScreen.scrollTop;
+            // 現在アクティブな画面を記憶し、スクロール位置を保存
+            const activeScreen = document.querySelector('.screen.active');
+            if (activeScreen) {
+                detailReturnScreen = activeScreen.id;
+                savedScrollPosition = window.scrollY;
             }
 
             currentTaskId = taskId;
@@ -6248,6 +6303,9 @@
             let statusText = 'やること';
 
             if (status === 'DONE') {
+                statusBadgeClass = 'done';
+                statusText = '完了';
+            } else if (status === 'AUTO_DONE') {
                 statusBadgeClass = 'done';
                 statusText = '完了';
             } else if (status === 'NEED_CONFIRM') {
@@ -6281,6 +6339,15 @@
                 <div class="detail-task-title">${markGlossaryTerms(task.title)}</div>
                 <div class="detail-status-badge ${statusBadgeClass}">${statusText}</div>
             </div>`;
+
+            if (status === 'AUTO_DONE') {
+                // AUTO_DONEタスク用の取消リンク付き通知
+                const autoDoneQuestionId = getAutoDoneQuestionId(task);
+                html += `<div style="background: #f0f7f0; border-radius: 10px; padding: 12px 16px; margin: 0 0 16px 0; font-size: 13px; color: #4a7c59; line-height: 1.6;">
+                    質問の回答に基づき完了しました。
+                    ${autoDoneQuestionId ? `<span style="color: var(--accent); cursor: pointer; text-decoration: underline;" onclick="event.stopPropagation(); openAutoDoneQuestion('${task.id}', '${autoDoneQuestionId}')">回答を変更する</span>` : ''}
+                </div>`;
+            }
 
             if (detail) {
                 // 届出先・届出場所（destination が存在する場合のみ表示）
@@ -6413,7 +6480,18 @@
             // 既存のイベントリスナーを削除
             completeBtn.onclick = null;
 
-            if (status === 'DONE') {
+            if (status === 'AUTO_DONE') {
+                completeBtn.textContent = '質問の回答に基づき完了 ✓';
+                completeBtn.classList.add('done');
+                completeBtn.disabled = false;
+                // AUTO_DONE状態の場合：回答変更画面へ遷移
+                completeBtn.onclick = function() {
+                    const autoDoneQuestionId = getAutoDoneQuestionId(task);
+                    if (autoDoneQuestionId) {
+                        openAutoDoneQuestion(taskId, autoDoneQuestionId);
+                    }
+                };
+            } else if (status === 'DONE') {
                 completeBtn.textContent = '完了済み ✓';
                 completeBtn.classList.add('done');
                 completeBtn.disabled = false;
@@ -6469,9 +6547,9 @@
                 const currentStatus = taskStatuses[currentTaskId] || determineTaskStatus(tasks.find(t => t.id === currentTaskId));
                 toggleTaskStatus(currentTaskId);
 
-                // DONE状態の場合はモーダルが表示されるため、画面遷移しない
+                // DONE/AUTO_DONE状態の場合はモーダル/回答変更が表示されるため、画面遷移しない
                 // OPEN→DONEの場合のみ画面遷移
-                if (currentStatus !== 'DONE') {
+                if (currentStatus !== 'DONE' && currentStatus !== 'AUTO_DONE') {
                     showScreen('screen-guide');
                 }
             }
@@ -6642,6 +6720,11 @@
                 // notApplicableWhenから質問IDを抽出
                 if (task.notApplicableWhen) {
                     extractQuestionIdsFromCondition(task.notApplicableWhen, relatedQuestionIds);
+                }
+
+                // autoDoneWhenから質問IDを抽出
+                if (task.autoDoneWhen) {
+                    extractQuestionIdsFromCondition(task.autoDoneWhen, relatedQuestionIds);
                 }
             });
 
@@ -7078,11 +7161,11 @@
                     // タスクの状態を判定
                     const hasOverdue = tasksForDate.some(t => {
                         const status = taskStatuses[t.id] || determineTaskStatus(t);
-                        return status !== 'DONE' && date < new Date();
+                        return status !== 'DONE' && status !== 'AUTO_DONE' && date < new Date();
                     });
                     const allDone = tasksForDate.every(t => {
                         const status = taskStatuses[t.id] || determineTaskStatus(t);
-                        return status === 'DONE';
+                        return status === 'DONE' || status === 'AUTO_DONE';
                     });
 
                     // ドット数を決定
@@ -7174,7 +7257,7 @@
 
             const overdueTasks = tasks.filter(task => {
                 const status = taskStatuses[task.id] || determineTaskStatus(task);
-                if (status === 'DONE' || status === 'NOT_APPLICABLE') return false;
+                if (status === 'DONE' || status === 'AUTO_DONE' || status === 'NOT_APPLICABLE') return false;
 
                 const deadline = getTaskDeadline(task, death);
                 if (!deadline) return false;
@@ -7210,7 +7293,7 @@
 
                 const overdueTasks = tasks.filter(task => {
                     const status = taskStatuses[task.id] || determineTaskStatus(task);
-                    if (status === 'DONE' || status === 'NOT_APPLICABLE') return false;
+                    if (status === 'DONE' || status === 'AUTO_DONE' || status === 'NOT_APPLICABLE') return false;
 
                     const deadline = getTaskDeadline(task, death);
                     if (!deadline) return false;
@@ -7459,7 +7542,7 @@
                 const status = taskStatuses[task.id] || determineTaskStatus(task);
                 const entry = { s: status };
 
-                if (status !== 'DONE' && status !== 'NOT_APPLICABLE') {
+                if (status !== 'DONE' && status !== 'AUTO_DONE' && status !== 'NOT_APPLICABLE') {
                     const dst = getTaskDestination(task.id);
                     if (dst) entry.dst = dst;
                 }
@@ -7468,7 +7551,7 @@
 
                 if (status !== 'NOT_APPLICABLE') {
                     applicable++;
-                    if (status === 'DONE') completed++;
+                    if (status === 'DONE' || status === 'AUTO_DONE') completed++;
                 }
             });
 
@@ -7670,7 +7753,7 @@
                 const visibleTasks = phaseTasksWithStatus.filter(t => t.status !== 'NOT_APPLICABLE');
                 if (visibleTasks.length === 0) return;
 
-                const doneInPhase = visibleTasks.filter(t => t.status === 'DONE').length;
+                const doneInPhase = visibleTasks.filter(t => t.status === 'DONE' || t.status === 'AUTO_DONE').length;
                 const totalInPhase = visibleTasks.length;
                 const phaseComplete = doneInPhase === totalInPhase;
 
@@ -7717,7 +7800,7 @@
                 `;
 
                 visibleTasks.forEach(t => {
-                    const isDone = t.status === 'DONE';
+                    const isDone = t.status === 'DONE' || t.status === 'AUTO_DONE';
                     const isBlocked = t.status === 'BLOCKED';
                     const taskRow = document.createElement('div');
 
@@ -7846,11 +7929,11 @@
 
             if (url.length <= 2000) return url;
 
-            // Phase 3: DONE と NOT_APPLICABLE だけ保持
+            // Phase 3: DONE, AUTO_DONE と NOT_APPLICABLE だけ保持
             const minimalData = { n: fullData.n, d: fullData.d, t: {}, c: fullData.c, a: fullData.a };
             Object.keys(fullData.t).forEach(id => {
                 const s = fullData.t[id].s;
-                if (s === 'DONE' || s === 'NOT_APPLICABLE') {
+                if (s === 'DONE' || s === 'AUTO_DONE' || s === 'NOT_APPLICABLE') {
                     minimalData.t[id] = { s: s };
                 }
             });
