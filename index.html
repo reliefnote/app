@@ -1546,71 +1546,229 @@
             color: var(--text-tertiary);
         }
 
-        /* シンプルなステップリスト（アコーディオンUI用） */
-        .detail-steps-simple {
-            list-style: none;
-            padding: 0;
-            margin: 0 0 24px 0;
+        /* ステップセクション全体 */
+        .steps-section {
+            margin-bottom: 24px;
         }
 
-        .detail-step-simple {
+        .steps-section-header {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        /* 横プログレスバー */
+        .steps-progress {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            margin-bottom: 6px;
+            padding: 0 4px;
+        }
+
+        .steps-progress-segment {
+            flex: 1;
+            height: 3px;
+            background: var(--border-light);
+            border-radius: 1.5px;
+            transition: background 0.3s ease;
+        }
+
+        .steps-progress-segment.completed {
+            background: var(--accent);
+        }
+
+        .steps-progress-segment + .steps-progress-segment {
+            margin-left: 3px;
+        }
+
+        .steps-progress-text {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            margin-bottom: 16px;
+        }
+
+        /* ステップリスト */
+        .steps-list {
+            position: relative;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* 縦ライン */
+        .step-item {
+            position: relative;
+            padding-left: 36px;
+            padding-bottom: 0;
+        }
+
+        .step-item:not(:last-child)::before {
+            content: '';
+            position: absolute;
+            left: 13px;
+            top: 28px;
+            bottom: 0;
+            width: 2px;
+            background: var(--border-light);
+            transition: background 0.3s ease;
+        }
+
+        .step-item.completed:not(:last-child)::before {
+            background: var(--accent);
+        }
+
+        /* ステップ番号（丸バッジ） */
+        .step-indicator {
+            position: absolute;
+            left: 0;
+            top: 2px;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .step-item:not(.completed) .step-indicator {
+            background: var(--bg-primary);
+            border: 2px solid var(--border);
+            color: var(--text-tertiary);
+        }
+
+        .step-item.completed .step-indicator {
+            background: var(--accent);
+            border: 2px solid var(--accent);
+            color: #ffffff;
+        }
+
+        .step-item.completed .step-indicator::after {
+            content: '';
+            width: 6px;
+            height: 10px;
+            border: solid #ffffff;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+            margin-top: -2px;
+        }
+
+        .step-item.completed .step-number-text {
+            display: none;
+        }
+
+        /* ステップコンテンツ行 */
+        .step-content {
             display: flex;
             align-items: flex-start;
-            gap: 8px;
-            margin-bottom: 12px;
+            justify-content: space-between;
+            padding: 6px 0 12px;
+            cursor: pointer;
+            min-height: 40px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .step-content:active {
+            opacity: 0.7;
+        }
+
+        .step-item.no-detail .step-content {
+            cursor: default;
+        }
+
+        .step-item.no-detail .step-content:active {
+            opacity: 1;
+        }
+
+        /* ステップテキスト */
+        .step-text {
+            flex: 1;
             font-size: 14px;
             line-height: 1.6;
             color: var(--text-primary);
+            transition: color 0.2s ease;
         }
 
-        .detail-step-simple:last-child {
-            margin-bottom: 0;
-        }
-
-        .detail-step-simple-number {
-            font-weight: 600;
-            color: var(--accent);
-            flex-shrink: 0;
-        }
-
-        .detail-step-simple-text {
-            flex: 1;
-        }
-
-        .step-checkbox {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            border: 2px solid var(--border-light);
-            flex-shrink: 0;
-            cursor: pointer;
-            margin-top: 2px;
-            position: relative;
-            background: white;
-            transition: background 0.15s, border-color 0.15s;
-        }
-        .step-checkbox:checked {
-            background: var(--accent);
-            border-color: var(--accent);
-        }
-        .step-checkbox:checked::after {
-            content: '✓';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            font-size: 13px;
-            font-weight: 600;
-            line-height: 1;
-        }
-
-        .detail-steps-progress {
-            font-size: 12px;
+        .step-item.completed .step-text {
             color: var(--text-tertiary);
-            margin-bottom: 8px;
+        }
+
+        /* 展開アイコン */
+        .step-expand-icon {
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: var(--text-tertiary);
+            transition: transform 0.2s ease;
+            margin-left: 8px;
+            margin-top: 2px;
+        }
+
+        .step-item.expanded .step-expand-icon {
+            transform: rotate(180deg);
+        }
+
+        .step-item.no-detail .step-expand-icon {
+            display: none;
+        }
+
+        /* 補足テキスト（展開部分） */
+        .step-detail {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.25s ease, padding 0.25s ease;
+            padding: 0;
+        }
+
+        .step-item.expanded .step-detail {
+            max-height: 500px;
+            padding: 0 0 12px 0;
+        }
+
+        .step-detail-inner {
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            padding: 12px 14px;
+            font-size: 13px;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            border-left: 3px solid var(--accent-light);
+            overflow-wrap: break-word;
+        }
+
+        .step-detail-inner br + br {
+            display: none;
+        }
+
+        .step-detail-important {
+            font-weight: 600;
+            color: var(--warning);
+        }
+
+        /* チェックボックスとしてのタップ領域 */
+        .step-check-area {
+            position: absolute;
+            left: -4px;
+            top: -4px;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            z-index: 1;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .step-check-area:active + .step-indicator {
+            transform: scale(0.9);
         }
 
         /* ステップリストとアコーディオンの区切り線 */
@@ -4703,6 +4861,234 @@
   }
 };
 
+// ステップ2層データ（steps_short: 常時表示, steps_detail: タップで展開）
+const taskStepsData = {
+  "RN-H24-01": {
+    steps_short: ["医師から「死亡診断書」を受け取る","氏名・死亡日時・場所・医師署名を確認","誤りがあればその場で訂正を依頼","クリアファイルに入れて保管"],
+    steps_detail: ["通常は医師から渡されます。渡されない場合は看護師に「死亡診断書をいただけますか」と声をかけてください。","漢字の間違い、日時のズレがないか目で確認してください。病院を離れた後だと修正に時間がかかります。","—","折り曲げ・水濡れで使えなくなることがあります。すべての手続きの出発点になる書類です。"]
+  },
+  "RN-H24-02": {
+    steps_short: ["A3サイズのまま5部以上コピーする（10部あると安心）","文字・押印が鮮明か確認","スマホでも表裏を撮影しておく","原本とコピーを別々の場所に保管"],
+    steps_detail: ["コンビニのマルチコピー機、自宅プリンター、葬儀社のコピー機が使えます。","医師の署名・押印が読み取れることを必ず確認してください。","正式にはコピーが必要ですが、内容確認のとき写真があると便利です。","【重要】役場に死亡届を出すと原本は回収されます。必ず届出前にコピーと撮影を済ませてください。"]
+  },
+  "RN-H24-03": {
+    steps_short: ["葬儀社が決まっている→連絡して搬送依頼","決まっていない→病院提携の搬送業者に依頼","安置先を決める（自宅 or 安置施設）","搬送時に死亡診断書を携行"],
+    steps_detail: ["葬儀社に電話して「病院から遺体の搬送をお願いしたい」と伝えてください。","看護師に「搬送業者を紹介してもらえますか」と聞いてください。搬送を頼んだ葬儀社に葬儀を依頼する義務はありません。","自宅安置の場合はドライアイスの手配が必要です。葬儀社が届けてくれます。","搬送中に提示を求められる場合があります。"]
+  },
+  "RN-H24-04": {
+    steps_short: ["故人の自宅で通帳・印鑑・保険証券・年金手帳等を探す","見つけたものをスマホで撮影してリスト化","1か所にまとめて鍵のかかる場所に保管","保管場所を家族に共有"],
+    steps_detail: ["探す場所の目安：タンスの引き出し、仏壇周り、金庫、書斎の机、寝室。探すもの：通帳・カード・届出印・保険証券・年金手帳/証書・健康保険証・介護保険証・マイナンバーカード・免許証・権利証・固定資産税通知書・車検証。遺言書が見つかっても絶対に開封しないでください。","通帳は口座番号のページ、保険証券は証券番号のページも撮影しておくと後で役立ちます。","—","LINEやメモで「○○の□□に保管した」と伝えておくと安心です。見つからないものがあっても再発行できるので焦らなくてOKです。"]
+  },
+  "RN-H24-05": {
+    steps_short: ["全窓・全ドアの施錠を確認","ガスの元栓を閉める","冬季は水道の水抜きをする（不明なら役場に相談）","不要な電気機器のコンセントを抜く","郵便受けに鍵をかける"],
+    steps_detail: ["裏口・勝手口・2階の窓も忘れずにチェックしてください。","コンロの元栓だけでなく、ガスメーター付近の元栓も閉めてください。","冬季（11〜3月）に空き家になる場合は凍結リスクがあります。北竜町役場（0164-34-2111）に「水抜きの方法を教えてほしい」と相談してください。","冷蔵庫（中身の処分がまだの場合）とスマホ充電器は残してください。","同居の場合は故人の部屋の窓の施錠確認だけでOK。遠方で行けない場合は親族・大家に依頼してください。"]
+  },
+  "RN-H24-06": {
+    steps_short: ["家族で話し合い喪主を決める","一般的な順：配偶者→長男→長女→近い親族","喪主と費用負担者（施主）は別でもOK"],
+    steps_detail: ["法律上の決まりはありません。","—","「喪主はお母さん、費用は子どもたちで分担」も一般的です。決まったら家族全員に共有してください。"]
+  },
+  "RN-H24-11": {
+    steps_short: ["故人のスマホ・PC・タブレットを探す","充電器に接続して電源を維持する","パスコードの心当たりをメモする","リセット・SIMカード抜き取りは絶対にしない"],
+    steps_detail: ["枕元・カバン・上着のポケット・充電場所を確認してください。","充電器が見つからなければ家電量販店やコンビニで購入してください。iPhone→Lightning or USB-C、Android→USB-Cが主流。","よく使われるもの：誕生日、電話番号の下4桁、結婚記念日。今解除する必要はありません。","パスコードを10回間違えるとデータが消える機種があります。SMS二段階認証を受信できる状態を保つことが最優先です。"]
+  },
+  "RN-D7-01": {
+    steps_short: ["互助会加入あり→加入先に連絡","未加入→2〜3社に概算見積もりを依頼","見積もり内容を比較する","1社に決めて正式に依頼する"],
+    steps_detail: ["会員証の有無、通帳の毎月2,000〜5,000円の引落しで確認できます。","電話で「家族が亡くなったので葬儀の相談をしたいのですが」と伝えてください。","基本プランに含まれるもの・追加費用が発生しやすい項目を比較してください。","搬送を依頼した葬儀社にそのまま頼む義務はありません。別の社に頼んでも失礼にはあたりません。"]
+  },
+  "RN-D7-02": {
+    steps_short: ["事前に形式・予算上限・宗教/宗派を家族で決めておく","葬儀社と日程・式場・祭壇・返礼品・料理を決める","見積書を紙でもらう","合計金額と追加費用の可能性を確認する"],
+    steps_detail: ["形式：一般葬/家族葬/一日葬/直葬。予算は「○万円以内で」と伝えられるようにしておくと話がスムーズです。","葬儀社の担当者が1つずつ確認してくれます。","—","不明な項目は「これは何の費用ですか」「外せますか」と聞いて問題ありません。"]
+  },
+  "RN-D7-04": {
+    steps_short: ["連絡先リストを作る（親族→勤務先→友人→町内会）","故人名・死亡日・葬儀日時/場所を電話で伝える","家族葬の場合は「家族のみで行います」と明確に伝える","連絡した相手と内容を記録しておく"],
+    steps_detail: ["北竜町の場合、町内会長・隣組長への連絡も検討してください。","伝え方の例：「○○の△△（続柄）の□□です。○月○日に○○が亡くなりましたのでお知らせいたします。」","「誠に勝手ながら、故人の遺志により家族のみで執り行います」と丁重に伝えてください。","あとから「連絡したかどうか」がわからなくなることを防げます。"]
+  },
+  "RN-D7-05": {
+    steps_short: ["スマホ・アルバム・PCから写真を探す","ピントが合い正面向きのものを2〜3枚選ぶ","葬儀社にプリントまたはデータで渡す"],
+    steps_detail: ["家族のスマホにある写真（LINE送信済みのもの等）も候補になります。","集合写真の切り抜き・スマホ写真でもまったく問題ありません。","データの場合はLINE・メール・USBメモリで渡せます。引き伸ばし・加工は葬儀社が行います。"]
+  },
+  "RN-D7-06": {
+    steps_short: ["死亡診断書の原本と届出人の印鑑を用意する","北竜町役場1F住民課で「死亡届の提出をしたい」と伝える","窓口で必要事項を記入して提出する","「火葬許可証」を受け取りクリアファイルで保管"],
+    steps_detail: ["印鑑は認印OK（シャチハタ不可）。コピーがまだの場合は先にRN-H24-02を完了してください。","平日8:30-17:15。時間外・休日は当直窓口で届出のみ受付可能。","死亡届は死亡診断書と一体の用紙（左半分）です。記入箇所は職員が教えてくれます。","この許可証がないと火葬ができません。葬儀社が代行してくれることも多いです。「代行は可能ですか」と聞いてみてください。"]
+  },
+  "RN-D7-07": {
+    steps_short: ["火葬終了後、火葬場の窓口で「埋葬許可証」を受け取る","記載内容を確認する","骨壺の箱の中、またはクリアファイルで保管","保管場所を家族に伝える"],
+    steps_detail: ["火葬許可証に「火葬済」の印が押されたものが埋葬許可証です。新しい書類が発行されるわけではありません。","故人のお名前と日付が正しいか確認してください。","納骨時に墓地管理者やお寺に提出が必要です。","—"]
+  },
+  "RN-D7-10": {
+    steps_short: ["故人の通帳の直近6か月分を確認する","定期引落しをリスト化（引落し先・金額・頻度・連絡先）","「名義変更で継続」「解約」「別途手続き要」に分類","銀行届出（口座凍結）のタイミングを決める"],
+    steps_detail: ["未記帳ならATMで記帳してください。銀行に死亡届を出す前に行うこと。ネット銀行はスマホ/PCからログインして取引履歴を確認。","—","口座が凍結されると引落しが止まります。名義変更が先に必要なもの（電気・水道等）を把握しておいてください。","—"]
+  },
+  "RN-D7-11": {
+    steps_short: ["タスクリストで役場関連の手続きを確認する","役場に電話して必要な持ち物を確認する","基本セットを準備する","来庁日時を決める（午前中がおすすめ）"],
+    steps_detail: ["世帯主変更・保険証返却・葬祭費申請・介護保険届出・住民票の除票取得・マイナンバーカード返却等。","電話番号：0164-34-2111。「家族が亡くなったのでまとめて手続きしたい。持ち物を教えてほしい」と伝えてください。","基本の持ち物：死亡診断書コピー2部以上・届出人の本人確認書類と印鑑・故人の保険証/介護保険証/年金手帳/マイナンバーカード・届出人の振込先口座。","2〜3時間かかることを見込んでおいてください。"]
+  },
+  "RN-D7-12": {
+    steps_short: ["直属の上司に電話し忌引休暇を申請","忌引日数・弔慰金の有無を確認","団体生命保険の加入有無を確認","メンタルサポート（EAP等）の有無を確認"],
+    steps_detail: ["誰が亡くなったか・続柄・葬儀日程を伝えてください。","忌引日数の目安：配偶者5〜10日、親5〜7日、兄弟3日。弔慰金は総務に確認。","給与明細の控除欄に「団体保険料」があれば加入の可能性があります。","—"]
+  },
+  "RN-D7-13": {
+    steps_short: ["役場1F住民課で「住民票の除票がほしい」と伝える","請求書に記入し本人確認書類を提示","3〜5通まとめて取得する（1通300円程度）"],
+    steps_detail: ["平日8:30-17:15。","—","銀行届出・保険金請求・相続手続き等で多数必要になります。死亡届提出後1〜2営業日後から取得可能です。"]
+  },
+  "RN-D7-14": {
+    steps_short: ["勤務先に電話し「○○の遺族です」と総務を呼んでもらう","最終給与・死亡退職金について確認","社会保険の資格喪失手続き・保険証返却","源泉徴収票の発行を依頼","貸与品の返却・私物の引き取り日程を調整"],
+    steps_detail: ["「○○の遺族ですが、総務のご担当者をお願いします」で大丈夫です。","退職金の金額はメモしておいてください（相続税計算で使います）。","保険証は勤務先に返却。手続きは勤務先が行います。","準確定申告（RN-M4-01）で必要になります。発行時期も確認してください。","—"]
+  },
+  "RN-D14-01": {
+    steps_short: ["届出が必要か確認する（故人が世帯主＆残り2人以上→必要）","新しい世帯主を決める","役場1F住民課で「世帯主変更届を出したい」と伝える","国保加入者は保険証の世帯主変更も同時に行う"],
+    steps_detail: ["残り1人なら届出不要（自動的に世帯主になります）。","一般的には配偶者がなることが多いです。","持ち物：本人確認書類・印鑑。","保険証も持参してください。"]
+  },
+  "RN-D14-02": {
+    steps_short: ["保険の種類を確認（国保/後期高齢者→役場、社保→勤務先）","役場 or 勤務先に保険証を返却・届出する","高額療養費の未申請分がないか確認","扶養家族の保険切り替えが必要か確認"],
+    steps_detail: ["保険証の表面を見れば種類がわかります。","役場の場合「健康保険証の返却と資格喪失の届出をしたい」と伝えてください。持ち物：故人の保険証・届出人の本人確認書類と印鑑。紛失の場合はその旨伝えればOK。社保の場合は勤務先が手続きします。","→RN-D14-04へ。","→RN-D14-23へ。"]
+  },
+  "RN-D14-03": {
+    steps_short: ["国保/後期高齢者→役場で「葬祭費の申請をしたい」と伝える","社保→協会けんぽに「埋葬料支給申請書」を郵送","振込先口座を記入して提出（1〜2か月後に振込）"],
+    steps_detail: ["持ち物：故人の保険証・葬儀の領収書（または会葬礼状）・申請者の振込先口座・印鑑。支給額は自治体により3〜7万円程度。","社保は一律5万円。協会けんぽのWebサイトから申請書をダウンロードできます。","領収書がまだでも会葬礼状で申請可。時効2年。"]
+  },
+  "RN-D14-04": {
+    steps_short: ["故人の医療費領収書を集める","月ごとの自己負担額を確認（約8万円/月以上なら対象の可能性）","役場に電話して該当するか確認","該当する場合は申請書を提出"],
+    steps_detail: ["—","限度額は年齢・所得により異なります。","0164-34-2111に電話して「高額療養費の還付があるか確認したい」と伝えてください。自分で判断できなくても教えてもらえます。","持ち物：医療費領収書・振込先口座・印鑑。"]
+  },
+  "RN-D14-05": {
+    steps_short: ["役場で「介護保険の届出をしたい」と伝える","被保険者証を返却する","保険料の還付・高額介護サービス費の該当を確認","施設入居だった場合は施設にも連絡して精算"],
+    steps_detail: ["65歳以上（または40〜64歳で要介護認定あり）が対象。持ち物：被保険者証・負担割合証・届出人の本人確認書類と印鑑。","—","「保険料の還付はありますか」「高額介護サービス費の該当はありますか」と聞いてください。","「利用料の精算と退所手続きについてお聞きしたい」と伝えてください。"]
+  },
+  "RN-D14-06": {
+    steps_short: ["届出期限を確認する（厚生年金10日、国民年金14日）","年金事務所に電話して予約する","「死亡届と未支給年金の請求を同時にしたい」と伝える","受給権者死亡届を提出する"],
+    steps_detail: ["届出先：厚生年金→深川年金事務所（0164-23-1299）、国民年金のみ→役場でも可。","—","同時に手続きすると1回の来所で済みます。持ち物：故人の年金証書・死亡確認書類・届出人の本人確認書類。","郵送でも提出可。マイナンバー登録済みなら届出不要の場合あり（事務所に確認）。届出が遅れると年金が振り込まれ、返還手続きが面倒になります。"]
+  },
+  "RN-D14-07": {
+    steps_short: ["故人と生計同一だった遺族が請求できる（配偶者→子→父母の順）","年金停止届（RN-D14-06）と同時に手続きする","「未支給年金・保険給付請求書」を記入・提出"],
+    steps_detail: ["年金は後払いのため、死亡月までの未受給分（最大2か月分）が発生します。","持ち物：年金証書・戸籍謄本・生計同一証明（同居なら住民票、別居なら仕送り記録等）・振込先口座・印鑑。","審査後2〜3か月で振込されます。"]
+  },
+  "RN-D14-08": {
+    steps_short: ["遺族基礎年金：18歳以下の子がいる配偶者/子が対象","遺族厚生年金：故人に会社員歴があれば子なし配偶者でも対象","年金事務所に電話して受給資格を確認","該当する場合は書類を揃えて請求する"],
+    steps_detail: ["年額約80万円＋子の加算。","金額は加入期間と報酬による。年金事務所で試算してもらえます。","深川年金事務所（0164-23-1299）に「遺族年金を受け取れるか確認したい」と伝える。年金証書を手元に準備。","請求から支給開始まで3〜4か月。5年以内なら遡及受給可。年額80〜200万円以上になることもあるので、必ず確認してください。"]
+  },
+  "RN-D14-09": {
+    steps_short: ["自動引落しの整理（RN-D7-10）を先に完了する","口座がある銀行すべてに電話して届出方法を確認","各銀行の窓口で届出する","「相続手続きの必要書類リスト」をもらう"],
+    steps_detail: ["【重要】届出をすると口座が凍結されます。名義変更が必要な引落しを先に済ませてください。","「口座名義人が亡くなりました。届出をしたい」と伝えてください。","持ち物：届出人の本人確認書類・故人の通帳/カード・死亡確認書類。","当面の生活費が必要なら「相続預金の払戻し制度」で各口座150万円まで引出し可能です。口座の解約・払戻しは遺産分割確定後（RN-M10-05）に行います。"]
+  },
+  "RN-D14-10": {
+    steps_short: ["証券口座の有無を確認する（郵便物・通帳の配当金入金等）","各社のカスタマーセンターに電話して届出する","相続人名義の口座開設についても確認する"],
+    steps_detail: ["確定申告書控えやPCのブックマークも手がかりになります。","「口座名義人が亡くなりました。届出をしたい」と伝えてください。届出後は相続手続き完了まで売買不可。","どの証券会社かわからない場合は、証券保管振替機構（ほふり）に開示請求できます。"]
+  },
+  "RN-D14-11": {
+    steps_short: ["加入先を確認する（保険証券・通帳の引落し記録）","各社に電話して「死亡保険金の請求をしたい」と伝える","請求書類一式を取り寄せる","書類を揃えて記入・返送する"],
+    steps_detail: ["わからない場合は生命保険協会の「契約照会制度」で調べられます。","—","—","同封するもの：死亡診断書コピー・受取人の本人確認書類/戸籍謄本/振込先口座。5営業日〜1か月で振込。JA共済はJAきたそらち窓口で手続き可能。"]
+  },
+  "RN-D14-12": {
+    steps_short: ["故人名義の損害保険を確認する（保険証券・通帳）","各社/代理店に電話して名義変更 or 解約を依頼","自動車保険は等級引継ぎの可否を確認","火災保険は保険の空白期間を作らないよう注意"],
+    steps_detail: ["—","「契約者が亡くなりました。名義変更（または解約）をしたい」と伝えてください。","同居の家族なら引き継げることが多いです。自動車保険は特に急いでください。","先に名義変更してから、必要に応じて切り替えてください。"]
+  },
+  "RN-D14-15": {
+    steps_short: ["故人名義の公共料金を確認する","住み続ける→各事業者に電話して名義変更","空き家にする→解約（冬季の水抜きに注意）","水道は北竜町役場（0164-34-2111）に連絡"],
+    steps_detail: ["請求書・通帳の引落し記録で確認できます。","「契約者が亡くなりました。名義変更をお願いしたい」と伝えれば電話1本で完了することが多いです。","冬季（11〜3月）は水道管凍結リスクあり。必ず水抜きについて役場に相談してください。","ガスの閉栓は立ち会いが必要な場合があります。ガス会社に日程調整を依頼してください。"]
+  },
+  "RN-D14-16": {
+    steps_short: ["SMS二段階認証に使われているサービスがないか確認","通帳・カード明細からサブスクをリスト化","各サービスに連絡して解約する","携帯電話は最後に解約する","SNSは追悼アカウント設定 or 削除申請"],
+    steps_detail: ["【重要】携帯を先に解約すると、他のサービスにログインできなくなる恐れがあります。","—","ログインできない場合は各社カスタマーセンターに「契約者が亡くなったので解約したい」と電話。","キャリアに電話 or ショップで手続き。北竜町にショップなし、電話/オンライン推奨。死亡解約は違約金免除が多い。","LINEのバックアップは解約前に。"]
+  },
+  "RN-D14-17": {
+    steps_short: ["故人名義のカードをリストアップする","各社に電話して「名義人死亡による解約」を依頼","カード決済のサブスク・未払い残高・リボ残高を確認","カード本体をハサミで裁断"],
+    steps_detail: ["財布・郵便物・通帳・スマホ決済アプリを確認してください。","会員番号不明でも氏名・生年月日と死亡証明で手続きできます。","カード解約前にサブスクの切り替え先を確認しておいてください。","ICチップ部分と磁気ストライプ部分を切断してください。"]
+  },
+  "RN-D14-18": {
+    steps_short: ["町営住宅→役場に連絡（承継 or 退去を相談）","民間賃貸→管理会社/大家に連絡（名義変更 or 解約）","退去する場合は遺品整理の日程も調整"],
+    steps_detail: ["北竜町役場 0164-34-2111。同居家族なら承継（名義変更）できる場合があります。","解約は通常1か月前予告が必要。敷金精算も確認してください。","業者に依頼する場合は2〜3社から見積もりを取ることをおすすめします。"]
+  },
+  "RN-D14-19": {
+    steps_short: ["NHK→0120-151515に電話して解約 or 名義変更","固定電話→116番に電話して解約 or 名義変更","郵便転送→郵便局で転居届を提出（またはe転居でWeb手続き）"],
+    steps_detail: ["電話だけで完了します。一人暮らしでテレビを置かない→解約、同居家族がいる→名義変更。","番号を残したい場合は名義変更で引き継げます。","転送期間は1年間（延長可）。故人宛の重要書類（税金通知・保険案内等）を見逃さないために必ず行ってください。"]
+  },
+  "RN-D14-20": {
+    steps_short: ["故人の自宅を探す（仏壇・金庫・書斎・タンス）","法務局で保管の有無を確認する（800円）","公証役場の遺言検索システムで公正証書遺言を確認","自筆遺言が見つかったら絶対に開封せず家庭裁判所で検認"],
+    steps_detail: ["銀行の貸金庫も確認してください。","旭川地方法務局深川支局（0164-23-3269）で「遺言書保管事実証明書」を請求。","戸籍謄本と本人確認書類を持参して照会。","法務局保管・公正証書の場合は検認不要でそのまま使えます。遺言書がなければ遺産分割協議（RN-M3-11）へ。"]
+  },
+  "RN-D14-22": {
+    steps_short: ["返却前に12桁の番号をメモまたは撮影","役場1F住民課に持参して返却","見つからない場合はその旨伝えればOK"],
+    steps_detail: ["相続税申告等で番号が必要になる場合があります。","持ち物：故人のカード・届出人の本人確認書類。","罰則はありません。"]
+  },
+  "RN-D14-23": {
+    steps_short: ["14日以内に切り替えないと無保険状態になる","自分の勤務先の社保に加入→総務に連絡","国保に加入→役場に資格喪失証明書を持参","任意継続（最長2年）→国保と保険料を比較して決める"],
+    steps_detail: ["故人の社保の扶養に入っていた方全員が対象です。","お子さんも一緒に扶養に入れられます。","資格喪失証明書は故人の勤務先から入手。持ち物：資格喪失証明書・本人確認書類・印鑑。","任意継続は20日以内に申し込みが必要。保険料が全額自己負担になるため高くなることが多いです。切り替え前に病院にかかったら、後日新保険証を提示すれば差額返金されます。"]
+  },
+  "RN-D14-24": {
+    steps_short: ["配偶者死亡＆18歳以下の子がいる場合が対象","役場に電話して「児童扶養手当の申請を相談したい」と伝える","必要書類を揃えて窓口で申請","ひとり親医療費助成・就学援助・住宅手当も確認"],
+    steps_detail: ["全部支給で月額44,140円（子1人）。所得制限あり。","0164-34-2111。必要書類を案内してもらえます。","主な持ち物：戸籍謄本・住民票・所得証明書・振込先口座・印鑑。","児童手当の受給者変更も忘れずに。遺族年金と併給の場合は差額支給。"]
+  },
+  "RN-D49-01": {
+    steps_short: ["墓あり→菩提寺/管理者に連絡して日程調整","墓なし→永代供養/樹木葬/散骨/手元供養を検討","埋葬許可証・お布施・お花等を準備","参列者に日時・場所を連絡"],
+    steps_detail: ["四十九日法要に合わせることが多いですが、法律上の期限はありません。","決められない場合は自宅安置のままでも法律上問題ありません。急がなくて大丈夫です。","お布施の目安：3〜5万円。お寺に直接聞いても失礼ではありません。","会食の有無も伝えてください。"]
+  },
+  "RN-D49-02": {
+    steps_short: ["香典帳を整理する（氏名・住所・金額）","いただいた額の1/3〜1/2の品物を選ぶ","挨拶状を添えて忌明け後に届くよう発送"],
+    steps_detail: ["—","定番：お茶・海苔・タオル・カタログギフト等の「消え物」。葬儀社・百貨店・ギフトショップで注文できます。","当日返し済みの場合は、高額香典（1万円以上）の方への追加返しのみでOK。"]
+  },
+  "RN-M3-01": {
+    steps_short: ["プラスの財産とマイナスの財産を把握する","プラスが多い→何もしなくてOK（単純承認）","マイナスが多い/不明→相続放棄を検討","放棄する場合→家庭裁判所に申述書を提出","判断がつかない→期間伸長の申し立てができる"],
+    steps_detail: ["財産目録（RN-M3-07）と負債調査（RN-M3-02）を並行して進めてください。","—","【重要】期限は相続開始を知った日から3か月以内。超えると自動的にすべて相続。","旭川家庭裁判所深川支部（0164-23-3269）。必要物：申述書・故人の戸籍謄本・住民票の除票・申述人の戸籍謄本・収入印紙800円・切手。","期限前に家裁に申し立てれば3か月延長が認められることがあります。"]
+  },
+  "RN-M3-02": {
+    steps_short: ["自宅で借用書・ローン契約書・督促状を探す","通帳の引落し記録からローンを確認する","信用情報機関3か所に開示請求する","結果をリスト化する"],
+    steps_detail: ["—","「○○ファイナンス」「○○カード」等の記載があれば借入の可能性あり。","CIC（0570-666-414）・JICC（0570-021-717）・KSC（03-3214-5020）。各約1,000円、郵送可。「相続人として故人の信用情報の開示請求をしたい」と伝える。必要物：戸籍謄本・本人確認書類・死亡確認書類。","個人間の貸借・連帯保証は信用情報に載りません。契約書で確認が必要です。"]
+  },
+  "RN-M3-03": {
+    steps_short: ["故人の出生〜死亡までの連続した戸籍謄本を取得","相続人全員の現在の戸籍謄本を取得","相続人全員の印鑑証明書を2〜3通ずつ取得"],
+    steps_detail: ["本籍地は住民票の除票で確認。取得方法：本籍地の役場（直接/郵送）、または広域交付制度で最寄りの役場でも可（2024年3月〜）。手数料：1通450〜750円。","各相続人が自分の本籍地の役場で取得。","住所地の役場またはコンビニ（マイナンバーカードがあれば）で取得。揃ったら法定相続情報一覧図（RN-M3-05）を早めに取得すると以降の手続きがスムーズです。"]
+  },
+  "RN-M3-04": {
+    steps_short: ["借入先の金融機関に電話して届出する","団体信用生命保険（団信）の加入有無を確認","団信加入→保険金でローン完済","団信未加入→返済引継ぎ or 相続放棄を検討"],
+    steps_detail: ["「借入人が亡くなりました。届出をしたい」と伝えてください。届出が遅れると遅延損害金のリスクがあります。","これが最も重要な確認事項です。住宅ローンの場合ほぼ加入しています。","金融機関の案内に従い保険金を請求。残債全額が返済されます。","—"]
+  },
+  "RN-M3-05": {
+    steps_short: ["法務局Webの記載例に従い一覧図と申出書を作成","戸籍謄本一式・住民票の除票・本人確認書類と一緒に法務局に提出","1〜2週間後に認証文付きの写しを受け取る（何枚でも無料）"],
+    steps_detail: ["手書きでもPCでもOKです。","旭川地方法務局深川支局（0164-23-3269）。窓口持参でも郵送でも可。","5〜10枚取得しておくと安心。これがあれば銀行・法務局・税務署で毎回戸籍の束を出す必要がなくなります。"]
+  },
+  "RN-M3-07": {
+    steps_short: ["プラスの財産をリスト化（預貯金・不動産・有価証券・保険・自動車等）","マイナスの財産をリスト化（ローン・借入金・未払い税金・医療費等）","各財産の評価額を確認する（死亡日時点）","一覧表にまとめて相続人全員に共有"],
+    steps_detail: ["預金→銀行に残高証明書を請求。不動産→役場で固定資産評価証明書を取得。株式→証券会社に残高証明書を請求（評価は死亡日の終値）。","—","農地の評価は固定資産税評価額と相続税評価額が異なります。税理士に相談をおすすめします。","遺産分割協議（RN-M3-11）・相続税申告・相続放棄判断のすべての土台になります。"]
+  },
+  "RN-M3-10": {
+    steps_short: ["相続人全員で話し合い、窓口となる代表者を1人決める","他の相続人から委任状をもらう","LINEグループ等で連絡手段を決める"],
+    steps_detail: ["法律上の義務ではありませんが、実務上スムーズになります。代表者に遺産の分け方を決める権限はありません。","委任状のフォーマットは各機関の窓口でもらえます。","進捗を定期的に共有してください。"]
+  },
+  "RN-M3-11": {
+    steps_short: ["財産目録をもとに分け方を全員で話し合う","全員合意→遺産分割協議書を作成","全員が署名＋実印を押印＋印鑑証明書を添付","人数分の部数を作成する"],
+    steps_detail: ["法定相続分を参考にしつつ、合意があれば自由な割合で分けられます。","記載内容：被相続人の情報・全相続人の氏名・各財産の取得者（具体的に記載）。","認印では銀行等の手続きで受付不可。必ず実印で。遠方の相続人→郵送リレー方式（書留で追跡番号を共有）。","まとまらない場合→家庭裁判所の遺産分割調停（0164-23-3269）または弁護士に相談。"]
+  },
+  "RN-M3-12": {
+    steps_short: ["故人名義の農地（田・畑）があるか確認する","農業委員会に電話して届出書を入手","必要書類を添付して提出","耕作予定がない場合は農地バンク等の制度を相談"],
+    steps_detail: ["固定資産税通知書で確認できます。届出しないと10万円以下の過料。","北竜町役場内の農業委員会（0164-34-2111）。「農地所有者が亡くなりました。相続の届出をしたい」と伝えてください。","添付書類：登記事項証明書（または遺産分割協議書コピー）・届出者の本人確認書類。","農地中間管理機構への貸付等を案内してもらえます。売却には農業委員会の許可が必要。"]
+  },
+  "RN-M4-01": {
+    steps_short: ["準確定申告が必要か判断する","必要な場合→源泉徴収票・領収書等を集める","確定申告書と「付表」を作成し相続人全員が署名","深川税務署に提出する（郵送可）"],
+    steps_detail: ["年金400万円以下＆他の所得20万円以下→原則不要。事業/不動産所得あり→必要。判断できなければ深川税務署（0164-23-2191）に電話で確認。","所得計算期間は1月1日〜死亡日。","国税庁Web「確定申告書等作成コーナー」で作成可。","深川税務署：北海道深川市2条17番17号。不動産/事業所得がある場合は税理士への依頼を推奨。"]
+  },
+  "RN-M10-01": {
+    steps_short: ["基礎控除額を計算（3,000万＋600万×相続人数）","財産総額 ≦ 基礎控除→申告不要","財産総額 ＞ 基礎控除→申告が必要","税理士への依頼を検討する"],
+    steps_detail: ["例）相続人2人→4,200万円、3人→4,800万円。","—","特例で税額ゼロでも申告は必要。期限は死亡日から10か月以内。","費用目安：遺産総額の0.5〜1%。深川税務署（0164-23-2191）。北竜町の農地には「納税猶予の特例」がある場合あり。"]
+  },
+  "RN-M10-05": {
+    steps_short: ["各銀行から相続届出書を取り寄せる","必要書類を揃える","銀行窓口で手続きし払戻し先口座を指定"],
+    steps_detail: ["遺産分割協議（RN-M3-11）確定後に手続き可能。","主な必要物：銀行所定の届出書（全員の署名・実印）・遺産分割協議書・戸籍一式 or 法定相続情報一覧図・印鑑証明書・本人確認書類・通帳/カード。","処理に1〜3週間。法定相続情報一覧図があれば複数行を並行して進められます。"]
+  },
+  "RN-M10-07": {
+    steps_short: ["車検証で故人名義を確認","使い続ける→名義変更、手放す→廃車 or 売却","普通車→旭川運輸支局、軽→軽自動車検査協会","自動車保険の名義変更も忘れずに行う"],
+    steps_detail: ["所有者がディーラー/ローン会社の場合は先に所有権解除が必要。","売却する場合はまず名義変更が必要。","旭川運輸支局（050-5540-2003、平日8:45-16:00）。必要物：車検証・戸籍謄本・遺産分割協議書・印鑑証明書・車庫証明書。代行はディーラー/行政書士に依頼可（1〜3万円）。","→RN-D14-12。"]
+  },
+  "RN-M10-08": {
+    steps_short: ["深川警察署に持参して返却","記念に残したい場合は穴あけ処理を依頼","返却しない場合はICチップ部分をハサミで裁断"],
+    steps_detail: ["深川警察署（0164-22-0110、平日8:30-17:15）。返却は義務ではなく罰則もありません。","—","深川に行くついでに対応するのがおすすめです。"]
+  },
+  "RN-Y3-01": {
+    steps_short: ["固定資産評価証明書を役場で取得する","登記申請書を作成する（法務局Webに記載例あり）","必要書類を揃え、登録免許税（評価額×0.4%）を計算","法務局に申請する（窓口 or 郵送）","登記識別情報通知を受け取り安全に保管"],
+    steps_detail: ["約300円。","—","必要物：申請書・戸籍一式 or 法定相続情報一覧図・遺産分割協議書・印鑑証明書・新所有者の住民票・固定資産評価証明書。登録免許税は収入印紙で納付。","旭川地方法務局深川支局（0164-23-3269）。1〜2週間で完了。法務局の「登記手続案内」（予約制・無料）で書き方を教えてもらえます。","【重要】2024年4月から義務化。3年以内に未申請だと10万円以下の過料。登記識別情報は紛失すると再発行不可。農地も相続登記が必要（農業委員会届出とは別）。複雑な案件は司法書士に依頼（1件5〜10万円目安）。"]
+  }
+};
+
         // オンボーディングで表示する質問ID（7問）
         const onboardingQuestionIds = [
             'Q-REL-01',
@@ -6616,29 +7002,88 @@
                 // ── hero ブロック終了 → body ブロック開始 ──
                 html += `</div><div class="detail-body">`;
 
-                // やること（手順）- チェックボックス付きリスト
+                // やること（手順）- 新UI（プログレスバー + 縦ライン + 展開補足）
                 window._currentStepCount = 0;
-                if (chSteps && chSteps !== '—') {
+                const stepsData = taskStepsData[taskId];
+                if (stepsData && stepsData.steps_short && stepsData.steps_short.length > 0) {
+                    const stepShort = stepsData.steps_short;
+                    const stepDetail = stepsData.steps_detail || [];
+                    window._currentStepCount = stepShort.length;
+                    const stepProg = window._currentStepProgress || [];
+                    const checkedCount = stepProg.filter(Boolean).length;
+
+                    html += `<div class="steps-section">`;
+                    html += `<div class="steps-section-header">ステップ</div>`;
+
+                    // 横プログレスバー
+                    html += `<div class="steps-progress">`;
+                    for (let i = 0; i < stepShort.length; i++) {
+                        html += `<div class="steps-progress-segment${stepProg[i] ? ' completed' : ''}"></div>`;
+                    }
+                    html += `</div>`;
+                    html += `<div class="steps-progress-text">${checkedCount} / ${stepShort.length} 完了</div>`;
+
+                    // ステップリスト
+                    html += `<ul class="steps-list">`;
+                    stepShort.forEach((shortText, index) => {
+                        const isChecked = stepProg[index] === true;
+                        const rawDetail = stepDetail[index] || '—';
+                        const hasDetail = rawDetail && rawDetail !== '—';
+                        const completedClass = isChecked ? ' completed' : '';
+                        const noDetailClass = hasDetail ? '' : ' no-detail';
+                        let processedDetail = '';
+                        if (hasDetail) {
+                            processedDetail = renderDetailText(rawDetail);
+                        }
+                        const processedShort = markGlossaryTerms(applyFuneralText(shortText));
+
+                        html += `
+                            <li class="step-item${completedClass}${noDetailClass}" data-step-index="${index}">
+                                <div class="step-check-area" onclick="event.stopPropagation(); toggleStepCheck('${taskId}', ${index}, ${stepShort.length})"></div>
+                                <div class="step-indicator"><span class="step-number-text">${index + 1}</span></div>
+                                <div class="step-content"${hasDetail ? ` onclick="toggleStepDetail(this)"` : ''}>
+                                    <span class="step-text">${processedShort}</span>
+                                    <span class="step-expand-icon">▾</span>
+                                </div>
+                                ${hasDetail ? `<div class="step-detail"><div class="step-detail-inner">${processedDetail}</div></div>` : ''}
+                            </li>
+                        `;
+                    });
+                    html += `</ul>`;
+                    html += `</div>`;
+                    html += `<hr class="detail-divider">`;
+                } else if (chSteps && chSteps !== '—') {
+                    // フォールバック：旧形式のステップデータ
                     const stepsList = chSteps.split(/(?=[①②③④⑤⑥⑦⑧⑨⑩])/).filter(s => s.trim() !== '');
                     if (stepsList.length > 0) {
                         window._currentStepCount = stepsList.length;
                         const stepProg = window._currentStepProgress || [];
                         const checkedCount = stepProg.filter(Boolean).length;
-                        html += `<div class="detail-steps-progress">${checkedCount} / ${stepsList.length} ステップ完了</div>`;
-                        html += `<div class="detail-steps-simple">`;
+                        html += `<div class="steps-section">`;
+                        html += `<div class="steps-section-header">ステップ</div>`;
+                        html += `<div class="steps-progress">`;
+                        for (let i = 0; i < stepsList.length; i++) {
+                            html += `<div class="steps-progress-segment${stepProg[i] ? ' completed' : ''}"></div>`;
+                        }
+                        html += `</div>`;
+                        html += `<div class="steps-progress-text">${checkedCount} / ${stepsList.length} 完了</div>`;
+                        html += `<ul class="steps-list">`;
                         stepsList.forEach((step, index) => {
                             let stepText = step.replace(/^[①②③④⑤⑥⑦⑧⑨⑩]/, '').trim();
                             stepText = stepText.replace(/\/\s*$/, '').trim();
                             const isChecked = stepProg[index] === true;
                             html += `
-                                <div class="detail-step-simple" data-step-index="${index}">
-                                    <input type="checkbox" class="step-checkbox" ${isChecked ? 'checked' : ''} onclick="event.stopPropagation(); toggleStepCheck('${taskId}', ${index}, ${stepsList.length})">
-                                    <div class="detail-step-simple-text" style="${isChecked ? 'color: var(--text-tertiary)' : ''}">${markGlossaryTerms(stepText)}</div>
-                                </div>
+                                <li class="step-item${isChecked ? ' completed' : ''} no-detail" data-step-index="${index}">
+                                    <div class="step-check-area" onclick="event.stopPropagation(); toggleStepCheck('${taskId}', ${index}, ${stepsList.length})"></div>
+                                    <div class="step-indicator"><span class="step-number-text">${index + 1}</span></div>
+                                    <div class="step-content">
+                                        <span class="step-text">${markGlossaryTerms(stepText)}</span>
+                                    </div>
+                                </li>
                             `;
                         });
+                        html += `</ul>`;
                         html += `</div>`;
-                        // ステップリストとアコーディオンの区切り線
                         html += `<hr class="detail-divider">`;
                     }
                 }
@@ -6847,6 +7292,28 @@
             window._currentStepProgress = stepProgress[taskId];
         }
 
+        function formatDetailText(text) {
+            if (!text || text === '—') return text;
+            let result = text.replace(/。(?=[^\s\n])/g, '。\n');
+            result = result.replace(/([^\n])(?=【重要】)/g, '$1\n');
+            return result;
+        }
+
+        function renderDetailText(text) {
+            if (!text || text === '—') return '';
+            let formatted = formatDetailText(applyFuneralText(text));
+            formatted = markGlossaryTerms(formatted);
+            formatted = formatted.replace(/【重要】/g, '<span class="step-detail-important">【重要】</span>');
+            formatted = formatted.replace(/\n/g, '<br>');
+            return formatted;
+        }
+
+        function toggleStepDetail(contentEl) {
+            const stepItem = contentEl.closest('.step-item');
+            if (!stepItem || stepItem.classList.contains('no-detail')) return;
+            stepItem.classList.toggle('expanded');
+        }
+
         function toggleStepCheck(taskId, stepIndex, totalSteps) {
             const stepProgress = JSON.parse(localStorage.getItem('rn_step_progress') || '{}');
             if (!stepProgress[taskId]) {
@@ -6860,22 +7327,32 @@
             // グローバル変数も更新
             window._currentStepProgress = stepProgress[taskId];
 
-            // UI更新: テキスト色
-            const stepItem = document.querySelector(`.detail-step-simple[data-step-index="${stepIndex}"]`);
+            // UI更新: step-item の completed クラス
+            const stepItem = document.querySelector(`.step-item[data-step-index="${stepIndex}"]`);
             if (stepItem) {
-                const textEl = stepItem.querySelector('.detail-step-simple-text');
-                if (textEl) {
-                    textEl.style.color = stepProgress[taskId][stepIndex] ? 'var(--text-tertiary)' : '';
+                if (stepProgress[taskId][stepIndex]) {
+                    stepItem.classList.add('completed');
+                } else {
+                    stepItem.classList.remove('completed');
                 }
             }
 
+            // プログレスバーのセグメント更新
+            const segments = document.querySelectorAll('.steps-progress-segment');
+            segments.forEach((seg, i) => {
+                if (stepProgress[taskId][i]) {
+                    seg.classList.add('completed');
+                } else {
+                    seg.classList.remove('completed');
+                }
+            });
+
             // プログレステキスト更新
             const checkedCount = (stepProgress[taskId] || []).filter(Boolean).length;
-            const progressEl = document.querySelector('.detail-steps-progress');
+            const progressEl = document.querySelector('.steps-progress-text');
             if (progressEl) {
-                progressEl.textContent = `${checkedCount} / ${totalSteps} ステップ完了`;
+                progressEl.textContent = `${checkedCount} / ${totalSteps} 完了`;
             }
-
         }
 
         function toggleFAQ(element) {
