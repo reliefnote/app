@@ -1,0 +1,147 @@
+override_id,task_id,field_name,override_value
+LO-HOKURYU-001,RN-H24-03,address,{要確認：北竜町近隣の葬儀社}
+LO-HOKURYU-002,RN-H24-03,phone,{要確認：葬儀社の電話番号}
+LO-HOKURYU-003,RN-H24-05,steps_detail,1. 裏口・勝手口・2階の窓も忘れずにチェック 2. ガスメーター付近の元栓も閉める 3. 冬季（11〜3月）空き家→凍結リスクあり。北竜町役場（0164-34-2111）に水抜き相談 4. 冷蔵庫・スマホ充電器は残す 5. 同居→故人の部屋の窓の施錠確認のみ
+LO-HOKURYU-004,RN-H24-05,faq,Q.同居→故人の部屋の施錠確認 / Q.遠方→親族・大家に依頼 / Q.冬場の水抜き→役場（0164-34-2111）に相談
+LO-HOKURYU-005,RN-D7-01,address,{要確認：北竜町近隣の葬儀社}
+LO-HOKURYU-006,RN-D7-01,phone,{要確認：葬儀社の電話番号}
+LO-HOKURYU-007,RN-D7-02,address,{要確認：葬儀社}
+LO-HOKURYU-008,RN-D7-02,phone,{要確認：葬儀社の電話番号}
+LO-HOKURYU-009,RN-D7-04,steps_detail,1. 北竜町の場合、町内会長・隣組長への連絡も検討 2. 伝え方の例文あり 3. 家族葬の場合の断り方 4. 連絡済みかどうかの記録推奨
+LO-HOKURYU-010,RN-D7-06,action_summary,北竜町役場 1F 住民課に「死亡届」を提出し、「火葬許可証」を受け取る。届出は葬儀社が代行してくれる場合も多い。
+LO-HOKURYU-011,RN-D7-06,destination,北竜町役場
+LO-HOKURYU-012,RN-D7-06,steps_short,1. 死亡診断書の原本と届出人の印鑑を用意 2. 北竜町役場1F住民課で伝える 3. 必要事項を記入して提出 4. 火葬許可証を受け取りクリアファイルで保管
+LO-HOKURYU-013,RN-D7-06,steps_detail,1. 認印OK（シャチハタ不可） 2. 平日8:30-17:15、時間外は当直窓口で届出のみ可 3. 左半分が死亡届 4. 葬儀社代行の可能性あり
+LO-HOKURYU-014,RN-D7-06,office_hours,平日 8:30-17:15（時間外・休日は当直窓口で届出のみ可）
+LO-HOKURYU-015,RN-D7-06,address,北海道雨竜郡北竜町字和11-1
+LO-HOKURYU-016,RN-D7-06,phone,0164-34-2111
+LO-HOKURYU-017,RN-D7-07,address,{要確認：火葬場}
+LO-HOKURYU-018,RN-D7-11,action_summary,北竜町役場で1回の来庁でまとめて行える手続きを事前に確認し、必要書類を準備する。
+LO-HOKURYU-019,RN-D7-11,destination,北竜町役場
+LO-HOKURYU-020,RN-D7-11,steps_short,1. 役場関連タスクを確認 2. 役場に電話して持ち物確認 3. 基本セット準備 4. 来庁日時を決める（午前推奨）
+LO-HOKURYU-021,RN-D7-11,steps_detail,1. 世帯主変更・保険証返却・葬祭費申請・介護保険届出・住民票の除票取得・マイナンバーカード返却等 2. 電話：0164-34-2111 3. 基本持ち物一式 4. 2〜3時間見込み
+LO-HOKURYU-022,RN-D7-11,office_hours,平日 8:30-17:15
+LO-HOKURYU-023,RN-D7-11,address,北海道雨竜郡北竜町字和11-1
+LO-HOKURYU-024,RN-D7-11,phone,0164-34-2111
+LO-HOKURYU-025,RN-D7-11,faq,Q.おくやみ窓口→専用なくても住民課に事前連絡で案内可 / Q.代理人→委任状で可 / Q.1日で終わる→2〜3時間で主要手続き完了
+LO-HOKURYU-026,RN-D7-13,action_summary,北竜町役場で故人の「住民票の除票」を取得する。複数枚まとめて取得推奨。
+LO-HOKURYU-027,RN-D7-13,destination,北竜町役場 1F 住民課
+LO-HOKURYU-028,RN-D7-13,office_hours,平日 8:30-17:15
+LO-HOKURYU-029,RN-D7-13,address,北海道雨竜郡北竜町字和11-1
+LO-HOKURYU-030,RN-D7-13,phone,0164-34-2111
+LO-HOKURYU-031,RN-D14-01,action_summary,北竜町役場で世帯主変更届を提出する。故人が世帯主で残り2人以上の場合に必要。
+LO-HOKURYU-032,RN-D14-01,destination,北竜町役場 1F 住民課
+LO-HOKURYU-033,RN-D14-01,office_hours,平日 8:30-17:15
+LO-HOKURYU-034,RN-D14-01,address,北海道雨竜郡北竜町字和11-1
+LO-HOKURYU-035,RN-D14-01,phone,0164-34-2111
+LO-HOKURYU-036,RN-D14-02,destination,国保・後期高齢者：北竜町役場／社保：故人の勤務先
+LO-HOKURYU-037,RN-D14-02,office_hours,平日 8:30-17:15（役場）
+LO-HOKURYU-038,RN-D14-02,address,北海道雨竜郡北竜町字和11-1
+LO-HOKURYU-039,RN-D14-02,phone,0164-34-2111
+LO-HOKURYU-040,RN-D14-03,destination,国保・後期高齢者：北竜町役場／社保：協会けんぽ支部等
+LO-HOKURYU-041,RN-D14-03,office_hours,平日 8:30-17:15（役場）
+LO-HOKURYU-042,RN-D14-03,address,北海道雨竜郡北竜町字和11-1
+LO-HOKURYU-043,RN-D14-03,phone,0164-34-2111
+LO-HOKURYU-044,RN-D14-04,destination,国保・後期高齢者：北竜町役場／社保：協会けんぽ支部等
+LO-HOKURYU-045,RN-D14-04,office_hours,平日 8:30-17:15（役場）
+LO-HOKURYU-046,RN-D14-04,address,北海道雨竜郡北竜町字和11-1
+LO-HOKURYU-047,RN-D14-04,phone,0164-34-2111
+LO-HOKURYU-048,RN-D14-05,destination,北竜町役場
+LO-HOKURYU-049,RN-D14-05,office_hours,平日 8:30-17:15
+LO-HOKURYU-050,RN-D14-05,address,北海道雨竜郡北竜町字和11-1
+LO-HOKURYU-051,RN-D14-05,phone,0164-34-2111
+LO-HOKURYU-052,RN-D14-06,destination,年金事務所（深川年金事務所）／国民年金のみは北竜町役場でも可
+LO-HOKURYU-053,RN-D14-06,steps_detail,1. 届出先：厚生年金→深川年金事務所（0164-23-1299）、国民年金のみ→役場でも可 2.— 3. 同時手続きで1回で済む 4. 郵送可、マイナンバー登録済みなら届出不要の場合あり
+LO-HOKURYU-054,RN-D14-06,office_hours,平日 8:30-17:15
+LO-HOKURYU-055,RN-D14-06,address,深川年金事務所：北海道深川市2条18番36号
+LO-HOKURYU-056,RN-D14-06,phone,0164-23-1299／0570-05-1165
+LO-HOKURYU-057,RN-D14-07,destination,年金事務所（深川年金事務所）／国民年金は北竜町役場
+LO-HOKURYU-058,RN-D14-07,office_hours,平日 8:30-17:15
+LO-HOKURYU-059,RN-D14-07,address,深川年金事務所：北海道深川市2条18番36号
+LO-HOKURYU-060,RN-D14-07,phone,0164-23-1299／0570-05-1165
+LO-HOKURYU-061,RN-D14-08,destination,年金事務所（深川年金事務所）
+LO-HOKURYU-062,RN-D14-08,steps_detail,1. 年額約80万円＋子の加算 2. 金額は加入期間と報酬による 3. 深川年金事務所（0164-23-1299）に確認 4. 請求→支給開始まで3〜4か月、5年以内遡及可
+LO-HOKURYU-063,RN-D14-08,office_hours,平日 8:30-17:15
+LO-HOKURYU-064,RN-D14-08,address,深川年金事務所：北海道深川市2条18番36号
+LO-HOKURYU-065,RN-D14-08,phone,0164-23-1299／0570-05-1165
+LO-HOKURYU-066,RN-D14-09,address,{要確認：北空知信金、JAきたそらち、北洋銀行深川支店、ゆうちょ銀行等}
+LO-HOKURYU-067,RN-D14-09,phone,{要確認：各銀行の電話番号}
+LO-HOKURYU-068,RN-D14-15,destination,電力会社・ガス会社・北竜町水道担当
+LO-HOKURYU-069,RN-D14-15,steps_short,1. 故人名義の公共料金を確認 2. 住み続ける→名義変更 3. 空き家→解約（冬季の水抜きに注意） 4. 水道は北竜町役場（0164-34-2111）に連絡
+LO-HOKURYU-070,RN-D14-15,steps_detail,1. 請求書・通帳で確認 2. 名義変更は電話1本 3. 冬季は水道管凍結リスク→役場に相談 4. ガス閉栓は立ち会い要の場合あり
+LO-HOKURYU-071,RN-D14-15,phone,北竜町役場（水道）：0164-34-2111
+LO-HOKURYU-072,RN-D14-15,faq,Q.電話1本でできる？→名義変更は多くの場合可 / Q.冬に水道解約→凍結リスクあり、水抜き必須 / Q.ガス閉栓→ガス会社に電話で立ち会い日案内
+LO-HOKURYU-073,RN-D14-16,address,{要確認：深川市のキャリアショップ。北竜町にはショップなし。電話/オンライン推奨}
+LO-HOKURYU-074,RN-D14-16,steps_detail,1.【重要】携帯を先に解約すると他サービスにログイン不可 2.— 3. カスタマーセンターに電話 4. 北竜町にショップなし、電話/オンライン推奨。死亡解約は違約金免除多い 5. LINEバックアップは解約前に
+LO-HOKURYU-075,RN-D14-18,destination,民間：管理会社・大家／町営住宅：北竜町役場
+LO-HOKURYU-076,RN-D14-18,steps_detail,1. 北竜町役場 0164-34-2111。同居家族なら承継可の場合あり 2. 解約は通常1か月前予告 3. 遺品整理業者は2〜3社見積もり推奨
+LO-HOKURYU-077,RN-D14-18,office_hours,役場：平日 8:30-17:15／管理会社：営業時間内
+LO-HOKURYU-078,RN-D14-18,address,北海道雨竜郡北竜町字和11-1（町営住宅）
+LO-HOKURYU-079,RN-D14-18,phone,0164-34-2111（役場）
+LO-HOKURYU-080,RN-D14-18,faq,Q.町営住宅に住み続けたい→同居家族なら承継可能な場合あり / Q.退去タイミング→1か月前予告必要 / Q.遺品整理→近隣業者に見積もり
+LO-HOKURYU-081,RN-D14-20,steps_detail,1. 銀行の貸金庫も確認 2. 旭川地方法務局深川支局（0164-23-3269）で遺言書保管事実証明書を請求 3. 戸籍謄本と本人確認書類を持参 4. 法務局保管・公正証書は検認不要
+LO-HOKURYU-082,RN-D14-20,office_hours,平日 8:30-17:15
+LO-HOKURYU-083,RN-D14-20,address,旭川地方法務局深川支局：北海道深川市3条2番1号
+LO-HOKURYU-084,RN-D14-20,phone,0164-23-3269
+LO-HOKURYU-085,RN-D14-22,action_summary,故人のマイナンバーカード（または通知カード）を北竜町役場に返す。悪用防止のため。
+LO-HOKURYU-086,RN-D14-22,destination,北竜町役場 1F 住民課
+LO-HOKURYU-087,RN-D14-22,office_hours,平日 8:30-17:15
+LO-HOKURYU-088,RN-D14-22,address,北海道雨竜郡北竜町字和11-1
+LO-HOKURYU-089,RN-D14-22,phone,0164-34-2111
+LO-HOKURYU-090,RN-D14-23,destination,国保：北竜町役場／ご自身の勤務先
+LO-HOKURYU-091,RN-D14-23,office_hours,平日 8:30-17:15（役場）
+LO-HOKURYU-092,RN-D14-23,address,北海道雨竜郡北竜町字和11-1
+LO-HOKURYU-093,RN-D14-23,phone,0164-34-2111
+LO-HOKURYU-094,RN-D14-24,destination,北竜町役場
+LO-HOKURYU-095,RN-D14-24,steps_detail,"1. 全部支給で月額44,140円（子1人）。所得制限あり 2. 0164-34-2111 3. 持ち物：戸籍謄本・住民票・所得証明書・口座・印鑑 4. 児童手当の受給者変更も忘れずに。遺族年金と併給は差額支給"
+LO-HOKURYU-096,RN-D14-24,office_hours,平日 8:30-17:15
+LO-HOKURYU-097,RN-D14-24,address,北海道雨竜郡北竜町字和11-1
+LO-HOKURYU-098,RN-D14-24,phone,0164-34-2111
+LO-HOKURYU-099,RN-D49-01,address,{要確認：菩提寺・霊園}
+LO-HOKURYU-100,RN-D49-01,phone,{要確認：寺院の電話番号}
+LO-HOKURYU-101,RN-M3-01,destination,旭川家庭裁判所深川支部
+LO-HOKURYU-102,RN-M3-01,steps_detail,1. 財産目録・負債調査を並行 2.— 3.【重要】3か月以内。超えると自動相続 4. 旭川家裁深川支部（0164-23-3269）。必要物一式 5. 3か月延長申立て可
+LO-HOKURYU-103,RN-M3-01,office_hours,平日 8:30-17:00
+LO-HOKURYU-104,RN-M3-01,address,旭川家庭裁判所深川支部：北海道深川市3条2番1号
+LO-HOKURYU-105,RN-M3-01,phone,0164-23-3269
+LO-HOKURYU-106,RN-M3-03,address,北海道雨竜郡北竜町字和11-1（本籍が北竜町の場合）
+LO-HOKURYU-107,RN-M3-03,phone,0164-34-2111
+LO-HOKURYU-108,RN-M3-05,destination,旭川地方法務局深川支局
+LO-HOKURYU-109,RN-M3-05,steps_detail,1. 手書きでもPCでもOK 2. 深川支局（0164-23-3269）、窓口・郵送可 3. 5〜10枚取得推奨→銀行・法務局・税務署で毎回戸籍不要に
+LO-HOKURYU-110,RN-M3-05,office_hours,平日 8:30-17:15
+LO-HOKURYU-111,RN-M3-05,address,旭川地方法務局深川支局：北海道深川市3条2番1号
+LO-HOKURYU-112,RN-M3-05,phone,0164-23-3269
+LO-HOKURYU-113,RN-M3-12,action_summary,故人名義の農地について北竜町農業委員会に届出。届出怠ると10万円以下の過料。耕作不能なら貸付制度を案内可。
+LO-HOKURYU-114,RN-M3-12,destination,北竜町農業委員会（役場内）
+LO-HOKURYU-115,RN-M3-12,steps_detail,1. 固定資産税通知書で確認。届出しないと過料 2. 役場内農業委員会（0164-34-2111） 3. 添付：登記事項証明書等 4. 農地中間管理機構への貸付案内あり。売却には農業委員会許可必要
+LO-HOKURYU-116,RN-M3-12,office_hours,平日 8:30-17:15
+LO-HOKURYU-117,RN-M3-12,address,北海道雨竜郡北竜町字和11-1
+LO-HOKURYU-118,RN-M3-12,phone,0164-34-2111
+LO-HOKURYU-119,RN-M4-01,destination,深川税務署
+LO-HOKURYU-120,RN-M4-01,steps_detail,1. 年金400万円以下＆他の所得20万円以下→原則不要。判断不明→深川税務署（0164-23-2191）に電話 2. 所得計算は1/1〜死亡日 3. 国税庁Webで作成可 4. 深川税務署：北海道深川市2条17番17号
+LO-HOKURYU-121,RN-M4-01,office_hours,平日 8:30-17:00
+LO-HOKURYU-122,RN-M4-01,address,深川税務署：北海道深川市2条17番17号
+LO-HOKURYU-123,RN-M4-01,phone,0164-23-2191
+LO-HOKURYU-124,RN-M10-01,destination,深川税務署
+LO-HOKURYU-125,RN-M10-01,steps_detail,"1. 例）相続人2人→4,200万円、3人→4,800万円 2.— 3. 特例で税額0でも申告必要。期限：死亡日から10か月 4. 費用目安：遺産総額の0.5〜1%。北竜町の農地には「納税猶予の特例」あり"
+LO-HOKURYU-126,RN-M10-01,office_hours,平日 8:30-17:00
+LO-HOKURYU-127,RN-M10-01,address,深川税務署：北海道深川市2条17番17号
+LO-HOKURYU-128,RN-M10-01,phone,0164-23-2191
+LO-HOKURYU-129,RN-M10-05,address,{要確認：北空知信金、JAきたそらち、北洋銀行深川支店、ゆうちょ銀行等}
+LO-HOKURYU-130,RN-M10-05,phone,{要確認：各銀行の電話番号}
+LO-HOKURYU-131,RN-M10-07,destination,普通車：旭川運輸支局／軽：軽自動車検査協会
+LO-HOKURYU-132,RN-M10-07,steps_detail,1. ディーラー/ローン会社所有→所有権解除が先 2. 売却→まず名義変更 3. 旭川運輸支局（050-5540-2003）。必要物一式。代行1〜3万円 4. →RN-D14-12
+LO-HOKURYU-133,RN-M10-07,office_hours,平日 8:45-16:00（運輸支局）
+LO-HOKURYU-134,RN-M10-07,address,旭川運輸支局：北海道旭川市春光町10番地
+LO-HOKURYU-135,RN-M10-07,phone,050-5540-2003
+LO-HOKURYU-136,RN-M10-08,destination,最寄りの警察署（深川警察署）
+LO-HOKURYU-137,RN-M10-08,steps_detail,1. 深川警察署（0164-22-0110）。返却は義務ではなく罰則なし 2.— 3. 深川に行くついでに対応推奨
+LO-HOKURYU-138,RN-M10-08,office_hours,平日 8:30-17:15
+LO-HOKURYU-139,RN-M10-08,address,深川警察署：北海道深川市4条8番20号
+LO-HOKURYU-140,RN-M10-08,phone,0164-22-0110
+LO-HOKURYU-141,RN-Y3-01,action_summary,故人名義の土地・建物の相続登記を法務局に申請。固定資産評価証明書は北竜町役場で取得可能。
+LO-HOKURYU-142,RN-Y3-01,destination,旭川地方法務局深川支局
+LO-HOKURYU-143,RN-Y3-01,steps_detail,1. 約300円 2.— 3. 必要物一式。登録免許税は収入印紙 4. 深川支局（0164-23-3269）。1〜2週間で完了。登記手続案内（予約制・無料）あり 5.【重要】2024年4月義務化。3年以内未申請→10万円以下過料。農地も相続登記必要（農業委員会届出とは別）。複雑→司法書士（5〜10万円目安）
+LO-HOKURYU-144,RN-Y3-01,office_hours,平日 8:30-17:15
+LO-HOKURYU-145,RN-Y3-01,address,旭川地方法務局深川支局：北海道深川市3条2番1号
+LO-HOKURYU-146,RN-Y3-01,phone,0164-23-3269

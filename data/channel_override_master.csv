@@ -1,0 +1,129 @@
+override_id,target_type,target_id,field_name,override_type,override_value
+CH-FUN-001,ui_config,global,subtitle,REPLACE,遺族のためのGPS
+CH-FUN-002,ui_config,global,header_logo_text,HIDE,
+CH-FUN-003,question,Q-FUN-STATUS-01,prefill_answer,PREFILL,ARRANGING
+CH-FUN-004,question,Q-AGRI-01,prefill_answer,CLEAR,
+CH-FUN-010,task,RN-H24-03,address,HIDE,
+CH-FUN-011,task,RN-H24-03,phone,HIDE,
+CH-FUN-012,task,RN-H24-05,action_summary,REPLACE,故人の自宅の施錠・ガスの元栓・水回りを確認する。寒冷地の冬季は水道管凍結にも注意。
+CH-FUN-013,task,RN-H24-05,faq,REPLACE,Q.同居→故人の部屋の窓の施錠確認 / Q.遠方→親族・大家に依頼 / Q.冬場の水抜き→お住まいの市区町村役場に相談
+CH-FUN-020,task,RN-D7-01,address,HIDE,
+CH-FUN-021,task,RN-D7-01,phone,HIDE,
+CH-FUN-022,task,RN-D7-02,address,HIDE,
+CH-FUN-023,task,RN-D7-02,phone,HIDE,
+CH-FUN-024,task,RN-D7-06,action_summary,REPLACE,お住まいの市区町村役場に「死亡届」を提出し、「火葬許可証」を受け取る。届出は葬儀社が代行してくれる場合も多い。
+CH-FUN-025,task,RN-D7-06,destination,REPLACE,お住まいの市区町村役場
+CH-FUN-026,task,RN-D7-06,steps_short,REPLACE,1. 死亡診断書の原本と届出人の印鑑を用意 2. お住まいの市区町村役場で伝える 3. 必要事項を記入して提出 4. 火葬許可証を受け取りクリアファイルで保管
+CH-FUN-027,task,RN-D7-06,office_hours,REPLACE,平日 8:30-17:15（一般的な開庁時間）
+CH-FUN-028,task,RN-D7-06,address,HIDE,
+CH-FUN-029,task,RN-D7-06,phone,HIDE,
+CH-FUN-030,task,RN-D7-07,address,HIDE,
+CH-FUN-031,task,RN-D7-11,action_summary,REPLACE,1回の来庁でまとめて行える手続きを事前に確認し、必要書類を準備する。
+CH-FUN-032,task,RN-D7-11,destination,REPLACE,お住まいの市区町村役場
+CH-FUN-033,task,RN-D7-11,steps_short,REPLACE,1. 役場関連タスクを確認 2. お住まいの市区町村役場に電話して持ち物確認 3. 基本セット準備 4. 来庁日時を決める（午前推奨）
+CH-FUN-034,task,RN-D7-11,office_hours,REPLACE,平日 8:30-17:15（一般的な開庁時間）
+CH-FUN-035,task,RN-D7-11,address,HIDE,
+CH-FUN-036,task,RN-D7-11,phone,HIDE,
+CH-FUN-037,task,RN-D7-11,faq,REPLACE,Q.おくやみ窓口→事前電話で各課案内してもらえる役場が多い / Q.代理人→委任状で可 / Q.1日で終わる→2〜3時間で主要手続き完了
+CH-FUN-038,task,RN-D7-13,action_summary,REPLACE,故人の「住民票の除票」を取得する。複数枚まとめて取得推奨。
+CH-FUN-039,task,RN-D7-13,destination,REPLACE,お住まいの市区町村役場
+CH-FUN-040,task,RN-D7-13,office_hours,REPLACE,平日 8:30-17:15（一般的な開庁時間）
+CH-FUN-041,task,RN-D7-13,address,HIDE,
+CH-FUN-042,task,RN-D7-13,phone,HIDE,
+CH-FUN-050,task,RN-D14-01,action_summary,REPLACE,世帯主変更届を提出する。故人が世帯主で、残りの世帯員が2人以上の場合に必要。
+CH-FUN-051,task,RN-D14-01,destination,REPLACE,お住まいの市区町村役場
+CH-FUN-052,task,RN-D14-01,office_hours,REPLACE,平日 8:30-17:15（一般的な開庁時間）
+CH-FUN-053,task,RN-D14-01,address,HIDE,
+CH-FUN-054,task,RN-D14-01,phone,HIDE,
+CH-FUN-055,task,RN-D14-02,destination,REPLACE,国保・後期高齢者：お住まいの市区町村役場／社保：故人の勤務先
+CH-FUN-056,task,RN-D14-02,office_hours,REPLACE,平日 8:30-17:15（一般的な開庁時間）
+CH-FUN-057,task,RN-D14-02,address,HIDE,
+CH-FUN-058,task,RN-D14-02,phone,HIDE,
+CH-FUN-059,task,RN-D14-03,destination,REPLACE,国保・後期高齢者：お住まいの市区町村役場／社保：協会けんぽ支部等
+CH-FUN-060,task,RN-D14-03,office_hours,REPLACE,平日 8:30-17:15（一般的な開庁時間）
+CH-FUN-061,task,RN-D14-03,address,HIDE,
+CH-FUN-062,task,RN-D14-03,phone,HIDE,
+CH-FUN-063,task,RN-D14-04,destination,REPLACE,国保・後期高齢者：お住まいの市区町村役場／社保：協会けんぽ支部等
+CH-FUN-064,task,RN-D14-04,office_hours,REPLACE,平日 8:30-17:15（一般的な開庁時間）
+CH-FUN-065,task,RN-D14-04,address,HIDE,
+CH-FUN-066,task,RN-D14-04,phone,HIDE,
+CH-FUN-067,task,RN-D14-05,destination,REPLACE,お住まいの市区町村役場
+CH-FUN-068,task,RN-D14-05,office_hours,REPLACE,平日 8:30-17:15（一般的な開庁時間）
+CH-FUN-069,task,RN-D14-05,address,HIDE,
+CH-FUN-070,task,RN-D14-05,phone,HIDE,
+CH-FUN-071,task,RN-D14-06,destination,REPLACE,最寄りの年金事務所／国民年金のみはお住まいの市区町村役場でも可
+CH-FUN-072,task,RN-D14-06,steps_detail,REPLACE,1. 届出先：厚生年金→最寄りの年金事務所、国民年金のみ→役場でも可 2.— 3. 同時手続きで1回で済む 4. 郵送可、マイナンバー登録済みなら届出不要の場合あり
+CH-FUN-073,task,RN-D14-06,address,HIDE,
+CH-FUN-074,task,RN-D14-06,phone,REPLACE,0570-05-1165（ねんきんダイヤル）
+CH-FUN-075,task,RN-D14-07,destination,REPLACE,最寄りの年金事務所／国民年金はお住まいの市区町村役場
+CH-FUN-076,task,RN-D14-07,address,HIDE,
+CH-FUN-077,task,RN-D14-07,phone,REPLACE,0570-05-1165（ねんきんダイヤル）
+CH-FUN-078,task,RN-D14-08,destination,REPLACE,最寄りの年金事務所
+CH-FUN-079,task,RN-D14-08,steps_detail,REPLACE,1. 年額約80万円＋子の加算 2. 金額は加入期間と報酬による 3. 最寄りの年金事務所に確認 4. 請求→支給開始3〜4か月、5年以内遡及可
+CH-FUN-080,task,RN-D14-08,address,HIDE,
+CH-FUN-081,task,RN-D14-08,phone,REPLACE,0570-05-1165（ねんきんダイヤル）
+CH-FUN-082,task,RN-D14-09,address,HIDE,
+CH-FUN-083,task,RN-D14-09,phone,HIDE,
+CH-FUN-084,task,RN-D14-09,office_hours,REPLACE,平日 9:00-15:00（一般的な窓口時間）
+CH-FUN-085,task,RN-D14-15,destination,REPLACE,電力会社・ガス会社・お住まいの市区町村水道担当
+CH-FUN-086,task,RN-D14-15,steps_short,REPLACE,1. 故人名義の公共料金を確認 2. 住み続ける→名義変更 3. 空き家→解約（冬季の水抜き注意） 4. 水道→お住まいの市区町村に連絡
+CH-FUN-087,task,RN-D14-15,faq,REPLACE,Q.電話1本→多くの場合可 / Q.冬に水道解約→凍結リスクあり、寒冷地は水抜き必須 / Q.ガス閉栓→ガス会社に電話
+CH-FUN-088,task,RN-D14-16,address,HIDE,
+CH-FUN-089,task,RN-D14-18,destination,REPLACE,民間：管理会社・大家／公営住宅：お住まいの市区町村役場
+CH-FUN-090,task,RN-D14-18,office_hours,REPLACE,役場：平日 8:30-17:15（一般的な開庁時間）
+CH-FUN-091,task,RN-D14-18,address,HIDE,
+CH-FUN-092,task,RN-D14-18,phone,HIDE,
+CH-FUN-093,task,RN-D14-20,steps_detail,REPLACE,1. 銀行の貸金庫も確認 2. 最寄りの法務局で遺言書保管事実証明書を請求 3. 戸籍謄本と本人確認書類を持参 4. 法務局保管・公正証書は検認不要
+CH-FUN-094,task,RN-D14-22,action_summary,REPLACE,故人のマイナンバーカード（または通知カード）をお住まいの市区町村役場に返す。悪用防止のため。
+CH-FUN-095,task,RN-D14-22,destination,REPLACE,お住まいの市区町村役場
+CH-FUN-096,task,RN-D14-22,office_hours,REPLACE,平日 8:30-17:15（一般的な開庁時間）
+CH-FUN-097,task,RN-D14-22,address,HIDE,
+CH-FUN-098,task,RN-D14-22,phone,HIDE,
+CH-FUN-099,task,RN-D14-23,destination,REPLACE,国保：お住まいの市区町村役場／ご自身の勤務先
+CH-FUN-100,task,RN-D14-23,office_hours,REPLACE,平日 8:30-17:15（一般的な開庁時間）
+CH-FUN-101,task,RN-D14-23,address,HIDE,
+CH-FUN-102,task,RN-D14-23,phone,HIDE,
+CH-FUN-103,task,RN-D14-24,destination,REPLACE,お住まいの市区町村役場
+CH-FUN-104,task,RN-D14-24,office_hours,REPLACE,平日 8:30-17:15（一般的な開庁時間）
+CH-FUN-105,task,RN-D14-24,address,HIDE,
+CH-FUN-106,task,RN-D14-24,phone,HIDE,
+CH-FUN-110,task,RN-M3-01,destination,REPLACE,最寄りの家庭裁判所
+CH-FUN-111,task,RN-M3-01,steps_detail,REPLACE,1. 財産目録・負債調査を並行 2.— 3.【重要】3か月以内 4. 最寄りの家庭裁判所に申述。必要物一式 5. 3か月延長申立て可
+CH-FUN-112,task,RN-M3-01,address,HIDE,
+CH-FUN-113,task,RN-M3-01,phone,HIDE,
+CH-FUN-114,task,RN-M3-03,destination,REPLACE,故人の本籍地の市区町村役場／広域交付で最寄り役場も可
+CH-FUN-115,task,RN-M3-03,address,HIDE,
+CH-FUN-116,task,RN-M3-03,phone,HIDE,
+CH-FUN-117,task,RN-M3-05,destination,REPLACE,最寄りの法務局
+CH-FUN-118,task,RN-M3-05,steps_detail,REPLACE,1. 手書きでもPCでもOK 2. 最寄りの法務局。窓口・郵送可 3. 5〜10枚取得推奨
+CH-FUN-119,task,RN-M3-05,address,HIDE,
+CH-FUN-120,task,RN-M3-05,phone,HIDE,
+CH-FUN-121,task,RN-M3-12,action_summary,REPLACE,故人名義の農地について、お住まいの市区町村の農業委員会に届出。届出怠ると10万円以下の過料。耕作不能なら貸付制度の案内あり。
+CH-FUN-122,task,RN-M3-12,destination,REPLACE,お住まいの市区町村の農業委員会
+CH-FUN-123,task,RN-M3-12,address,HIDE,
+CH-FUN-124,task,RN-M3-12,phone,HIDE,
+CH-FUN-125,task,RN-M3-12,office_hours,REPLACE,平日 8:30-17:15（一般的な開庁時間）
+CH-FUN-126,task,RN-M4-01,destination,REPLACE,最寄りの税務署
+CH-FUN-127,task,RN-M4-01,steps_detail,REPLACE,1. 年金400万円以下＆他の所得20万円以下→原則不要。判断不明→最寄りの税務署に電話 2. 所得計算は1/1〜死亡日 3. 国税庁Webで作成可 4. 最寄りの税務署
+CH-FUN-128,task,RN-M4-01,address,HIDE,
+CH-FUN-129,task,RN-M4-01,phone,HIDE,
+CH-FUN-130,task,RN-M10-01,destination,REPLACE,最寄りの税務署
+CH-FUN-131,task,RN-M10-01,steps_detail,REPLACE,1. 基礎控除の計算例 2.— 3. 特例で税額0でも申告必要。期限10か月 4. 費用目安0.5〜1%。最寄りの税務署へ。農地に納税猶予の特例あり
+CH-FUN-132,task,RN-M10-01,address,HIDE,
+CH-FUN-133,task,RN-M10-01,phone,HIDE,
+CH-FUN-134,task,RN-M10-05,address,HIDE,
+CH-FUN-135,task,RN-M10-05,phone,HIDE,
+CH-FUN-136,task,RN-M10-05,office_hours,REPLACE,平日 9:00-15:00（一般的な窓口時間）
+CH-FUN-137,task,RN-M10-07,destination,REPLACE,普通車：最寄りの運輸支局／軽：軽自動車検査協会
+CH-FUN-138,task,RN-M10-07,steps_detail,REPLACE,1. ディーラー/ローン会社所有→所有権解除が先 2. 売却→まず名義変更 3. 最寄りの運輸支局。必要物一式。代行1〜3万円 4. →RN-D14-12
+CH-FUN-139,task,RN-M10-07,address,HIDE,
+CH-FUN-140,task,RN-M10-07,phone,HIDE,
+CH-FUN-141,task,RN-M10-08,destination,REPLACE,最寄りの警察署
+CH-FUN-142,task,RN-M10-08,steps_detail,REPLACE,1. 最寄りの警察署に持参して返却。義務ではなく罰則なし 2. 記念に残したい場合は穴あけ処理を依頼可 3. 返却しない場合はICチップをハサミで裁断して処分
+CH-FUN-143,task,RN-M10-08,address,HIDE,
+CH-FUN-144,task,RN-M10-08,phone,HIDE,
+CH-FUN-145,task,RN-Y3-01,action_summary,REPLACE,故人名義の土地・建物の相続登記を法務局に申請。固定資産評価証明書はお住まいの市区町村役場で取得可能。
+CH-FUN-146,task,RN-Y3-01,destination,REPLACE,最寄りの法務局
+CH-FUN-147,task,RN-Y3-01,steps_detail,REPLACE,1. 固定資産評価証明書を市区町村役場で取得 2. 登記申請書を作成（法務局Webに記載例あり） 3. 必要書類＋登録免許税（評価額×0.4%）を計算 4. 最寄りの法務局に申請（窓口 or 郵送） 5. 登記識別情報通知を受け取り安全に保管
+CH-FUN-148,task,RN-Y3-01,address,HIDE,
+CH-FUN-149,task,RN-Y3-01,phone,HIDE,
