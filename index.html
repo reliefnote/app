@@ -973,6 +973,58 @@
             transition: width 0.4s ease;
         }
 
+        /* 質問再アクセスボタン */
+        .guide-question-btn {
+            margin: 10px 16px 0;
+        }
+
+        .guide-question-btn-inner {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            background: #FFFFFF;
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            cursor: pointer;
+            transition: opacity 0.15s ease;
+        }
+
+        .guide-question-btn-inner:active {
+            opacity: 0.7;
+        }
+
+        .guide-question-btn-icon {
+            flex-shrink: 0;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+        }
+
+        .guide-question-btn-text {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .guide-question-btn-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .guide-question-btn-sub {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+
+        .guide-question-btn-arrow {
+            font-size: 20px;
+            color: var(--text-tertiary);
+            flex-shrink: 0;
+        }
+
         /* フェーズカード（全体を包む白カード） */
         .phase-card {
             background: #FFFFFF;
@@ -3574,7 +3626,7 @@
                 <div class="confirm-completion-content">
                     <div class="heading-lg" style="text-align: center; margin-bottom: 16px;">確認が完了しました</div>
                     <div class="body-sm" style="text-align: center; color: var(--text-secondary); margin-bottom: 40px;">回答内容はいつでも変更できます</div>
-                    <button class="btn-primary" onclick="showScreen('screen-home')">ホームへ戻る</button>
+                    <button class="btn-primary" onclick="returnFromConfirmCenter()">ホームへ戻る</button>
                 </div>
             </div>
         </div>
@@ -3647,36 +3699,39 @@
                     <div class="concierge-subtitle">手続きのことも、気持ちのことも、いつでもご相談ください。</div>
                 </div>
 
-                <!-- 担当者名 -->
-                <div style="display: flex; align-items: center; gap: 10px; margin: 16px 0 8px 0;">
-                    <div style="width: 36px; height: 36px; border-radius: 50%; background: var(--accent-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="12" cy="8" r="3" stroke="var(--text-secondary)" stroke-width="2.5" stroke-linecap="round"/>
-                            <path d="M6 20c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="var(--text-secondary)" stroke-width="2.5" stroke-linecap="round"/>
-                        </svg>
+                <!-- サポーターカード -->
+                <div style="background: #FFFFFF; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); padding: 20px; margin: 16px 0;">
+                    <!-- 担当者名 -->
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div style="width: 36px; height: 36px; border-radius: 50%; background: var(--accent-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="12" cy="8" r="3" stroke="var(--text-secondary)" stroke-width="2.5" stroke-linecap="round"/>
+                                <path d="M6 20c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="var(--text-secondary)" stroke-width="2.5" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <div style="font-size: 14px; color: var(--text-primary); font-weight: 500;">北林</div>
+                            <div style="font-size: 11px; color: var(--text-tertiary);">あなたの担当サポーター</div>
+                        </div>
                     </div>
-                    <div>
-                        <div style="font-size: 14px; color: var(--text-primary); font-weight: 500;">北林</div>
-                        <div style="font-size: 11px; color: var(--text-tertiary);">あなたの担当サポーター</div>
-                    </div>
-                </div>
 
-                <!-- エリア2: LINEで相談するボタン -->
-                <div class="concierge-line-button" onclick="openLineOA()">
-                    <div class="concierge-line-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
+                    <!-- LINEで相談するボタン -->
+                    <div class="concierge-line-button" onclick="openLineOA()" style="margin-top: 16px;">
+                        <div class="concierge-line-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="concierge-line-content">
+                            <div class="concierge-line-title">LINEで相談する</div>
+                            <div class="concierge-line-subtitle">トークでいつでも・返信は原則24時間以内</div>
+                        </div>
                     </div>
-                    <div class="concierge-line-content">
-                        <div class="concierge-line-title">LINEで相談する</div>
-                        <div class="concierge-line-subtitle">トークでいつでも・返信は原則24時間以内</div>
-                    </div>
-                </div>
 
-                <!-- 補足テキスト -->
-                <div class="concierge-line-note">
-                    専用チームが直接お返事します。お気軽にどうぞ。
+                    <!-- 補足テキスト -->
+                    <div style="margin-top: 12px; text-align: center; font-size: 13px; color: var(--text-secondary);">
+                        専用チームが直接お返事します。お気軽にどうぞ。
+                    </div>
                 </div>
 
                 <!-- エリア4: 相談例 -->
@@ -3942,7 +3997,7 @@ RN-D14-02,故人の健康保険証を返す【届出期限14日】,HEALTH,D14,RE
 RN-D14-03,葬祭費・埋葬料を申請する（約5万円）,HEALTH,D14,REVIEW,85,RN-D7-06,SINGLE,2,,制度ごとに請求期限あり（一般に2年）,3,CLAIM_WINDOW,HIGH
 RN-D14-04,高額な医療費が戻るか確認する,HEALTH,D14,REVIEW,70,RN-D7-06,SINGLE,2,,制度ごとに請求期限あり（一般に2年）,3,CLAIM_WINDOW,MEDIUM
 RN-D14-05,介護保険の届出と精算をする,HEALTH,D14,CONDITIONAL,70,,NONE,3,,自治体運用差あり。早め推奨,7,RECOMMENDED,MEDIUM
-RN-D14-06,故人の年金を止める【届出期限14日】,PENSION,D14,CONDITIONAL,90,RN-D7-06,SINGLE,2,10,厚生年金は10日以内、国民年金は14日以内が目安,3,LEGAL,HIGH
+RN-D14-06,故人の年金を止める【届出期限10〜14日】,PENSION,D14,CONDITIONAL,90,RN-D7-06,SINGLE,2,10,厚生年金は10日以内、国民年金は14日以内が目安,3,LEGAL,HIGH
 RN-D14-07,まだ届いていない年金を受け取る,PENSION,D14,CONDITIONAL,75,RN-D14-06,SINGLE,2,,未支給年金の請求期限は一般に5年,3,CLAIM_WINDOW,MEDIUM
 RN-D14-08,遺族年金をもらえるか確認する,PENSION,D14,CONDITIONAL,85,RN-D7-06,SINGLE,2,,遺族年金の請求期限は一般に5年。早期確認推奨,3,CLAIM_WINDOW,HIGH
 RN-D14-09,銀行に届け出る,FINANCE,D14,CONDITIONAL,88,RN-D7-06;RN-D7-10,AND,3,,,7,RECOMMENDED,HIGH
@@ -5414,9 +5469,8 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
             } else if (screenId === 'screen-settings') {
                 updateUserNameDisplay();
             } else if (screenId === 'screen-confirm') {
-                // 確認センターを表示
+                // 確認センター画面の初期表示のみ（startConfirmCenterは呼び出し元で実行済み）
                 document.getElementById('confirmQuestionArea').style.display = 'block';
-                startConfirmCenter();
             }
         }
 
@@ -5818,6 +5872,17 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
             return null;
         }
 
+        // タスク固有の期限日数を取得（年金タスクは年金種類に応じて変動）
+        function getTaskDueDays(task) {
+            if (task.id === 'RN-D14-06') {
+                // 厚生年金: 10日、国民年金: 14日、不明: 10日（安全側）
+                const penEmp = answers['Q-PEN-EMP-01'];
+                if (penEmp === 'NO') return 14; // 国民年金のみ
+                return 10; // 厚生年金加入者 or 不明 → 安全側
+            }
+            return null;
+        }
+
         // タスクの期限日を取得
         function getTaskDeadline(task, deathDate) {
             if (!task.phase || !deathDate) return null;
@@ -5833,8 +5898,10 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
             };
             const config = phaseConfig[task.phase];
             if (!config) return null;
+            const overrideDays = getTaskDueDays(task);
+            const days = overrideDays !== null ? overrideDays : config.days;
             const deadline = new Date(deathDate);
-            deadline.setDate(deadline.getDate() + config.days);
+            deadline.setDate(deadline.getDate() + days);
             return deadline;
         }
 
@@ -6355,6 +6422,27 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                     </div>
                 </div>
             `;
+
+            // 質問への再アクセスボタン（1問以上回答済みの場合のみ表示）
+            const answeredCount = questions.filter(q => {
+                const a = answers[q.id];
+                return a && (!Array.isArray(a) || a.length > 0);
+            }).length;
+            if (answeredCount > 0) {
+                const totalQuestions = questions.length;
+                html += `
+                    <div class="guide-question-btn" onclick="openAllQuestionsFromGuide()">
+                        <div class="guide-question-btn-inner">
+                            <span class="guide-question-btn-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect><path d="M9 12h6"></path><path d="M9 16h6"></path></svg></span>
+                            <div class="guide-question-btn-text">
+                                <span class="guide-question-btn-title">回答内容を確認・変更する</span>
+                                <span class="guide-question-btn-sub">${answeredCount} / ${totalQuestions} 問回答済み</span>
+                            </div>
+                            <span class="guide-question-btn-arrow">›</span>
+                        </div>
+                    </div>
+                `;
+            }
 
             // 各フェーズを描画
             phaseDataList.forEach((data) => {
@@ -7072,7 +7160,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
 
         // タスク詳細表示
         // 期限計算ヘルパー関数
-        function calculateDeadline(phase, deathDateStr) {
+        function calculateDeadline(phase, deathDateStr, overrideDays) {
             const phaseConfig = {
                 'H24': { days: 1, label: '死亡日の翌日までに行う手続きです' },  // 修正: 死亡日の翌日が期限
                 'D7': { days: 7, label: '死亡日から7日以内に届出が必要です' },
@@ -7145,7 +7233,8 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
             }
 
             const deadlineDate = new Date(deathDate);
-            deadlineDate.setDate(deadlineDate.getDate() + config.days);
+            const effectiveDays = overrideDays != null ? overrideDays : config.days;
+            deadlineDate.setDate(deadlineDate.getDate() + effectiveDays);
 
             const today = new Date();
             today.setHours(0, 0, 0, 0);
@@ -7230,7 +7319,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 // 期限に基づいてバッジを変更
                 const savedAnswers = JSON.parse(localStorage.getItem('answers') || '{}');
                 const deathDate = savedAnswers['Q-DOD-01'];
-                const deadlineInfo = calculateDeadline(task.phase, deathDate);
+                const deadlineInfo = calculateDeadline(task.phase, deathDate, getTaskDueDays(task));
 
                 if (deadlineInfo && deadlineInfo.hasDate) {
                     const daysRemaining = deadlineInfo.daysRemaining;
@@ -7254,6 +7343,14 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 <div class="detail-task-title">${markGlossaryTerms(task.title)}</div>
                 <div class="detail-status-badge ${statusBadgeClass}">${statusText}</div>
             </div>`;
+
+            // RN-D14-06: 年金届出期限の注意書き
+            if (taskId === 'RN-D14-06') {
+                html += `<div style="background: rgba(212, 133, 74, 0.1); border-radius: 8px; padding: 12px 16px; margin: 0 0 8px 0; display: flex; gap: 10px; align-items: flex-start;">
+                    <span style="color: #D4854A; font-size: 16px; font-weight: 700; flex-shrink: 0; line-height: 1.4;">!</span>
+                    <span style="font-size: 14px; color: var(--text-primary); line-height: 1.6;">厚生年金は死亡後<strong>10日以内</strong>、国民年金は<strong>14日以内</strong>が届出期限です。故人が厚生年金に加入していた場合はお早めに手続きしてください。</span>
+                </div>`;
+            }
 
             if (status === 'AUTO_DONE') {
                 // AUTO_DONEタスク用の取消リンク付き通知
@@ -7864,11 +7961,32 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
             startConfirmCenter('screen-guide');
         }
 
+        // おくやみガイドから全質問を確認・変更する
+        function openAllQuestionsFromGuide() {
+            confirmSavedScrollPosition = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+            confirmSavedReturnScreen = 'screen-guide';
+
+            // フィルタモードをリセット（全質問表示）
+            window._filteredMode = false;
+            window._filteredQuestions = null;
+            window._filteredPhaseId = null;
+            window._filteredTaskId = null;
+
+            startConfirmCenter('screen-guide');
+        }
+
         // ホーム画面の未回答カードからの遷移
         function openConfirmFromHome() {
             confirmSavedScrollPosition = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
             confirmSavedReturnScreen = 'screen-home';
-            showScreen('screen-confirm');
+
+            // フィルタモードをリセット（全質問表示）
+            window._filteredMode = false;
+            window._filteredQuestions = null;
+            window._filteredPhaseId = null;
+            window._filteredTaskId = null;
+
+            startConfirmCenter('screen-home');
         }
 
         function startConfirmCenter(sourceScreen = 'screen-home') {
@@ -8128,11 +8246,12 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                     `;
                 } else {
                     // 通常モード（確認センターから直接開いた場合）
+                    const returnLabel = confirmSourceScreen === 'screen-guide' ? 'おくやみガイドへ戻る' : 'ホームへ戻る';
                     completionScreen.innerHTML = `
                         <div class="confirm-completion-content">
                             <div class="heading-lg" style="text-align: center; margin-bottom: 16px;">確認が完了しました</div>
                             <div class="body-sm" style="text-align: center; color: var(--text-secondary); margin-bottom: 40px;">回答内容はいつでも変更できます</div>
-                            <button class="btn-primary" onclick="returnFromConfirmCenter()">ホームへ戻る</button>
+                            <button class="btn-primary" onclick="returnFromConfirmCenter()">${returnLabel}</button>
                         </div>
                     `;
                 }
