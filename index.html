@@ -973,55 +973,39 @@
             transition: width 0.4s ease;
         }
 
-        /* 質問再アクセスボタン */
-        .guide-question-btn {
-            margin: 10px 16px 0;
-        }
-
-        .guide-question-btn-inner {
+        /* フェーズ内質問確認カード */
+        .phase-question-review-link {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 14px 16px;
-            background: #FFFFFF;
-            border-radius: 10px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            gap: 8px;
+            padding: 10px 14px;
+            margin: 12px 16px;
+            background: #F5F3F0;
+            border-radius: 8px;
             cursor: pointer;
             transition: opacity 0.15s ease;
         }
 
-        .guide-question-btn-inner:active {
-            opacity: 0.7;
+        .phase-question-review-link:active {
+            opacity: 0.6;
         }
 
-        .guide-question-btn-icon {
+        .phase-question-review-icon {
             flex-shrink: 0;
-            color: var(--text-secondary);
             display: flex;
             align-items: center;
+            color: #9B9B9B;
         }
 
-        .guide-question-btn-text {
+        .phase-question-review-label {
+            font-size: 13px;
+            color: #6B6B6B;
             flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
         }
 
-        .guide-question-btn-title {
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--text-primary);
-        }
-
-        .guide-question-btn-sub {
+        .phase-question-review-count {
             font-size: 12px;
-            color: var(--text-tertiary);
-        }
-
-        .guide-question-btn-arrow {
-            font-size: 20px;
-            color: var(--text-tertiary);
+            color: #9B9B9B;
             flex-shrink: 0;
         }
 
@@ -1283,17 +1267,7 @@
             font-weight: 400;
         }
 
-        /* 7日以内 — ガイド画面では非表示 */
-        .task-deadline.soon {
-            color: var(--text-tertiary);
-        }
-
-        .guide-task-list .task-deadline.soon,
-        .guide-task-list .task-deadline:not(.urgent):not(.overdue) {
-            display: none;
-        }
-
-        /* 3日以内 — 当日 */
+        /* 3日以内・当日 */
         .task-deadline.urgent {
             color: #D4854A;
         }
@@ -5872,13 +5846,10 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
             return null;
         }
 
-        // タスク固有の期限日数を取得（年金タスクは年金種類に応じて変動）
+        // タスク固有の期限日数を取得
         function getTaskDueDays(task) {
             if (task.id === 'RN-D14-06') {
-                // 厚生年金: 10日、国民年金: 14日、不明: 10日（安全側）
-                const penEmp = answers['Q-PEN-EMP-01'];
-                if (penEmp === 'NO') return 14; // 国民年金のみ
-                return 10; // 厚生年金加入者 or 不明 → 安全側
+                return 10; // 厚生年金10日・国民年金14日 → 安全側の10日で統一
             }
             return null;
         }
@@ -6423,30 +6394,9 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 </div>
             `;
 
-            // 質問への再アクセスボタン（1問以上回答済みの場合のみ表示）
-            const answeredCount = questions.filter(q => {
-                const a = answers[q.id];
-                return a && (!Array.isArray(a) || a.length > 0);
-            }).length;
-            if (answeredCount > 0) {
-                const totalQuestions = questions.length;
-                html += `
-                    <div class="guide-question-btn" onclick="openAllQuestionsFromGuide()">
-                        <div class="guide-question-btn-inner">
-                            <span class="guide-question-btn-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect><path d="M9 12h6"></path><path d="M9 16h6"></path></svg></span>
-                            <div class="guide-question-btn-text">
-                                <span class="guide-question-btn-title">回答内容を確認・変更する</span>
-                                <span class="guide-question-btn-sub">${answeredCount} / ${totalQuestions} 問回答済み</span>
-                            </div>
-                            <span class="guide-question-btn-arrow">›</span>
-                        </div>
-                    </div>
-                `;
-            }
-
             // 各フェーズを描画
             phaseDataList.forEach((data) => {
-                const { phaseId, incompleteTasks, completedTasks, needConfirmCount, totalCount, doneCount } = data;
+                const { phaseId, phaseTasks, incompleteTasks, completedTasks, needConfirmCount, totalCount, doneCount } = data;
                 const phasePercent = totalCount > 0 ? Math.round((doneCount / totalCount) * 100) : 0;
 
                 // 開閉状態：デフォルトはアクティブフェーズ（未完了タスクがある最初のフェーズ）のみ開く
@@ -6457,6 +6407,32 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 const completedKey = 'completed_deadline_' + phaseId;
                 const isCompletedOpen = window._accordionState[completedKey] || false;
                 const completedOpenClass = isCompletedOpen ? ' open' : '';
+
+                // フェーズに関連する回答済み質問数を計算
+                const phaseQuestionIds = new Set();
+                phaseTasks.forEach(task => {
+                    if (task.requiredQuestions && task.requiredQuestions.length > 0) {
+                        task.requiredQuestions.forEach(qid => phaseQuestionIds.add(qid));
+                    }
+                    if (task.appliesWhen) extractQuestionIdsFromCondition(task.appliesWhen, phaseQuestionIds);
+                    if (task.notApplicableWhen) extractQuestionIdsFromCondition(task.notApplicableWhen, phaseQuestionIds);
+                    if (task.autoDoneWhen) extractQuestionIdsFromCondition(task.autoDoneWhen, phaseQuestionIds);
+                });
+                const phaseAnsweredCount = [...phaseQuestionIds].filter(qid => {
+                    const a = answers[qid];
+                    return a && (!Array.isArray(a) || a.length > 0);
+                }).length;
+
+                // 回答確認リンクHTML
+                const reviewLinkHtml = phaseAnsweredCount > 0 ? `
+                    <div class="phase-question-review-link" onclick="event.stopPropagation(); openPhaseAllQuestionsForReview('${phaseId}')">
+                        <span class="phase-question-review-icon">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                        </span>
+                        <span class="phase-question-review-label">回答を確認・変更する</span>
+                        <span class="phase-question-review-count">${phaseAnsweredCount}問回答済み</span>
+                    </div>
+                ` : '';
 
                 html += `
                     <div class="phase-section${openClass}" data-phase-id="${phaseId}">
@@ -6484,6 +6460,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                                             <div class="phase-unanswered-arrow">›</div>
                                         </div>
                                     ` : ''}
+                                    ${reviewLinkHtml}
                                     ${renderTaskList(incompleteTasks, false, false, true)}
                                     ${completedTasks.length > 0 ? `
                                         <div class="completed-tasks-section${completedOpenClass}" data-completed-id="${phaseId}" onclick="event.stopPropagation(); toggleCompletedTasks(this)">
@@ -6797,46 +6774,34 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                     checkboxDisabled = 'disabled';
                 }
 
-                // 改修B：バッジ風期限表示（1件目のみ、またはemphasizeFirst無効時は従来通り）
+                // 期限表示：超過・当日・3日以内のタスクにのみ表示
                 let deadlineDisplayText = '';
                 let deadlineBadgeClass = '';
-                const showDeadline = isFirst || !emphasizeFirst;
                 const deathDate = answers['Q-DOD-01'];
 
-                if (showDeadline) {
-                    if (deathDate && t.phase) {
-                        const remaining = getTaskRemainingDays(t);
+                if (deathDate && t.phase) {
+                    const remaining = getTaskRemainingDays(t);
 
-                        if (remaining !== null) {
-                            const parts = deathDate.split('-');
-                            const deathDateObj = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
-                            const deadlineDate = getTaskDeadline(t, deathDateObj);
+                    if (remaining !== null) {
+                        const parts = deathDate.split('-');
+                        const deathDateObj = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+                        const deadlineDate = getTaskDeadline(t, deathDateObj);
 
-                            if (deadlineDate) {
-                                const m = deadlineDate.getMonth() + 1;
-                                const d = deadlineDate.getDate();
+                        if (deadlineDate) {
+                            const m = deadlineDate.getMonth() + 1;
+                            const d = deadlineDate.getDate();
 
-                                if (remaining < 0) {
-                                    deadlineDisplayText = `期限: ${m}/${d}（${Math.abs(remaining)}日超過）`;
-                                    deadlineBadgeClass = 'overdue';
-                                } else if (remaining === 0) {
-                                    deadlineDisplayText = `期限: ${m}/${d}（今日が期限）`;
-                                    deadlineBadgeClass = 'overdue';
-                                } else if (remaining <= 3) {
-                                    deadlineDisplayText = `期限: ${m}月${d}日まで（あと${remaining}日）`;
-                                    deadlineBadgeClass = 'urgent';
-                                } else if (remaining <= 7) {
-                                    deadlineDisplayText = `期限: ${m}月${d}日まで（あと${remaining}日）`;
-                                    deadlineBadgeClass = 'soon';
-                                } else {
-                                    deadlineDisplayText = `期限: ${m}月${d}日まで（あと${remaining}日）`;
-                                    deadlineBadgeClass = '';
-                                }
+                            if (remaining < 0) {
+                                deadlineDisplayText = `期限: ${m}/${d}（${Math.abs(remaining)}日超過）`;
+                                deadlineBadgeClass = 'overdue';
+                            } else if (remaining === 0) {
+                                deadlineDisplayText = `期限: ${m}/${d}（今日が期限）`;
+                                deadlineBadgeClass = 'urgent';
+                            } else if (remaining <= 3) {
+                                deadlineDisplayText = `期限: ${m}/${d}（あと${remaining}日）`;
+                                deadlineBadgeClass = 'urgent';
                             }
                         }
-                    } else if (deadlineText) {
-                        deadlineDisplayText = `期限: ${deadlineText}`;
-                        deadlineBadgeClass = '';
                     }
                 }
 
@@ -7958,6 +7923,45 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
             confirmReturnPhase = phaseId; // 戻る時のスクロール先フェーズを記憶
 
             // 確認センターを起動
+            startConfirmCenter('screen-guide');
+        }
+
+        // フェーズの全質問（回答済み含む）を確認・変更する
+        function openPhaseAllQuestionsForReview(phaseId) {
+            confirmSavedScrollPosition = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+            confirmSavedReturnScreen = 'screen-guide';
+
+            // そのフェーズに属するタスクを取得
+            const phaseTasks = tasks.filter(t => t.phase === phaseId);
+
+            // それらのタスクで使われている質問IDを収集
+            const relatedQuestionIds = new Set();
+            phaseTasks.forEach(task => {
+                if (task.requiredQuestions && task.requiredQuestions.length > 0) {
+                    task.requiredQuestions.forEach(qid => relatedQuestionIds.add(qid));
+                }
+                if (task.appliesWhen) extractQuestionIdsFromCondition(task.appliesWhen, relatedQuestionIds);
+                if (task.notApplicableWhen) extractQuestionIdsFromCondition(task.notApplicableWhen, relatedQuestionIds);
+                if (task.autoDoneWhen) extractQuestionIdsFromCondition(task.autoDoneWhen, relatedQuestionIds);
+            });
+
+            // 全質問（回答済み・未回答問わず）をフィルタリング
+            const targetQuestions = questions.filter(q => relatedQuestionIds.has(q.id));
+
+            if (targetQuestions.length === 0) {
+                showToast('このフェーズに関連する質問はありません');
+                return;
+            }
+
+            // フィルタモードを設定
+            window._filteredMode = true;
+            window._filteredQuestions = targetQuestions;
+            window._filteredCurrentIndex = 0;
+            window._filteredReturnScreen = 'screen-guide';
+            window._filteredTaskId = null;
+            window._filteredPhaseId = phaseId;
+            confirmReturnPhase = phaseId;
+
             startConfirmCenter('screen-guide');
         }
 
