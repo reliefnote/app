@@ -4425,6 +4425,91 @@
             color: var(--text-tertiary);
             margin-top: 4px;
         }
+
+        /* ===== 利用規約・プライバシーポリシーページ ===== */
+        .legal-page {
+            background: #fff;
+            min-height: 100vh;
+            padding: 0;
+        }
+        .legal-page-header {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid #E8E5E0;
+            position: sticky;
+            top: 0;
+            background: #fff;
+            z-index: 10;
+        }
+        .legal-back-btn {
+            background: none;
+            border: none;
+            font-size: 16px;
+            color: var(--text-primary);
+            cursor: pointer;
+            padding: 4px 8px 4px 0;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .legal-back-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+        .legal-page-body {
+            padding: 20px 16px 40px;
+        }
+        .legal-page-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        .legal-page-date {
+            font-size: 13px;
+            color: var(--text-tertiary);
+            margin-bottom: 24px;
+        }
+        .legal-page-body p {
+            font-size: 14px;
+            line-height: 1.8;
+            color: var(--text-primary);
+            margin: 0 0 16px;
+        }
+        .legal-section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 24px 0 8px;
+        }
+        .legal-section-text {
+            font-size: 14px;
+            line-height: 1.8;
+            color: var(--text-primary);
+            margin: 0 0 8px;
+        }
+        .legal-indent {
+            padding-left: 1em;
+        }
+        .legal-contact-link {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        .onboarding-legal-text {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            text-align: center;
+            margin-top: 12px;
+            line-height: 1.6;
+            max-width: 280px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .legal-link {
+            color: var(--text-secondary);
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -4444,8 +4529,9 @@
                 <div class="splash-tagline" id="splashTagline">北竜町 おくやみ手続きナビ</div>
                 <div class="splash-message">悲しみの中でも、<br>迷わず前へ。</div>
                 <button class="btn-splash btn-primary" onclick="startOnboarding()">はじめる</button>
+                <p class="onboarding-legal-text">利用を開始することで、<a href="#" class="legal-link" onclick="showTerms(); return false;">利用規約</a> と<br><a href="#" class="legal-link" onclick="showPrivacy(); return false;">プライバシーポリシー</a> に同意したものとみなされます。</p>
                 <div class="splash-footer">
-                    © ReliefNote Inc.
+                    © ReliefNote
                 </div>
             </div>
         </div>
@@ -4784,6 +4870,32 @@
                 <div class="modal-title">名前を変更</div>
                 <input type="text" id="editNameInput" class="modal-input" placeholder="名前を入力" maxlength="20">
                 <button class="btn-primary" onclick="saveEditedName()">保存</button>
+            </div>
+        </div>
+
+        <!-- 利用規約ページ -->
+        <div id="screen-terms" class="screen">
+            <div class="legal-page">
+                <div class="legal-page-header">
+                    <button class="legal-back-btn" onclick="closeLegalPage()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        戻る
+                    </button>
+                </div>
+                <div class="legal-page-body" id="termsContent"></div>
+            </div>
+        </div>
+
+        <!-- プライバシーポリシーページ -->
+        <div id="screen-privacy" class="screen">
+            <div class="legal-page">
+                <div class="legal-page-header">
+                    <button class="legal-back-btn" onclick="closeLegalPage()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        戻る
+                    </button>
+                </div>
+                <div class="legal-page-body" id="privacyContent"></div>
             </div>
         </div>
 
@@ -6617,7 +6729,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
 
             // フッターナビの表示制御
             const footerNav = document.querySelector('.footer-nav');
-            const screensWithoutFooter = ['screen-splash', 'screen-onboarding', 'screen-bulk-confirm', 'screen-onboard-confirm'];
+            const screensWithoutFooter = ['screen-splash', 'screen-onboarding', 'screen-bulk-confirm', 'screen-onboard-confirm', 'screen-terms', 'screen-privacy'];
             if (footerNav) {
                 if (screensWithoutFooter.includes(screenId)) {
                     footerNav.style.display = 'none';
@@ -6702,6 +6814,117 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
         // 電話をかける
         function callPhone() {
             window.location.href = 'tel:0164342111';
+        }
+
+        // ===== 利用規約・プライバシーポリシー =====
+        var _legalReturnScreen = 'screen-onboarding';
+
+        function showTerms() {
+            _legalReturnScreen = document.querySelector('.screen.active')?.id || 'screen-onboarding';
+            var el = document.getElementById('termsContent');
+            if (el && !el.innerHTML) {
+                el.innerHTML = getTermsHTML();
+            }
+            showScreen('screen-terms');
+        }
+
+        function showPrivacy() {
+            _legalReturnScreen = document.querySelector('.screen.active')?.id || 'screen-onboarding';
+            var el = document.getElementById('privacyContent');
+            if (el && !el.innerHTML) {
+                el.innerHTML = getPrivacyHTML();
+            }
+            showScreen('screen-privacy');
+        }
+
+        function closeLegalPage() {
+            showScreen(_legalReturnScreen);
+        }
+
+        function getTermsHTML() {
+            return '<div class="legal-page-title">ReliefNote 利用規約</div>'
+                + '<div class="legal-page-date">最終更新日：2026年3月15日</div>'
+                + '<p>本利用規約（以下「本規約」）は、北林 歩（以下「運営者」）が提供するReliefNote（以下「本サービス」）の利用条件を定めるものです。</p>'
+                + '<div class="legal-section-title">第1条（サービスの内容）</div>'
+                + '<div class="legal-section-text">本サービスは、ご遺族の皆様が必要な手続きを把握し、進捗を管理するための情報提供ツールです。本サービスは、法的助言、税務相談、行政手続きの代行を行うものではありません。手続きの詳細や個別の判断については、管轄の行政機関、または弁護士・司法書士・税理士等の専門家にご相談ください。</div>'
+                + '<div class="legal-section-title">第2条（利用条件）</div>'
+                + '<div class="legal-section-text">1. 本サービスの利用にあたり、アカウント登録やログインは不要です。</div>'
+                + '<div class="legal-section-text">2. 本サービスの利用を開始した時点で、本規約およびプライバシーポリシーに同意したものとみなします。</div>'
+                + '<div class="legal-section-text">3. 本サービスは、日本国内での利用を想定しています。</div>'
+                + '<div class="legal-section-title">第3条（情報の正確性）</div>'
+                + '<div class="legal-section-text">1. 本サービスが提供する手続き情報は、一般的な内容を案内するものであり、すべての状況に当てはまることを保証するものではありません。</div>'
+                + '<div class="legal-section-text">2. 手続きの期限、届出先、必要書類等は、自治体・機関により異なる場合があります。最新の情報は各届出先にご確認ください。</div>'
+                + '<div class="legal-section-text">3. 運営者は、情報の正確性・完全性・最新性について最善の努力を行いますが、これを保証するものではありません。</div>'
+                + '<div class="legal-section-title">第4条（データの取り扱い）</div>'
+                + '<div class="legal-section-text">1. 本サービスにおけるデータの保存・利用については、プライバシーポリシーに定めるとおりとします。</div>'
+                + '<div class="legal-section-text">2. ご利用者様が入力したデータは、主にご利用者様のブラウザに保存されます。ブラウザのデータ消去やキャッシュクリアにより、データが失われる場合があります。</div>'
+                + '<div class="legal-section-text">3. 運営者は、ブラウザに保存されたデータの消失について責任を負いません。</div>'
+                + '<div class="legal-section-title">第5条（禁止事項）</div>'
+                + '<div class="legal-section-text">ご利用者様は、本サービスの利用にあたり、以下の行為を行ってはなりません。</div>'
+                + '<div class="legal-section-text legal-indent">(1) 本サービスの運営を妨害する行為</div>'
+                + '<div class="legal-section-text legal-indent">(2) 本サービスを不正な目的で利用する行為</div>'
+                + '<div class="legal-section-text legal-indent">(3) 他の利用者または第三者の権利を侵害する行為</div>'
+                + '<div class="legal-section-text legal-indent">(4) 本サービスのコンテンツを無断で複製・転載・販売する行為</div>'
+                + '<div class="legal-section-title">第6条（免責事項）</div>'
+                + '<div class="legal-section-text">1. 本サービスの利用により生じた損害について、運営者は故意または重大な過失がある場合を除き、責任を負いません。</div>'
+                + '<div class="legal-section-text">2. 本サービスは、手続きの完了や期限の遵守を保証するものではありません。重要な手続きについては、ご自身で期限と届出先をご確認ください。</div>'
+                + '<div class="legal-section-text">3. 本サービスの利用に基づいて行った手続きの結果について、運営者は責任を負いません。</div>'
+                + '<div class="legal-section-title">第7条（サービスの変更・中断・終了）</div>'
+                + '<div class="legal-section-text">1. 運営者は、ご利用者様に事前に通知することなく、本サービスの内容を変更し、または本サービスの提供を中断・終了することがあります。</div>'
+                + '<div class="legal-section-text">2. サービスの終了を行う場合は、可能な限り事前に本サービス上で告知します。</div>'
+                + '<div class="legal-section-title">第8条（本規約の変更）</div>'
+                + '<div class="legal-section-text">運営者は、必要に応じて本規約を改定することがあります。改定した場合は、本サービス上で通知します。改定後に本サービスの利用を継続した場合、改定後の規約に同意したものとみなします。</div>'
+                + '<div class="legal-section-title">第9条（準拠法・管轄）</div>'
+                + '<div class="legal-section-text">本規約は日本法に準拠し、本サービスに関する紛争は東京地方裁判所を第一審の専属的合意管轄裁判所とします。</div>'
+                + '<div class="legal-section-title">第10条（お問い合わせ）</div>'
+                + '<div class="legal-section-text">本規約に関するお問い合わせは、以下までご連絡ください。</div>'
+                + '<div class="legal-section-text">メールアドレス：<a href="mailto:reliefnote@gmail.com" class="legal-contact-link">reliefnote@gmail.com</a></div>';
+        }
+
+        function getPrivacyHTML() {
+            return '<div class="legal-page-title">ReliefNote プライバシーポリシー</div>'
+                + '<div class="legal-page-date">最終更新日：2026年3月15日</div>'
+                + '<p>ReliefNote（以下「本サービス」）は、ご利用者様の個人情報の保護を重要な責務と考えています。本ポリシーは、本サービスにおける個人情報の取り扱いについて定めるものです。</p>'
+                + '<div class="legal-section-title">1. 運営者情報</div>'
+                + '<div class="legal-section-text">サービス名：ReliefNote</div>'
+                + '<div class="legal-section-text">運営者：北林 歩</div>'
+                + '<div class="legal-section-text">お問い合わせ：<a href="mailto:reliefnote@gmail.com" class="legal-contact-link">reliefnote@gmail.com</a></div>'
+                + '<div class="legal-section-title">2. 取得する情報</div>'
+                + '<div class="legal-section-text">本サービスでは、以下の情報を取得します。</div>'
+                + '<div class="legal-section-text legal-indent">(1) ご利用者様が入力する情報：お名前（ニックネーム可）、故人との続柄、故人に関する状況情報（手続きの要否判定に使用）</div>'
+                + '<div class="legal-section-text legal-indent">(2) 自動的に取得する情報：サービスの利用状況（タスクの生成・着手・完了等の操作履歴）、アクセス元の識別情報（URLパラメータによるチャネル情報）、ブラウザの種類・アクセス日時</div>'
+                + '<div class="legal-section-text legal-indent">(3) ご利用者様が任意で提供する情報：アンケートへの回答内容、LINE等を通じたお問い合わせ内容</div>'
+                + '<div class="legal-section-title">3. 利用目的</div>'
+                + '<div class="legal-section-text">取得した情報は、以下の目的で利用します。</div>'
+                + '<div class="legal-section-text legal-indent">(1) 本サービスの提供（手続きタスクの自動生成・管理機能の提供）</div>'
+                + '<div class="legal-section-text legal-indent">(2) サービスの改善および新機能の開発</div>'
+                + '<div class="legal-section-text legal-indent">(3) 実証実験（PoC）における効果検証・分析</div>'
+                + '<div class="legal-section-text legal-indent">(4) お問い合わせへの対応</div>'
+                + '<div class="legal-section-text">上記以外の目的で利用する場合は、事前にご利用者様の同意を得るものとします。</div>'
+                + '<div class="legal-section-title">4. データの保存</div>'
+                + '<div class="legal-section-text legal-indent">(1) ご利用者様が入力した情報およびタスクの進捗状況は、ご利用者様のブラウザ（localStorage）に保存されます。サーバーにアカウント情報は保存されません。</div>'
+                + '<div class="legal-section-text legal-indent">(2) 利用状況の記録（操作ログ）は、外部データベースサービス（Supabase Inc. 所在地：米国、サーバー所在地：東京リージョン）に送信・保存されます。</div>'
+                + '<div class="legal-section-text legal-indent">(3) 操作ログに含まれる情報は、お名前（入力された場合）、操作の種類、チャネル情報、操作日時です。</div>'
+                + '<div class="legal-section-title">5. 第三者提供</div>'
+                + '<div class="legal-section-text">本サービスは、以下の場合を除き、取得した個人情報を第三者に提供しません。</div>'
+                + '<div class="legal-section-text legal-indent">(1) ご利用者様の同意がある場合</div>'
+                + '<div class="legal-section-text legal-indent">(2) 法令に基づく場合</div>'
+                + '<div class="legal-section-text legal-indent">(3) 上記4(2)に記載のデータベースサービスへの保存（サービス運営に必要な委託先として）</div>'
+                + '<div class="legal-section-title">6. データの保持期間</div>'
+                + '<div class="legal-section-text">操作ログは、実証実験の終了後1年間保持した後、削除します。ブラウザに保存されたデータは、ご利用者様自身がブラウザのデータを消去することで削除できます。</div>'
+                + '<div class="legal-section-title">7. ご利用者様の権利</div>'
+                + '<div class="legal-section-text">ご利用者様は、以下の権利を有します。</div>'
+                + '<div class="legal-section-text legal-indent">(1) ご自身の操作ログの開示を求めること</div>'
+                + '<div class="legal-section-text legal-indent">(2) ご自身の操作ログの削除を求めること</div>'
+                + '<div class="legal-section-text legal-indent">(3) 本サービスの利用を中止すること</div>'
+                + '<div class="legal-section-text">上記のご請求は、お問い合わせ先（<a href="mailto:reliefnote@gmail.com" class="legal-contact-link">reliefnote@gmail.com</a>）までご連絡ください。</div>'
+                + '<div class="legal-section-title">8. 安全管理措置</div>'
+                + '<div class="legal-section-text">本サービスは、取得した情報への不正アクセス・紛失・改ざん・漏洩を防止するため、データベースへの通信の暗号化（HTTPS）、アクセス制御の設定、定期的な安全性の確認を実施します。</div>'
+                + '<div class="legal-section-title">9. 本ポリシーの変更</div>'
+                + '<div class="legal-section-text">本ポリシーは、法令の改正やサービス内容の変更に伴い、改定することがあります。改定した場合は、本サービス上で通知します。</div>'
+                + '<div class="legal-section-title">10. お問い合わせ</div>'
+                + '<div class="legal-section-text">本ポリシーに関するお問い合わせは、以下までご連絡ください。</div>'
+                + '<div class="legal-section-text">メールアドレス：<a href="mailto:reliefnote@gmail.com" class="legal-contact-link">reliefnote@gmail.com</a></div>';
         }
 
         // オンボーディング（質問）
