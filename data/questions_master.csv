@@ -11,6 +11,7 @@ sort_order,question_id,time_bucket,onboarding_step,question_text,answer_type,opt
 10,Q-DEPENDENT-01,D7,2,故人の健康保険の扶養に入っていた方はいますか？,single_select,YES;NO;UNKNOWN,いる;いない;わからない,,TRUE
 11,Q-PEN-01,D7,2,故人は年金を受け取っていましたか？,single_select,YES;NO;UNKNOWN,はい;いいえ;わからない,,TRUE
 12,Q-PEN-EMP-01,D7,2,故人は会社員や公務員として働いていたことがありますか？,single_select,YES;NO;UNKNOWN,はい;いいえ;わからない,,TRUE
+12.5,Q-DC-01,D7,2,故人はiDeCo（個人型確定拠出年金）や企業型の確定拠出年金に加入していましたか？,single_select,YES;NO;UNKNOWN,はい;いいえ;わからない（勤務先に確認できます）,,TRUE
 13,Q-SPOUSE-01,D7,2,故人に配偶者（夫または妻）はいますか？,single_select,YES;NO,いる;いない,,TRUE
 14,Q-CHILD-U18-01,D7,2,高校卒業までのお子さん（18歳の年度末まで）はいますか？,single_select,YES;NO,いる;いない,,TRUE
 15,Q-CARE-01,D14,3,故人は介護保険のサービスを使っていましたか？,single_select,YES;NO;UNKNOWN,はい;いいえ;わからない,,TRUE
