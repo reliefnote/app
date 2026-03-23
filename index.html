@@ -1462,6 +1462,43 @@
             font-size: 13px;
         }
 
+        .dest-row.dest-link {
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .dest-row.dest-link:active {
+            opacity: 0.6;
+        }
+        .dest-row.dest-link .dest-value {
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .dest-row .map-pin-icon,
+        .dest-row .phone-call-icon {
+            color: var(--text-tertiary);
+            flex-shrink: 0;
+        }
+        .map-search-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            margin: 6px 0 0 0;
+            background: var(--accent-light);
+            border-radius: 10px;
+            color: var(--accent);
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: opacity 150ms;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .map-search-btn:active {
+            opacity: 0.6;
+        }
+
         .detail-summary-text {
             margin-top: 8px;
             font-size: 14px;
@@ -6208,7 +6245,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 });
             });
 
-            // 8. channel overrides → 保存のみ（P0ではfuneralチャネル用のFUNERAL_OVERRIDESを構築）
+            // 8. channel overrides → FUNERAL_OVERRIDESを構築（display用4フィールド + 全REPLACEフィールド）
             channelOverridesRaw = raw.rawChannelOverrides;
             FUNERAL_OVERRIDES = {};
             channelOverridesRaw.forEach(co => {
@@ -6221,6 +6258,10 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                     if (co.field_name === 'address') ov.address = co.override_type === 'HIDE' ? null : co.override_value;
                     if (co.field_name === 'phone') ov.phone = co.override_type === 'HIDE' ? null : co.override_value;
                     if (co.field_name === 'office_hours') ov.office_hours = co.override_type === 'HIDE' ? '' : co.override_value;
+                    // REPLACE タイプの全フィールドを保存
+                    if (co.override_type === 'REPLACE') {
+                        ov[co.field_name] = co.override_value;
+                    }
                 }
             });
 
@@ -6331,6 +6372,199 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                     console.log(`  ${id}: status=${taskStatuses[id]}, dependsOn=${JSON.stringify(t.dependsOn)}, resolved=${t.dependsOn.map(d => d+'='+isTaskResolved(d))}`);
                 }
             });
+        }
+
+        // channel override を taskDetails / taskStepsData に適用（initChannel() 後に呼ぶ）
+        function applyChannelOverrides() {
+            var ch = window.currentChannelId;
+            if (!ch || ch === 'direct') return;
+
+            var chCount = 0;
+
+            // ヘルパー（buildMasterData内のローカル関数と同等）
+            var _cnl = function(s) { return s ? s.replace(/\\n/g, '\n') : ''; };
+            var _split = function(s) {
+                if (!s) return [];
+                var arr = s.split(/(?=\d{1,2}\.\s)/);
+                return arr.map(function(x) { return x.trim(); }).filter(function(x) { return x !== ''; });
+            };
+            var _strip = function(s) { return s.replace(/^\d{1,2}\.\s*/, ''); };
+
+            var fieldMap = {
+                'action_summary': 'actionSummary',
+                'why_needed': 'whyNeeded',
+                'destination': 'destination',
+                'required_docs': 'requiredDocs',
+                'steps_short': 'steps',
+                'office_hours': 'officeHours',
+                'address': 'address',
+                'phone': 'phone',
+                'done_condition': 'doneCondition',
+                'faq': 'faq'
+            };
+
+            // funeral チャネル: FUNERAL_OVERRIDES の REPLACE フィールドを taskDetails に反映
+            if (ch === 'funeral') {
+                Object.keys(FUNERAL_OVERRIDES).forEach(function(taskId) {
+                    var ov = FUNERAL_OVERRIDES[taskId];
+                    Object.keys(ov).forEach(function(field) {
+                        // display用4フィールドはgetTaskDetailDisplayで処理するのでスキップ
+                        if (field === 'destination' || field === 'address' || field === 'phone' || field === 'office_hours') return;
+                        if (ov[field] === null || ov[field] === undefined) return;
+                        var internalField = fieldMap[field] || field;
+                        if (taskDetails[taskId] && internalField in taskDetails[taskId]) {
+                            taskDetails[taskId][internalField] = _cnl(ov[field]);
+                            chCount++;
+                        }
+                        if (field === 'steps_short' && taskStepsData[taskId]) {
+                            taskStepsData[taskId].steps_short = _split(ov[field]).map(_strip);
+                        }
+                        if (field === 'steps_detail' && taskStepsData[taskId]) {
+                            taskStepsData[taskId].steps_detail = _split(ov[field]).map(_strip);
+                        }
+                    });
+                });
+            }
+            console.log('[RN] overrides applied: locale=' + Object.keys(localeOverrideMap).length + ' (' + ch + '), channel=' + chCount);
+        }
+
+        // マップ連携: タイプ判定（pin=確定住所, search=検索）
+        function getMapLinkType(disp) {
+            if (!disp.address || disp.address.includes('{') || disp.address.includes('要確認')) {
+                return 'search';
+            }
+            var generic = ['各銀行', '各保険会社', '葬儀社', '火葬場', 'ご利用の'];
+            var dest = disp.destination || '';
+            for (var i = 0; i < generic.length; i++) {
+                if (dest.includes(generic[i])) return 'search';
+            }
+            return 'pin';
+        }
+
+        // マップ連携: タイプBの検索キーワード生成
+        function getMapSearchQuery(disp) {
+            var dest = (disp.destination || '').trim();
+
+            // 1. 部分一致キーワードマッピング（優先度順）
+            var mappings = [
+                // 電話・ウェブ手続き系（マップ検索不適）→ 非表示
+                { match: '総務部', keyword: '' },
+                { match: '人事部', keyword: '' },
+                { match: '勤務先', keyword: '' },
+                { match: 'カスタマーセンター', keyword: '' },
+                { match: 'コールセンター', keyword: '' },
+                { match: 'カスタマーサポート', keyword: '' },
+                { match: '信用情報機関', keyword: '' },
+                { match: 'CIC', keyword: '' },
+                { match: 'JICC', keyword: '' },
+                { match: 'プリンター', keyword: '' },
+                { match: 'コンビニ', keyword: '' },
+                // 複合destination対策（郵便局をNHK/NTTより先に）
+                { match: '郵便局', keyword: '郵便局' },
+                { match: 'NHK', keyword: '' },
+                { match: 'NTT', keyword: '' },
+                // 金融関連追加
+                { match: '借入先', keyword: '銀行' },
+                { match: 'カード会社', keyword: '' },
+                // 医療・介護関連
+                { match: '病院', keyword: '病院' },
+                { match: '通院', keyword: '病院' },
+                { match: '入院', keyword: '病院' },
+                { match: '介護施設', keyword: '介護施設' },
+                { match: '介護', keyword: '介護施設' },
+                { match: '施設', keyword: '介護施設' },
+                { match: '薬局', keyword: '薬局' },
+                { match: 'クリニック', keyword: 'クリニック' },
+                { match: '診療所', keyword: '診療所' },
+                // 葬儀・火葬関連
+                { match: '火葬場', keyword: '火葬場' },
+                { match: '葬儀社', keyword: '葬儀社' },
+                { match: '葬儀', keyword: '葬儀社' },
+                // 金融機関
+                { match: '銀行', keyword: '銀行' },
+                { match: '信金', keyword: '信用金庫' },
+                { match: '信用金庫', keyword: '信用金庫' },
+                { match: '農協', keyword: 'JA 農協' },
+                { match: 'JA', keyword: 'JA 農協' },
+                { match: '証券会社', keyword: '証券会社' },
+                { match: '証券', keyword: '証券会社' },
+                // 保険
+                { match: '保険会社', keyword: '保険会社' },
+                { match: '保険', keyword: '保険会社' },
+                // 行政・公的機関
+                { match: '年金事務所', keyword: '年金事務所' },
+                { match: '法務局', keyword: '法務局' },
+                { match: '税務署', keyword: '税務署' },
+                { match: '家庭裁判所', keyword: '家庭裁判所' },
+                { match: '裁判所', keyword: '家庭裁判所' },
+                { match: '役場', keyword: '役場' },
+                { match: '役所', keyword: '役所' },
+                { match: '市区町村', keyword: '役所' },
+                // 車両
+                { match: '運輸支局', keyword: '運輸支局' },
+                { match: '警察', keyword: '警察署' },
+                // 士業
+                { match: '司法書士', keyword: '司法書士事務所' },
+                { match: '税理士', keyword: '税理士事務所' },
+                { match: '弁護士', keyword: '弁護士事務所' },
+                { match: '行政書士', keyword: '行政書士事務所' },
+                // 不動産・住居
+                { match: '不動産', keyword: '不動産会社' },
+                { match: '管理会社', keyword: '不動産管理会社' },
+                // 遺品・生活関連
+                { match: '遺品整理', keyword: '遺品整理業者' },
+                { match: '遺品', keyword: '遺品整理業者' },
+                // 通信・ライフライン
+                { match: '携帯', keyword: '携帯ショップ' },
+                { match: 'キャリアショップ', keyword: '携帯ショップ' },
+                { match: '電力', keyword: '電力会社 営業所' },
+                { match: 'ガス', keyword: 'ガス会社 営業所' },
+                { match: '水道', keyword: '水道局' },
+                // 寺院・霊園
+                { match: '菩提寺', keyword: '寺院' },
+                { match: '寺院', keyword: '寺院' },
+                { match: '霊園', keyword: '霊園' },
+                { match: '墓地', keyword: '霊園 墓地' },
+                { match: '納骨', keyword: '寺院 霊園' }
+            ];
+
+            for (var i = 0; i < mappings.length; i++) {
+                if (dest.includes(mappings[i].match)) return mappings[i].keyword;
+            }
+
+            // 2. 「自宅」「故人の」を含む場合はマップ検索不要 → 空文字
+            if (dest.includes('自宅') || dest.includes('故人の')) {
+                return '';
+            }
+
+            // 3. 汎用接頭辞を除去してキーワード化
+            var cleaned = dest
+                .replace(/^各/, '')
+                .replace(/^ご利用の/, '')
+                .replace(/の窓口$/, '')
+                .replace(/窓口$/, '')
+                .replace(/等$/, '')
+                .replace(/など$/, '')
+                .replace(/[／\/]/g, ' ')
+                .trim();
+
+            if (cleaned) {
+                console.warn('[MAP] Unmapped destination: "' + dest + '" → using "' + cleaned + '"');
+            }
+            return cleaned || '';
+        }
+
+        function buildMapSearchUrl(keyword) {
+            var ch = window.currentChannelId || '';
+            var area = '';
+            if (ch === 'hokuryu') area = '北竜町';
+            var q = keyword + (area ? ' ' + area : '');
+            return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q);
+        }
+
+        function openMap(address) {
+            if (!address) return;
+            window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(address), '_blank', 'noopener');
         }
 
         // ====== ここからハードコード維持データ ======
@@ -9192,40 +9426,47 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                         .replace(/[\s\u3000]+,[\s\u3000]+/g, '、')
                         .replace(/\n/g, '、')
                         .trim();
-                    // 「／」「/」で分割
                     const destinations = destRaw.includes('／')
                         ? destRaw.split('／').map(s => s.trim()).filter(s => s !== '')
                         : destRaw.includes('/')
                             ? destRaw.split('/').map(s => s.trim()).filter(s => s !== '')
                             : [destRaw];
-
-                    // 各値をクリーンアップ
                     const cleanDests = destinations.map(d => d.replace(/[\s\u3000]+/g, ' ').trim());
                     const hasPlaceholder = cleanDests.some(d => d.startsWith('{'));
                     const destText = cleanDests.join('、');
 
+                    const mapType = getMapLinkType(disp);
+                    const mapPinSvg = '<svg class="map-pin-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>';
+                    const phoneSvg = '<svg class="phone-call-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"></path></svg>';
+
                     html += `<div class="task-detail-destination">`;
-                    html += `<div class="dest-row"><span class="dest-label">届出先</span><span class="dest-value${hasPlaceholder ? ' placeholder' : ''}">${hasPlaceholder ? destText : markGlossaryTerms(destText)}</span></div>`;
 
-                    if (disp.phone) {
-                        if (disp.phone.startsWith('{')) {
-                            html += `<div class="dest-row"><span class="dest-label">電話</span><span class="dest-value placeholder">${disp.phone}</span></div>`;
-                        } else {
-                            const telNum = disp.phone.split(/[／\/（]/)[0].replace(/[^0-9+-]/g, '');
-                            html += `<div class="dest-row"><span class="dest-label">電話</span><span class="dest-value"><a href="tel:${telNum}">${disp.phone}</a></span></div>`;
-                        }
+                    // 届出先行
+                    html += `<div class="dest-row"><span class="dest-label">届出先</span><span class="dest-value${hasPlaceholder ? ' placeholder' : ''}">${hasPlaceholder ? escapeHtml(destText) : markGlossaryTerms(destText)}</span></div>`;
+
+                    // 電話行
+                    if (disp.phone && !disp.phone.startsWith('{')) {
+                        const telNum = disp.phone.split(/[／\/（]/)[0].replace(/[^0-9+-]/g, '');
+                        html += `<div class="dest-row dest-link" onclick="window.location.href='tel:${escapeHtml(telNum)}'"><span class="dest-label">電話</span><span class="dest-value">${escapeHtml(disp.phone)} ${phoneSvg}</span></div>`;
                     }
 
-                    if (disp.address) {
-                        if (disp.address.startsWith('{')) {
-                            html += `<div class="dest-row"><span class="dest-label">住所</span><span class="dest-value placeholder">${disp.address}</span></div>`;
-                        } else {
-                            html += `<div class="dest-row"><span class="dest-label">住所</span><span class="dest-value">${disp.address}</span></div>`;
-                        }
+                    // 住所行 / マップ検索ボタン
+                    if (mapType === 'pin' && disp.address) {
+                        html += `<div class="dest-row dest-link" onclick="openMap('${escapeHtml(disp.address)}')"><span class="dest-label">住所</span><span class="dest-value">${escapeHtml(disp.address)} ${mapPinSvg}</span></div>`;
                     }
 
+                    // 受付時間行
                     if (disp.office_hours) {
-                        html += `<div class="dest-row"><span class="dest-label">受付</span><span class="dest-value">${disp.office_hours}</span></div>`;
+                        html += `<div class="dest-row"><span class="dest-label">受付</span><span class="dest-value">${escapeHtml(disp.office_hours)}</span></div>`;
+                    }
+
+                    // タイプB: マップ検索ボタン（searchKw が空なら非表示）
+                    if (mapType === 'search') {
+                        const searchKw = getMapSearchQuery(disp);
+                        if (searchKw) {
+                            const searchUrl = buildMapSearchUrl(searchKw);
+                            html += `<a class="map-search-btn" href="${escapeHtml(searchUrl)}" target="_blank" rel="noopener">${mapPinSvg} 近くの${escapeHtml(searchKw)}を探す →</a>`;
+                        }
                     }
 
                     html += `</div>`;
@@ -12079,6 +12320,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
 
             // 通常の初期化処理
             initChannel();
+            applyChannelOverrides();
             checkDataVersion();
             loadData();
             applyPresetAnswers();
