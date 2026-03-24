@@ -25,5 +25,4 @@ sort_order,question_id,time_bucket,onboarding_step,question_text,answer_type,opt
 23,Q-LOAN-01,M3,4,故人名義の住宅ローンや借入金はありますか？,single_select,YES;NO;UNKNOWN,はい;いいえ;わからない,,TRUE
 24,Q-TAX-01,M4,4,故人には収入がありましたか？,multi_select,SALARY;PENSION;BUSINESS;REALESTATE;NONE;UNKNOWN,給与;年金;事業（自営業・農業等）;不動産収入;なかった;わからない,NONE;UNKNOWN,TRUE
 25,Q-RE-01,M10,4,故人名義の土地や建物はありますか？,single_select,YES;NO;UNKNOWN,はい;いいえ;わからない,,TRUE
-26,Q-CAR-01,M10,4,故人名義の自動車はありますか？,single_select,YES;NO;UNKNOWN,はい;いいえ;わからない,,TRUE
-27,Q-LICENSE-01,M10,4,故人は有効な運転免許証を持っていましたか？,single_select,YES;NO;UNKNOWN,はい;いいえ;わからない,,TRUE
+26,Q-CAR-01,M10,4,故人名義の自動車はありますか？,single_select,YES;NO;UNKNOWN,はい;いいえ;わからない,,
