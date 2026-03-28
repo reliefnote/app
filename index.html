@@ -1294,6 +1294,67 @@
             color: var(--warning);
         }
 
+        /* 法定期限バッジ（タスクリスト用） */
+        .legal-due-badge {
+            display: inline-block;
+            font-size: 11px;
+            line-height: 1.3;
+            margin-top: 3px;
+            font-weight: 500;
+            color: var(--text-tertiary);
+        }
+        .legal-due-badge.overdue,
+        .legal-due-badge.urgent {
+            color: #C0392B;
+        }
+        .legal-due-badge.soon {
+            color: #D4854A;
+        }
+
+        /* 法定期限セクション（タスク詳細用） */
+        .legal-due-section {
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin: 0 0 8px 0;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .legal-due-section .legal-due-icon {
+            font-size: 16px;
+            font-weight: 700;
+            flex-shrink: 0;
+            line-height: 1.4;
+        }
+        .legal-due-section.overdue,
+        .legal-due-section.urgent {
+            background: rgba(192, 57, 43, 0.1);
+        }
+        .legal-due-section.overdue .legal-due-icon,
+        .legal-due-section.urgent .legal-due-icon {
+            color: #C0392B;
+        }
+        .legal-due-section.soon {
+            background: rgba(212, 133, 74, 0.1);
+        }
+        .legal-due-section.soon .legal-due-icon {
+            color: #D4854A;
+        }
+        .legal-due-section.normal {
+            background: rgba(52, 152, 219, 0.1);
+        }
+        .legal-due-section.normal .legal-due-icon {
+            color: #3498DB;
+        }
+        .legal-due-section.no-date {
+            background: var(--bg-tertiary);
+        }
+        .legal-due-section.no-date .legal-due-icon {
+            color: var(--text-tertiary);
+        }
+
         .task-confirm-hint {
             font-size: 12px;
             color: var(--text-secondary);
@@ -6059,7 +6120,9 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                     appliesWhen: rule.applies_when || 'TRUE',
                     notApplicableWhen: rule.not_applicable_when || null,
                     autoDoneWhen: rule.auto_done_when || null,
-                    fallbackStatus: rule.fallback_status || 'OPEN'
+                    fallbackStatus: rule.fallback_status || 'OPEN',
+                    legalDueDays: t.legal_due_days_from_dod ? parseInt(t.legal_due_days_from_dod) : null,
+                    legalDueNote: t.legal_due_note || null
                 };
             });
 
@@ -7664,13 +7727,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
 
         // タスク固有の期限日数を取得
         function getTaskDueDays(task) {
-            if (task.id === 'RN-D14-06') {
-                return 10; // 厚生年金10日・国民年金14日 → 安全側の10日で統一
-            }
-            if (task.id === 'RN-M3-12') {
-                return 300; // 農地法上の届出期限は約10か月（300日）
-            }
-            return null;
+            return task.legalDueDays || null;
         }
 
         // タスクの期限日を取得
@@ -7693,6 +7750,28 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
             const deadline = new Date(deathDate);
             deadline.setDate(deadline.getDate() + days);
             return deadline;
+        }
+
+        // 法定期限日を取得
+        function getLegalDueDate(task) {
+            const deathDate = answers['Q-DOD-01'];
+            if (!deathDate || !task.legalDueDays) return null;
+            const parts = deathDate.split('-');
+            const d = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+            d.setDate(d.getDate() + task.legalDueDays);
+            return d;
+        }
+
+        // 法定期限ステータスを取得
+        function getLegalDueStatus(task) {
+            const due = getLegalDueDate(task);
+            if (!due) return null;
+            const today = new Date(); today.setHours(0,0,0,0); due.setHours(0,0,0,0);
+            const remaining = Math.ceil((due - today) / 86400000);
+            if (remaining < 0) return { status: 'overdue', remaining };
+            if (remaining <= 7) return { status: 'urgent', remaining };
+            if (remaining <= 30) return { status: 'soon', remaining };
+            return { status: 'normal', remaining };
         }
 
         // タスクの期限残日数を取得
@@ -8740,6 +8819,23 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                     }
                 }
 
+                // 法定期限バッジ
+                let legalBadgeHtml = '';
+                if (t.legalDueDays && !isCompleted && !isNotApplicable && !isAutoDone) {
+                    const legalStatus = getLegalDueStatus(t);
+                    if (legalStatus) {
+                        const legalDue = getLegalDueDate(t);
+                        const lm = legalDue.getMonth() + 1;
+                        const ld = legalDue.getDate();
+                        const remainText = legalStatus.remaining < 0
+                            ? `${Math.abs(legalStatus.remaining)}日超過`
+                            : legalStatus.remaining === 0 ? '今日が期限' : `あと${legalStatus.remaining}日`;
+                        legalBadgeHtml = `<div class="legal-due-badge ${legalStatus.status}">⚖ 法定期限: ${lm}/${ld}（${remainText}）</div>`;
+                    } else {
+                        legalBadgeHtml = `<div class="legal-due-badge">⚖ 法定期限あり（${t.legalDueDays}日）</div>`;
+                    }
+                }
+
                 let itemStyle = borderStyle;
                 const blockedClass = t.status === 'BLOCKED' ? ' blocked' : '';
 
@@ -8749,6 +8845,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                         <div class="task-info">
                             <div class="task-name ${isCompleted ? 'done' : ''}">${taskTitle}${priorityBadge}</div>
                             ${deadlineDisplayText ? `<div class="task-deadline ${deadlineBadgeClass}">${deadlineDisplayText}</div>` : ''}
+                            ${legalBadgeHtml}
                             ${extraInfo}
                         </div>
                     </div>
@@ -9344,12 +9441,29 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 <div class="detail-status-badge ${statusBadgeClass}">${statusText}</div>
             </div>`;
 
-            // RN-D14-06: 年金届出期限の注意書き
-            if (taskId === 'RN-D14-06') {
-                html += `<div style="background: rgba(212, 133, 74, 0.1); border-radius: 8px; padding: 12px 16px; margin: 0 0 8px 0; display: flex; gap: 10px; align-items: flex-start;">
-                    <span style="color: #D4854A; font-size: 16px; font-weight: 700; flex-shrink: 0; line-height: 1.4;">!</span>
-                    <span style="font-size: 14px; color: var(--text-primary); line-height: 1.6;">厚生年金は死亡後<strong>10日以内</strong>、国民年金は<strong>14日以内</strong>が届出期限です。故人が厚生年金に加入していた場合はお早めに手続きしてください。</span>
-                </div>`;
+            // 法定期限セクション（汎用）
+            if (task.legalDueDays && status !== 'DONE' && status !== 'AUTO_DONE' && status !== 'NOT_APPLICABLE') {
+                const legalStatus = getLegalDueStatus(task);
+                if (legalStatus) {
+                    const legalDue = getLegalDueDate(task);
+                    const ly = legalDue.getFullYear();
+                    const lm = legalDue.getMonth() + 1;
+                    const ld = legalDue.getDate();
+                    const remainText = legalStatus.remaining < 0
+                        ? `${Math.abs(legalStatus.remaining)}日超過`
+                        : legalStatus.remaining === 0 ? '今日が期限' : `あと${legalStatus.remaining}日`;
+                    const noteHtml = task.legalDueNote ? `<br><span style="font-size: 13px; color: var(--text-secondary);">${task.legalDueNote}</span>` : '';
+                    html += `<div class="legal-due-section ${legalStatus.status}">
+                        <span class="legal-due-icon">⚖</span>
+                        <span style="color: var(--text-primary);">法定期限: <strong>${ly}年${lm}月${ld}日</strong>（${remainText}）${noteHtml}</span>
+                    </div>`;
+                } else {
+                    const noteHtml = task.legalDueNote ? `<br><span style="font-size: 13px; color: var(--text-secondary);">${task.legalDueNote}</span>` : '';
+                    html += `<div class="legal-due-section no-date">
+                        <span class="legal-due-icon">⚖</span>
+                        <span style="color: var(--text-primary);">法定期限: 死亡日から<strong>${task.legalDueDays}日以内</strong>${noteHtml}</span>
+                    </div>`;
+                }
             }
 
             if (status === 'AUTO_DONE') {
