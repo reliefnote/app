@@ -88,9 +88,12 @@
             from { stroke-dashoffset: 251.2; }
         }
 
-        /* Home progress bar */
+        /* Progress bar (guide) */
         .home-progress-bar {
-            margin-top: 20px;
+            background: #FFFFFF;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px 16px;
         }
         .home-progress-bar .progress-header {
             display: flex;
@@ -124,7 +127,6 @@
             background: var(--border-light);
             border-radius: 5px;
             overflow: hidden;
-            position: relative;
         }
         .home-progress-bar .progress-fill {
             height: 100%;
@@ -605,6 +607,16 @@
             margin-bottom: 16px;
             line-height: 1.5;
             color: var(--text-primary);
+        }
+        .question-annotation {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin: -8px 0 12px;
+            padding: 10px 12px;
+            background: var(--bg-warm);
+            border-left: 3px solid var(--accent);
+            border-radius: 4px;
         }
         .question-info {
             background: var(--bg-secondary);
@@ -3880,14 +3892,14 @@
             flex-direction: column;
             min-height: calc(100vh - 70px);
             min-height: calc(100dvh - 70px);
-            background: #FFFFFF;
+            background: var(--bg-warm);
             position: relative;
         }
 
-        /* ヒーロー（ベージュ背景） */
+        /* ヒーロー */
         .concierge-hero {
-            background: var(--bg-warm, #F5F0EB);
-            padding: 40px 24px 32px;
+            background: #EFE9DE;
+            padding: 44px 24px 36px;
         }
         .concierge-avatars {
             display: flex;
@@ -3897,13 +3909,13 @@
             width: 48px;
             height: 48px;
             border-radius: 50%;
-            background: var(--border-light);
-            border: 2.5px solid var(--bg-warm, #F5F0EB);
+            background: #FFFFFF;
+            border: 2px solid var(--bg-warm);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 20px;
-            color: var(--text-secondary);
+            color: var(--accent);
             overflow: hidden;
         }
         .concierge-avatar:not(:first-child) {
@@ -3925,6 +3937,7 @@
         .concierge-body {
             flex: 1;
             padding: 28px 24px;
+            background: var(--bg-warm);
         }
         .concierge-subtitle {
             font-size: 15px;
@@ -3947,7 +3960,8 @@
             width: 32px;
             height: 32px;
             border-radius: 50%;
-            background: var(--accent-light, #F0EDE8);
+            background: #FFFFFF;
+            border: 1px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -3968,7 +3982,7 @@
         /* 固定フッターCTA */
         .concierge-footer {
             padding: 16px 24px calc(16px + env(safe-area-inset-bottom));
-            background: #FFFFFF;
+            background: var(--bg-warm);
         }
         .concierge-cta-btn {
             width: 100%;
@@ -4422,9 +4436,9 @@
 
         .need-confirm-header-count {
             font-size: 12px;
-            color: var(--text-secondary);
+            color: #E65100;
             font-weight: 600;
-            background: #EEEEE9;
+            background: #FFF3E0;
             padding: 2px 8px;
             border-radius: 10px;
         }
@@ -6383,7 +6397,6 @@
                     <span class="header-name">田中さん</span>
                     <span class="header-weeks" id="weeksDisplay">--週目</span>
                 </div>
-                <div class="home-progress" id="homeProgress"></div>
                 <p id="homeMessageText" class="home-message" style="display: none;"></p>
             </div>
 
@@ -6463,6 +6476,7 @@
                 <div class="guide-tabs-border"></div>
                 <div class="guide-tab-indicator" id="guideTabIndicator"></div>
             </div>
+            <div id="guideProgress"></div>
             <div id="guideContent"></div>
         </div>
 
@@ -6552,7 +6566,7 @@
                         </div>
                         <div class="qa-card" onclick="toggleQA(this)">
                             <div class="qa-question">Q. 死亡届は誰が出せる？ <span>▼</span></div>
-                            <div class="qa-answer">同居の親族、その他の親族、同居者などが届出できます。届出期限は死亡の事実を知った日から7日以内です。</div>
+                            <div class="qa-answer">同居の親族、その他の親族、同居者などが届出できます。届出期限は死亡の事実を知った日から7日以内ですが、実際には葬儀社が代行して自治体に提出してくれるケースがほとんどです。ご自身で出向く必要があるかどうか、まずは葬儀社にご確認ください。</div>
                         </div>
                         <div class="qa-card" onclick="toggleQA(this)">
                             <div class="qa-question">Q. 遺族年金はいくらもらえる？ <span>▼</span></div>
@@ -6639,7 +6653,7 @@
             <div class="expert-screen-body">
                 <div class="expert-neutrality-banner">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8B7355" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                    <span>紹介料は一切いただいていません。中立的な情報提供です。</span>
+                    <span>掲載にあたり紹介料などは一切いただいておらず、中立的な立場で情報をご案内しています。</span>
                 </div>
 
                 <!-- 北竜町役場 -->
@@ -6950,13 +6964,13 @@
                         <div class="concierge-avatar">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M5.5 21c0-3.6 2.9-6.5 6.5-6.5s6.5 2.9 6.5 6.5"/></svg>
                         </div>
-                        <div class="concierge-avatar" style="background:#E8E0D6;">
+                        <div class="concierge-avatar">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M5.5 21c0-3.6 2.9-6.5 6.5-6.5s6.5 2.9 6.5 6.5"/></svg>
                         </div>
-                        <div class="concierge-avatar" style="background:#D6DDE8;">
+                        <div class="concierge-avatar">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M5.5 21c0-3.6 2.9-6.5 6.5-6.5s6.5 2.9 6.5 6.5"/></svg>
                         </div>
-                        <div class="concierge-avatar" style="background:#E0D6E8;">
+                        <div class="concierge-avatar">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M5.5 21c0-3.6 2.9-6.5 6.5-6.5s6.5 2.9 6.5 6.5"/></svg>
                         </div>
                     </div>
@@ -9955,7 +9969,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
         const CONFIRM_HINTS = {
             'Q-DIG-01': '故人のスマホや請求書を確認してみてください',
             'Q-FUN-STATUS-01': '葬儀社に連絡したか思い出してみてください',
-            'Q-ADMIN-DN-01': '死亡届を役場に出したかどうかです',
+            'Q-ADMIN-DN-01': '多くの場合、葬儀社が代行して自治体に提出してくれます',
             'Q-REL-01': '亡くなった方はあなたにとって誰か（例：自分の親）です',
             'Q-EMP-01': 'あなたが現在お勤めかどうかです',
             'Q-DECEASED-EMP-01': '故人が亡くなった時点でお仕事をしていたかです',
@@ -10220,12 +10234,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                             daysSinceDeath = Math.floor((Date.now() - ddDate.getTime()) / (1000 * 60 * 60 * 24));
                         }
                     }
-                    logEvent('milestone_reached', {
-                        milestone: thresholds[i],
-                        days_since_death: daysSinceDeath,
-                        completed: msCompleted,
-                        applicable: msApplicable
-                    });
+                    // milestone_reached ログは廃止
                 }
             }
             safeSetItem('rn_milestones_reached', JSON.stringify(reached));
@@ -10234,8 +10243,73 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
         // セッションログ済みフラグ（1セッション1回）
         var _sessionLogged = false;
 
+        // ===== History API 連携 =====
+        // ブラウザの戻る/進むボタンで画面遷移できるようにする
+        var _suppressHistoryPush = false; // popstate中はpushStateしない
+        var _currentScreenId = null;
+        var _initComplete = false; // init完了までhistory pushを抑止
+        // 初期ロード時のハッシュをキャプチャ（init中のshowScreenで上書きされる前に）
+        var _initialHash = location.hash || '';
+
+        function pushScreenState(screenId, extra) {
+            if (_suppressHistoryPush) return;
+            if (!_initComplete) return; // init中はpushしない
+            var hash = '#' + screenId;
+            if (extra) hash += '/' + extra;
+            // 同じURLなら何もしない
+            if (location.hash === hash) return;
+            try {
+                history.pushState({ screen: screenId, extra: extra || null }, '', hash);
+            } catch (e) {}
+        }
+
+        function applyHashState(hash) {
+            // 例: #screen-onboarding/q3, #screen-home
+            if (!hash || hash === '#') {
+                return;
+            }
+            var raw = hash.replace(/^#/, '');
+            var parts = raw.split('/');
+            var screenId = parts[0];
+            var extra = parts[1] || null;
+            if (!document.getElementById(screenId)) return;
+
+            _suppressHistoryPush = true;
+            try {
+                if (screenId === 'screen-onboarding' && extra) {
+                    var m = extra.match(/^q(-?\d+)$/);
+                    if (m) {
+                        var idx = parseInt(m[1], 10);
+                        if (!isNaN(idx) && idx >= -1 && idx < onboardingQuestions.length) {
+                            currentQuestionIndex = idx;
+                            try { safeSetItem('rn_onboarding_index', String(idx)); } catch (e) {}
+                            showScreen('screen-onboarding');
+                            if (typeof renderQuestion === 'function') renderQuestion();
+                            _suppressHistoryPush = false;
+                            return;
+                        }
+                    }
+                }
+                showScreen(screenId);
+            } finally {
+                _suppressHistoryPush = false;
+            }
+        }
+
+        window.addEventListener('popstate', function(e) {
+            applyHashState(location.hash);
+        });
+
         // 画面遷移
         function showScreen(screenId) {
+            _currentScreenId = screenId;
+            // 履歴に追加（popstate中は除く）
+            if (screenId === 'screen-onboarding' && typeof currentQuestionIndex !== 'undefined') {
+                pushScreenState(screenId, 'q' + currentQuestionIndex);
+            } else {
+                pushScreenState(screenId);
+            }
+
             // ===== スクロールリセット（包括的） =====
             // 方法1: window
             window.scrollTo(0, 0);
@@ -10333,60 +10407,13 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 document.getElementById('confirmQuestionArea').style.display = 'block';
             }
 
-            // === screen_viewed イベント ===
-            var trackableScreens = ['screen-home', 'screen-guide', 'screen-settings', 'screen-experts', 'screen-concierge'];
-            if (trackableScreens.indexOf(screenId) !== -1) {
-                logEvent('screen_viewed', { screen: screenId });
-            }
-
-            // === session_start + progress_snapshot（ホーム初回表示時のみ） ===
-            if (screenId === 'screen-home' && !_sessionLogged) {
-                _sessionLogged = true;
-
-                var deathDateStr = getDeathDateFromLocalStorage();
-                var daysSinceDeath = null;
-                if (deathDateStr) {
-                    var ddDate = new Date(deathDateStr);
-                    if (!isNaN(ddDate.getTime())) {
-                        daysSinceDeath = Math.floor((Date.now() - ddDate.getTime()) / (1000 * 60 * 60 * 24));
-                    }
-                }
-
-                var snapCompleted = 0;
-                var snapApplicable = 0;
-                var phaseCompleted = {};
-                tasks.forEach(function(t) {
-                    var st = taskStatuses[t.id] || determineTaskStatus(t);
-                    if (st !== 'NOT_APPLICABLE') {
-                        snapApplicable++;
-                        if (st === 'DONE' || st === 'AUTO_DONE') {
-                            snapCompleted++;
-                            phaseCompleted[t.phase] = (phaseCompleted[t.phase] || 0) + 1;
-                        }
-                    }
-                });
-                var snapRate = snapApplicable > 0 ? Math.round((snapCompleted / snapApplicable) * 100) : 0;
-
-                logEvent('session_start', {
-                    days_since_death: daysSinceDeath,
-                    total_tasks: snapApplicable,
-                    completed_tasks: snapCompleted,
-                    completion_rate: snapRate
-                });
-
-                logEvent('progress_snapshot', {
-                    completed: snapCompleted,
-                    applicable: snapApplicable,
-                    completion_rate: snapRate,
-                    days_since_death: daysSinceDeath,
-                    phase_completed: phaseCompleted
-                });
-            }
+            // screen_viewed / session_start / progress_snapshot ログは廃止
         }
 
         // タブ切り替え
         function switchTab(tab) {
             _returnToTaskId = null;
+            _returnTaskStack = [];
             if (tab === 'home') {
                 showScreen('screen-home');
             } else if (tab === 'guide') {
@@ -10436,10 +10463,12 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
 
         function getTermsHTML() {
             return '<div class="legal-page-title">ReliefNote 利用規約</div>'
-                + '<div class="legal-page-date">最終更新日：2026年3月15日</div>'
+                + '<div class="legal-page-date">最終更新日：2026年4月5日</div>'
                 + '<p>本利用規約（以下「本規約」）は、北林 歩（以下「運営者」）が提供するReliefNote（以下「本サービス」）の利用条件を定めるものです。</p>'
-                + '<div class="legal-section-title">第1条（サービスの内容）</div>'
-                + '<div class="legal-section-text">本サービスは、ご遺族の皆様が必要な手続きを把握し、進捗を管理するための情報提供ツールです。本サービスは、法的助言、税務相談、行政手続きの代行を行うものではありません。手続きの詳細や個別の判断については、管轄の行政機関、または弁護士・司法書士・税理士等の専門家にご相談ください。</div>'
+                + '<div class="legal-section-title">第1条（サービスの内容と性質）</div>'
+                + '<div class="legal-section-text">1. 本サービスは、ご遺族の皆様が必要な手続きを把握し、進捗を管理するための情報提供およびサポートツールです。</div>'
+                + '<div class="legal-section-text">2. 本サービスは、法的助言、税務相談、行政手続きの代行を行うものではありません。手続きの詳細や個別の判断については、管轄の行政機関、または弁護士・司法書士・税理士等の専門家にご相談ください。</div>'
+                + '<div class="legal-section-text">3. 本サービス内で提供するチャット・電話等のサポート機能は、一般的な情報提供と案内を目的とするベストエフォート（可能な範囲での対応）であり、即時の回答や特定の結果を保証するものではありません。</div>'
                 + '<div class="legal-section-title">第2条（利用条件）</div>'
                 + '<div class="legal-section-text">1. 本サービスの利用にあたり、アカウント登録やログインは不要です。</div>'
                 + '<div class="legal-section-text">2. 本サービスの利用を開始した時点で、本規約およびプライバシーポリシーに同意したものとみなします。</div>'
@@ -10450,26 +10479,31 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 + '<div class="legal-section-text">3. 運営者は、情報の正確性・完全性・最新性について最善の努力を行いますが、これを保証するものではありません。</div>'
                 + '<div class="legal-section-title">第4条（データの取り扱い）</div>'
                 + '<div class="legal-section-text">1. 本サービスにおけるデータの保存・利用については、プライバシーポリシーに定めるとおりとします。</div>'
-                + '<div class="legal-section-text">2. ご利用者様が入力したデータは、主にご利用者様のブラウザに保存されます。ブラウザのデータ消去やキャッシュクリアにより、データが失われる場合があります。</div>'
-                + '<div class="legal-section-text">3. 運営者は、ブラウザに保存されたデータの消失について責任を負いません。</div>'
+                + '<div class="legal-section-text">2. ご利用者様が入力したデータは、主にご利用者様のブラウザまたは連携する通信アプリ（LINE等）に保存されます。ブラウザのデータ消去やキャッシュクリアにより、データが失われる場合があります。</div>'
+                + '<div class="legal-section-text">3. 運営者は、端末の紛失やブラウザに保存されたデータの消失について責任を負いません。</div>'
                 + '<div class="legal-section-title">第5条（禁止事項）</div>'
                 + '<div class="legal-section-text">ご利用者様は、本サービスの利用にあたり、以下の行為を行ってはなりません。</div>'
                 + '<div class="legal-section-text legal-indent">(1) 本サービスの運営を妨害する行為</div>'
                 + '<div class="legal-section-text legal-indent">(2) 本サービスを不正な目的で利用する行為</div>'
                 + '<div class="legal-section-text legal-indent">(3) 他の利用者または第三者の権利を侵害する行為</div>'
                 + '<div class="legal-section-text legal-indent">(4) 本サービスのコンテンツを無断で複製・転載・販売する行為</div>'
-                + '<div class="legal-section-title">第6条（免責事項）</div>'
-                + '<div class="legal-section-text">1. 本サービスの利用により生じた損害について、運営者は故意または重大な過失がある場合を除き、責任を負いません。</div>'
+                + '<div class="legal-section-text legal-indent">(5) 運営者またはサポート担当者に対する暴言、脅迫、過度な要求等のハラスメント行為</div>'
+                + '<div class="legal-section-title">第6条（反社会的勢力の排除）</div>'
+                + '<div class="legal-section-text">ご利用者様は、現在かつ将来にわたり、暴力団、暴力団員、暴力団準構成員、その他これらに準ずる者（以下「反社会的勢力」）に該当しないこと、および反社会的勢力と不適切な関係を有していないことを確約するものとします。これに違反した場合、運営者は事前の通知なく本サービスの提供を停止できるものとします。</div>'
+                + '<div class="legal-section-title">第7条（免責事項）</div>'
+                + '<div class="legal-section-text">1. 本サービスの利用により生じた損害（手続きの遅延による金銭的損失、精神的苦痛を含みます）について、運営者は故意または重大な過失がある場合を除き、一切の責任を負いません。</div>'
                 + '<div class="legal-section-text">2. 本サービスは、手続きの完了や期限の遵守を保証するものではありません。重要な手続きについては、ご自身で期限と届出先をご確認ください。</div>'
                 + '<div class="legal-section-text">3. 本サービスの利用に基づいて行った手続きの結果について、運営者は責任を負いません。</div>'
-                + '<div class="legal-section-title">第7条（サービスの変更・中断・終了）</div>'
-                + '<div class="legal-section-text">1. 運営者は、ご利用者様に事前に通知することなく、本サービスの内容を変更し、または本サービスの提供を中断・終了することがあります。</div>'
+                + '<div class="legal-section-title">第8条（サービスの変更・中断・終了）</div>'
+                + '<div class="legal-section-text">1. 運営者は、ご利用者様に事前に通知することなく、本サービスの内容を変更し、またはシステムの保守・点検等のために本サービスの提供を中断・終了することがあります。</div>'
                 + '<div class="legal-section-text">2. サービスの終了を行う場合は、可能な限り事前に本サービス上で告知します。</div>'
-                + '<div class="legal-section-title">第8条（本規約の変更）</div>'
+                + '<div class="legal-section-title">第9条（分離可能性）</div>'
+                + '<div class="legal-section-text">本規約のいずれかの条項が法令等により無効または執行不能と判断された場合であっても、本規約のその他の条項の効力には影響を及ぼさないものとします。</div>'
+                + '<div class="legal-section-title">第10条（本規約の変更）</div>'
                 + '<div class="legal-section-text">運営者は、必要に応じて本規約を改定することがあります。改定した場合は、本サービス上で通知します。改定後に本サービスの利用を継続した場合、改定後の規約に同意したものとみなします。</div>'
-                + '<div class="legal-section-title">第9条（準拠法・管轄）</div>'
-                + '<div class="legal-section-text">本規約は日本法に準拠し、本サービスに関する紛争は東京地方裁判所を第一審の専属的合意管轄裁判所とします。</div>'
-                + '<div class="legal-section-title">第10条（お問い合わせ）</div>'
+                + '<div class="legal-section-title">第11条（準拠法・管轄）</div>'
+                + '<div class="legal-section-text">本規約は日本法に準拠し、本サービスに関する紛争は札幌地方裁判所を第一審の専属的合意管轄裁判所とします。</div>'
+                + '<div class="legal-section-title">第12条（お問い合わせ）</div>'
                 + '<div class="legal-section-text">本規約に関するお問い合わせは、以下までご連絡ください。</div>'
                 + '<div class="legal-section-text">メールアドレス：<a href="mailto:reliefnote@gmail.com" class="legal-contact-link">reliefnote@gmail.com</a></div>';
         }
@@ -10694,6 +10728,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
             if (currentQuestionIndex > -1) {
                 currentQuestionIndex--;
                 safeSetItem('rn_onboarding_index', String(currentQuestionIndex));
+                pushScreenState('screen-onboarding', 'q' + currentQuestionIndex);
                 renderQuestion();
             } else {
                 // Already at name input step (-1), go back to splash
@@ -10709,6 +10744,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
             if (currentQuestionIndex < onboardingQuestions.length - 1) {
                 currentQuestionIndex++;
                 safeSetItem('rn_onboarding_index', String(currentQuestionIndex));
+                pushScreenState('screen-onboarding', 'q' + currentQuestionIndex);
                 renderQuestion();
             } else {
                 // オンボーディング完了
@@ -10833,6 +10869,19 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
         function hasDependencyBlocking(task) {
             if (!task.dependsOn || task.dependsOn.length === 0) return false;
             return task.dependsOn.some(depId => !isTaskResolved(depId));
+        }
+
+        // BLOCKEDだが根本はNEED_CONFIRMに分類されるべきタスク判定
+        function isNeedConfirmLike(task) {
+            if (task.status === 'NEED_CONFIRM') return true;
+            if (task.status === 'BLOCKED') {
+                try {
+                    var awResult = task.appliesWhen ? evaluateCondition(task.appliesWhen, answers) : true;
+                    var fb = task.fallbackStatus || 'NEED_CONFIRM';
+                    if (awResult === 'UNKNOWN' && fb === 'NEED_CONFIRM') return true;
+                } catch (e) {}
+            }
+            return false;
         }
 
         function determineTaskStatus(task) {
@@ -11207,8 +11256,11 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 var homeBulkMinutes = homeBulkQuestions.length > 0 ? Math.max(1, Math.ceil(homeBulkQuestions.length * 8 / 60)) : 0;
                 // 全カテゴリのNEED_CONFIRMタスク件数を表示
                 var allNeedConfirmCount = tasks.filter(function(t) {
-                    var s = taskStatuses[t.id];
-                    return s === 'NEED_CONFIRM';
+                    var resolved = (typeof isTaskResolved === 'function') ? isTaskResolved(t.id) : false;
+                    if (resolved) return false;
+                    var s = taskStatuses[t.id] || determineTaskStatus(t);
+                    var aug = Object.assign({}, t, { status: s });
+                    return isNeedConfirmLike(aug);
                 }).length;
                 let html = '<div class="need-confirm-section home-compact">' +
                     '<div class="need-confirm-header">' +
@@ -11315,19 +11367,6 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
             // フェーズメッセージを取得
             const phaseMsg = phaseMessagesOneLine[currentPhase] || '';
 
-            const progressContainer = document.getElementById('homeProgress');
-            const pct = Math.round(progressPercent);
-            progressContainer.innerHTML = `
-                <div class="home-progress-bar">
-                    <div class="progress-header">
-                        <div class="progress-percent">${pct}<span>%</span></div>
-                        <div class="progress-count"><strong>${completedCount}件</strong>完了 / 全${totalCount}件</div>
-                    </div>
-                    <div class="progress-track">
-                        <div class="progress-fill" style="width: ${Math.max(pct, 1)}%"></div>
-                    </div>
-                </div>
-            `;
 
             // 寄り添いメッセージ（非表示）
             const msgEl = document.getElementById('homeMessageText');
@@ -11381,7 +11420,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
 
             // OPEN と NEED_CONFIRM を分離
             const openTasks = activeTasks.filter(t => t.status === 'OPEN');
-            const needConfirmTasks = activeTasks.filter(t => t.status === 'NEED_CONFIRM');
+            const needConfirmTasks = activeTasks.filter(t => isNeedConfirmLike(t));
             const totalActiveTasks = activeTasks.length;
 
             // 修正2：「次にやること」表示（1件フォーカス）
@@ -11523,6 +11562,29 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
             const contentEl = document.getElementById('guideContent');
             if (!contentEl) return;
 
+            // プログレスバー（ホームから移植）
+            const progressEl = document.getElementById('guideProgress');
+            if (progressEl) {
+                const allTasks = tasks.map(t => ({
+                    ...t,
+                    status: taskStatuses[t.id] || determineTaskStatus(t)
+                })).filter(t => t.status !== 'NOT_APPLICABLE');
+                const completedCount = allTasks.filter(t => t.status === 'DONE' || t.status === 'AUTO_DONE').length;
+                const totalCount = allTasks.length;
+                const pct = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+                progressEl.innerHTML = `
+                    <div class="home-progress-bar" style="margin: 12px 16px 4px;">
+                        <div class="progress-header">
+                            <div class="progress-percent">${pct}<span>%</span></div>
+                            <div class="progress-count"><strong>${completedCount}件</strong>完了 / 全${totalCount}件</div>
+                        </div>
+                        <div class="progress-track">
+                            <div class="progress-fill" style="width: ${Math.max(pct, 1)}%"></div>
+                        </div>
+                    </div>
+                `;
+            }
+
             renderGuideContent(contentEl);
             initGuideSwipe();
         }
@@ -11598,15 +11660,9 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 const phaseTasksForCount = tasks.filter(t => t.phase === phaseId);
                 phaseTasksForCount.forEach(function(task) {
                     const currentStatus = determineTaskStatus(task);
-                    if (currentStatus === 'NEED_CONFIRM') {
-                        const hasUnanswered = task.requiredQuestions && task.requiredQuestions.length > 0 &&
-                            task.requiredQuestions.some(qId => {
-                                const ans = answers[qId];
-                                return ans === undefined || ans === null || ans === '';
-                            });
-                        if (hasUnanswered) {
-                            needConfirmCount++;
-                        }
+                    const aug = Object.assign({}, task, { status: currentStatus });
+                    if (isNeedConfirmLike(aug)) {
+                        needConfirmCount++;
                     }
                 });
 
@@ -11621,19 +11677,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 });
             });
 
-            // 全体プログレスサマリー
-            const overallPercent = totalAllTasks > 0 ? Math.round((doneAllTasks / totalAllTasks) * 100) : 0;
-            let html = `
-                <div class="guide-summary">
-                    <div class="guide-summary-label">
-                        <span>全体の進捗</span>
-                        <span>${doneAllTasks} / ${totalAllTasks} 完了</span>
-                    </div>
-                    <div class="guide-summary-bar">
-                        <div class="guide-summary-fill" style="width: ${overallPercent}%"></div>
-                    </div>
-                </div>
-            `;
+            let html = '';
 
             // 各フェーズを描画
             phaseDataList.forEach((data) => {
@@ -11694,8 +11738,8 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                                 <div class="phase-tasks-inner">
                                     ${reviewLinkHtml}
                                     ${(() => {
-                                        const groupA = incompleteTasks.filter(t => t.status !== 'NEED_CONFIRM');
-                                        const groupB = incompleteTasks.filter(t => t.status === 'NEED_CONFIRM');
+                                        const groupA = incompleteTasks.filter(t => !isNeedConfirmLike(t));
+                                        const groupB = incompleteTasks.filter(t => isNeedConfirmLike(t));
                                         let out = '';
                                         if (groupA.length > 0) {
                                             out += renderTaskList(groupA, false, false, true);
@@ -11758,7 +11802,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 const completedTasks = groupTasks.filter(t => isTaskResolved(t.id));
 
                 // NEED_CONFIRMカウント
-                const needConfirmTasks = incompleteTasks.filter(t => t.status === 'NEED_CONFIRM');
+                const needConfirmTasks = incompleteTasks.filter(t => isNeedConfirmLike(t));
                 const needConfirmBadge = needConfirmTasks.length > 0
                     ? `<span style="display:inline-block;background:#FFF3E0;color:#E65100;font-size:11px;font-weight:600;padding:2px 8px;border-radius:10px;margin-left:8px;">${needConfirmTasks.length}件確認</span>`
                     : '';
@@ -11813,8 +11857,8 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                                     ` : ''}
                                     ${hintCard}
                                     ${(() => {
-                                        const groupA = incompleteTasks.filter(t => t.status !== 'NEED_CONFIRM');
-                                        const groupB = incompleteTasks.filter(t => t.status === 'NEED_CONFIRM');
+                                        const groupA = incompleteTasks.filter(t => !isNeedConfirmLike(t));
+                                        const groupB = incompleteTasks.filter(t => isNeedConfirmLike(t));
                                         let out = '';
                                         if (groupA.length > 0) {
                                             out += renderTaskList(groupA, false, true);
@@ -12227,8 +12271,9 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
         // 完了タスクを未完了に戻す確認ダイアログ用の変数
         let pendingUndoTaskId = null;
 
-        // BLOCKED依存先タスク完了後に戻る先のタスクID
-        var _returnToTaskId = null;
+        // BLOCKED依存先タスク完了後に戻る先のタスクIDスタック
+        var _returnToTaskId = null; // 互換: 直近の戻り先（参照用）
+        var _returnTaskStack = [];
         var _depReturnInProgress = false;
 
         // 依存先タスク完了後の復帰遷移（オーバーレイ付き）
@@ -12584,6 +12629,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
 
         function goBackFromDetail() {
             _returnToTaskId = null;
+            _returnTaskStack = [];
             if (detailNavStack.length > 0) {
                 // スタックから前のタスクに戻る
                 const prev = detailNavStack.pop();
@@ -13052,8 +13098,8 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 completeBtn.classList.add('active');
                 completeBtn.disabled = false;
                 completeBtn.onclick = function() {
-                    var capturedReturnId = _returnToTaskId;
-                    _returnToTaskId = null;
+                    var capturedReturnId = _returnTaskStack.length > 0 ? _returnTaskStack.pop() : null;
+                    _returnToTaskId = _returnTaskStack.length > 0 ? _returnTaskStack[_returnTaskStack.length - 1] : null;
                     toggleTaskStatus(taskId);
                     if (capturedReturnId) {
                         var rt = tasks.find(function(t) { return t.id === capturedReturnId; });
@@ -13080,7 +13126,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                         const btn = document.createElement('button');
                         btn.className = 'btn-blocked-dep';
                         btn.innerHTML = '<span class="btn-blocked-dep-title">' + depTask.title + '</span><span class="btn-blocked-dep-label">を先に完了してください</span>';
-                        btn.onclick = function() { _returnToTaskId = taskId; showTaskDetail(depId); };
+                        btn.onclick = function() { _returnTaskStack.push(taskId); _returnToTaskId = taskId; showTaskDetail(depId); };
                         blockedContainer.appendChild(btn);
                     });
                     completeBtn.parentNode.insertBefore(blockedContainer, completeBtn);
@@ -13258,8 +13304,8 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 const currentStatus = taskStatuses[taskId] || determineTaskStatus(tasks.find(t => t.id === taskId));
                 if (currentStatus === 'OPEN' || currentStatus === 'NEED_CONFIRM') {
                     var autoTask = tasks.find(function(t) { return t.id === taskId; });
-                    var _capturedReturnId = _returnToTaskId;
-                    _returnToTaskId = null;
+                    var _capturedReturnId = _returnTaskStack.length > 0 ? _returnTaskStack.pop() : null;
+                    _returnToTaskId = _returnTaskStack.length > 0 ? _returnTaskStack[_returnTaskStack.length - 1] : null;
                     setTimeout(function() {
                         taskStatuses[taskId] = 'DONE';
                         saveData();
@@ -14404,6 +14450,10 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
             html += `<div class="question-card">`;
             html += `<div class="domain-badge domain-${q.domain}">${timeBucketLabels[q.domain] || q.domain}</div>`;
             html += `<div class="question-text">${markGlossaryTerms(q.text)}</div>`;
+            const _confirmHint = (typeof CONFIRM_HINTS !== 'undefined' && CONFIRM_HINTS[q.id]) ? CONFIRM_HINTS[q.id] : '';
+            if (_confirmHint) {
+                html += `<div class="question-annotation">※${_confirmHint}</div>`;
+            }
             html += `<div class="question-info">※後から変更できます</div>`;
 
             if (q.type === 'single') {
@@ -16088,6 +16138,25 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 generateTasks();
                 showScreen('screen-splash');
             }
+
+            // 初期ロード時、URLにハッシュがあれば優先的に復元
+            if (_initialHash && _initialHash.length > 1) {
+                try { applyHashState(_initialHash); } catch (e) {}
+            }
+            // init完了。以降はshowScreenでhistory pushを有効化
+            _initComplete = true;
+            // 現在の画面でhash状態を確定（replaceStateで既存履歴を汚さない）
+            try {
+                var sid = _currentScreenId || 'screen-home';
+                var curHash = '#' + sid;
+                if (sid === 'screen-onboarding' && typeof currentQuestionIndex !== 'undefined') {
+                    curHash += '/q' + currentQuestionIndex;
+                }
+                if (location.hash !== curHash) {
+                    history.replaceState({ screen: sid }, '', curHash);
+                }
+            } catch (e) {}
+            _initialHash = '';
 
             // 「戻す」ボタンのイベントリスナー
             document.getElementById('revertConfirmBtn').onclick = function() {
