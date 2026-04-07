@@ -10813,7 +10813,10 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 var icon = container.querySelector('.generating-icon');
                 if (icon) icon.style.animation = 'none';
 
-                var ncIds = tasks.filter(function(t) { return taskStatuses[t.id] === 'NEED_CONFIRM'; }).map(function(t) { return t.id; });
+                var ncIds = tasks.filter(function(t) {
+                    var aug = Object.assign({}, t, { status: taskStatuses[t.id] });
+                    return isNeedConfirmLike(aug);
+                }).map(function(t) { return t.id; });
                 if (ncIds.length > 0) {
                     showOnboardConfirmScreen(ncIds);
                 } else {
