@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -35,7 +36,6 @@
             color: var(--text-primary);
             background: var(--bg-secondary);
             -webkit-font-smoothing: antialiased;
-            padding-bottom: calc(56px + env(safe-area-inset-bottom));
         }
 
         .app-container {
@@ -3027,8 +3027,7 @@
         .settings-content {
             padding: 0;
             background: var(--bg-warm);
-            min-height: 100vh;
-            padding-bottom: calc(56px + 80px + env(safe-area-inset-bottom));
+            padding-bottom: calc(24px + env(safe-area-inset-bottom));
         }
 
         .settings-header {
@@ -4882,33 +4881,78 @@
         }
 
         /* ── 一括確認ウィザード（q-screen共有、固有スタイルのみ） ── */
-        .bulk-confirm-affected {
+        .bulk-confirm-affected-head {
+            padding-bottom: 16px;
             margin-bottom: 16px;
-            padding: 12px 16px;
-            background: var(--accent-light);
-            border-radius: 10px;
+            border-bottom: 1px solid var(--border);
         }
-
-        .bulk-confirm-affected-label {
+        .bulk-confirm-affected-head-task {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.5;
+            margin-bottom: 2px;
+        }
+        .bulk-confirm-affected-head-sub {
             font-size: 13px;
+            color: var(--text-secondary);
+        }
+        .bulk-confirm-affected {
+            margin: 8px 0 12px;
+            border-radius: 999px;
+            background: var(--accent-light);
+            overflow: hidden;
+            display: inline-block;
+            max-width: 100%;
+        }
+        .bulk-confirm-affected[open] {
+            border-radius: 14px;
+            display: block;
+        }
+        .bulk-confirm-affected-summary {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            font-size: 12px;
             font-weight: 600;
             color: var(--accent);
-            margin-bottom: 6px;
+            cursor: pointer;
+            list-style: none;
+            user-select: none;
         }
-
+        .bulk-confirm-affected-summary::-webkit-details-marker { display: none; }
+        .bulk-confirm-affected-icon {
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+        }
+        .bulk-confirm-affected-summary > span {
+            flex: 1;
+        }
+        .bulk-confirm-affected-chevron {
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+            transition: transform 0.2s;
+            opacity: 0.6;
+        }
+        .bulk-confirm-affected[open] .bulk-confirm-affected-chevron {
+            transform: rotate(180deg);
+        }
         .bulk-confirm-affected-list {
             display: flex;
             flex-direction: column;
-            gap: 3px;
+            gap: 6px;
+            padding: 4px 16px 14px 36px;
         }
-
         .bulk-confirm-affected-item {
             font-size: 13px;
             color: var(--text-secondary);
             padding-left: 12px;
             position: relative;
+            line-height: 1.5;
         }
-
         .bulk-confirm-affected-item::before {
             content: '・';
             position: absolute;
@@ -7294,14 +7338,6 @@
             </div>
             <div class="grief-article-detail" id="griefArticleContent"></div>
         </div>
-
-        <!-- フローティング相談ボタン -->
-        <button class="floating-consult-btn" id="floatingConsultBtn" onclick="openLineOA()">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <span>相談する</span>
-        </button>
 
         <!-- SOS相談窓口シート -->
         <div class="grief-sos-overlay" id="sosOverlay" onclick="closeSosSheet()"></div>
@@ -10623,6 +10659,10 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
 
             let bodyHtml = `<div class="q-domain">${timeBucketLabels[q.domain] || q.domain}</div>`;
             bodyHtml += `<h1 class="q-text">${markGlossaryTerms(q.text)}</h1>`;
+            const _qHint = (typeof CONFIRM_HINTS !== 'undefined' && CONFIRM_HINTS[q.id]) ? CONFIRM_HINTS[q.id] : '';
+            if (_qHint) {
+                bodyHtml += `<div class="question-annotation">※${_qHint}</div>`;
+            }
             bodyHtml += '<div class="q-sub">※ あとから変更できます</div>';
             body.innerHTML = bodyHtml;
 
@@ -13784,22 +13824,22 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
 
             // --- body (question text area) ---
             var bodyHtml = '';
+            bodyHtml += '<h1 class="q-text">' + q.questionText + '</h1>';
+            bodyHtml += '<div class="q-sub">' + (index + 1) + ' / ' + total + ' 問</div>';
             if (q.affectedTaskIds.length > 1) {
-                bodyHtml += '<div class="bulk-confirm-affected">' +
-                    '<div class="bulk-confirm-affected-label">この質問で' + q.affectedTaskIds.length + 'つの手続きが確定します</div>' +
+                bodyHtml += '<details class="bulk-confirm-affected">' +
+                    '<summary class="bulk-confirm-affected-summary">' +
+                        '<svg class="bulk-confirm-affected-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>' +
+                        '<span>この回答で' + q.affectedTaskIds.length + '件の手続きが確定します</span>' +
+                        '<svg class="bulk-confirm-affected-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>' +
+                    '</summary>' +
                     '<div class="bulk-confirm-affected-list">' +
                     q.affectedTaskNames.map(function(name) {
                         return '<div class="bulk-confirm-affected-item">' + name + '</div>';
                     }).join('') +
-                    '</div></div>';
+                    '</div></details>';
             }
-            bodyHtml += '<h1 class="q-text">' + q.questionText + '</h1>';
-            bodyHtml += '<div class="q-sub">' + (index + 1) + ' / ' + total + ' 問</div>';
 
-            var hintText = CONFIRM_HINTS[q.questionId] || '';
-            if (hintText) {
-                bodyHtml += '<div class="bulk-confirm-hint">' + hintText + '</div>';
-            }
 
             // --- options ---
             var existingAnswer = answers[q.questionId];
@@ -13818,7 +13858,6 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 });
             } else if (q.answerType === 'multi') {
                 var exVals = JSON.stringify(q.exclusiveOptions).replace(/"/g, '&quot;');
-                optionsHtml += '<div class="q-sub" style="margin-top:0;margin-bottom:4px;">あてはまるものをすべて選んでください</div>';
                 var prevSelected = Array.isArray(existingAnswer) ? existingAnswer : [];
                 q.options.forEach(function(opt) {
                     var isU = opt.value === 'UNKNOWN' || opt.value === 'NONE';
@@ -13975,13 +14014,13 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
             var totalChanged = addedTasks.length + removedTasks.length;
 
             if (totalChanged === 0) {
-                // パターンB: まだわからない / 変化なし
+                // パターンB: 回答は記録したが、他の条件待ちで手続きはまだ確定していない
                 var html = '<div class="bulk-feedback">' +
                     '<div class="bulk-feedback-summary uncertain">' +
-                        '<div class="bulk-feedback-number">−</div>' +
-                        '<div class="bulk-feedback-label">あとで確認できます</div>' +
+                        '<div class="bulk-feedback-number">✓</div>' +
+                        '<div class="bulk-feedback-label">回答を記録しました</div>' +
                     '</div>' +
-                    '<div class="bulk-feedback-hint">関連する手続きは「確認が必要な手続き」に残ります</div>' +
+                    '<div class="bulk-feedback-hint">他の質問への回答で手続きが確定します</div>' +
                 '</div>';
                 document.getElementById('bulkConfirmBody').innerHTML = html;
                 setTimeout(function() {
@@ -14144,7 +14183,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                         <div class="onboard-confirm-action-badge">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                         </div>
-                        <div class="onboard-confirm-action-title">あと${ncIds.length}件の確認が必要です</div>
+                        <div class="onboard-confirm-action-title">あと${qCount}個の質問に答えてください</div>
                     </div>
                     <div class="onboard-confirm-action-desc">あなたに当てはまるか判断できなかった手続きがあります。かんたんな質問に答えて確定しましょう。</div>
                     <div class="onboard-confirm-action-meta">
@@ -15073,7 +15112,9 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
             // モーダルを閉じてからリロード
             closeLogoutDialog();
 
-            // ページをリロードして全てのメモリ上の変数もリセット
+            // ハッシュをクリアしてからリロード（applyHashState で元画面に戻るのを防ぐ）
+            try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
+            location.hash = '';
             location.reload();
         }
 
