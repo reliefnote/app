@@ -1250,29 +1250,42 @@
         }
 
         .calendar-btn {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 8px 12px;
+            background: #FFFFFF;
+            border: 1px solid #E6E1D6;
+            border-radius: 999px;
+            padding: 9px 16px 9px 13px;
             cursor: pointer;
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            gap: 6px;
-            font-size: 14px;
-            color: var(--text-primary);
-            font-weight: 500;
-            transition: all 0.2s;
+            gap: 7px;
+            font-size: 13px;
+            color: var(--accent);
+            font-weight: 600;
+            letter-spacing: 0.2px;
+            box-shadow: 0 1px 2px rgba(58, 63, 50, 0.05), 0 4px 12px rgba(58, 63, 50, 0.04);
+            transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .calendar-btn:hover {
-            background: var(--accent-light);
-            border-color: var(--accent);
+            background: #FBF8F2;
+            border-color: #D8D0BE;
+            box-shadow: 0 2px 4px rgba(58, 63, 50, 0.08), 0 6px 16px rgba(58, 63, 50, 0.06);
+            transform: translateY(-1px);
+        }
+
+        .calendar-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 2px rgba(58, 63, 50, 0.06);
+            background: #F5F0E6;
         }
 
         .calendar-btn svg {
             width: 16px;
             height: 16px;
-            fill: var(--text-secondary);
+            fill: none;
+            stroke: var(--accent);
+            flex-shrink: 0;
         }
 
         .guide-tabs {
@@ -6697,6 +6710,336 @@
             .sc-headline { font-size: 20px; }
             .sc-sub { font-size: 13px; }
         }
+
+        /* ===== 開発者オプション ===== */
+        .settings-dev-section {
+            border: 1px dashed #CCC5B8;
+            background: #FBF8F2;
+        }
+        .dev-option-row {
+            margin: 12px 0;
+        }
+        .dev-option-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+        .dev-option-radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .dev-option-radio {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+        .dev-option-radio input[type="radio"] {
+            margin: 0;
+        }
+        .dev-option-input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 13px;
+            font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+            background: #FFFFFF;
+            color: var(--text-primary);
+        }
+        .dev-option-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        .dev-option-help {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            line-height: 1.6;
+            margin-top: 4px;
+        }
+        .dev-option-help code {
+            font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+            background: #F0EBE0;
+            padding: 1px 4px;
+            border-radius: 3px;
+        }
+        .dev-option-btn {
+            padding: 8px 14px;
+            border: 1px solid var(--border);
+            background: #FFFFFF;
+            border-radius: 8px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .dev-option-btn:active { opacity: 0.7; }
+
+        /* ===== AI Q&A チャット (Phase 1 モック) ===== */
+        /* エントリーカード（タスク詳細内） */
+        .detail-ai-entry {
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+            margin: 0 16px 16px;
+            background: #FFFFFF;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+        .detail-ai-entry:active {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+        }
+        .detail-ai-entry-icon {
+            width: 42px; height: 42px; border-radius: 50%;
+            background: #EFE9DE;
+            display: flex; align-items: center; justify-content: center;
+            margin-right: 12px; flex-shrink: 0;
+            color: var(--accent);
+        }
+        .detail-ai-entry-icon svg { width: 22px; height: 22px; }
+        .detail-ai-entry-body { flex: 1; min-width: 0; }
+        .detail-ai-entry-title { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+        .detail-ai-entry-sub { font-size: 12px; color: var(--text-tertiary); margin-top: 2px; line-height: 1.5; }
+        .detail-ai-entry-arrow { font-size: 20px; color: var(--text-tertiary); margin-left: 8px; }
+
+        /* ボトムシート本体 */
+        .ai-chat-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            display: none;
+            align-items: flex-end;
+            justify-content: center;
+            z-index: 1100;
+        }
+        .ai-chat-overlay.show { display: flex; }
+        .ai-chat-sheet {
+            background: var(--bg-primary);
+            border-radius: 16px 16px 0 0;
+            max-width: 430px;
+            width: 100%;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            animation: slideUp 0.3s ease;
+            overflow: hidden;
+        }
+        .ai-chat-handle {
+            width: 36px; height: 4px;
+            background: #D0CEC9;
+            border-radius: 2px;
+            margin: 8px auto 8px;
+            flex-shrink: 0;
+        }
+        .ai-chat-header {
+            display: flex;
+            align-items: center;
+            padding: 8px 16px 12px;
+            border-bottom: 1px solid var(--border-light);
+            flex-shrink: 0;
+        }
+        .ai-chat-header-main {
+            display: flex;
+            align-items: center;
+            flex: 1;
+            min-width: 0;
+        }
+        .ai-chat-avatar {
+            width: 38px; height: 38px;
+            border-radius: 50%;
+            background: #EFE9DE;
+            display: flex; align-items: center; justify-content: center;
+            margin-right: 10px;
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+        .ai-chat-avatar svg { width: 22px; height: 22px; }
+        .ai-chat-header-text { flex: 1; min-width: 0; }
+        .ai-chat-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .ai-chat-title-badge {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            color: #FFFFFF;
+            background: var(--accent);
+            padding: 2px 6px;
+            border-radius: 999px;
+        }
+        .ai-chat-subtitle {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            margin-top: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .ai-chat-close {
+            width: 32px; height: 32px;
+            border: none;
+            background: transparent;
+            font-size: 18px;
+            color: var(--text-tertiary);
+            cursor: pointer;
+            padding: 0;
+            flex-shrink: 0;
+        }
+        .ai-chat-close:active { opacity: 0.6; }
+
+        .ai-chat-body {
+            flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 16px 20px 4px;
+        }
+
+        /* メッセージバブル */
+        .ai-msg {
+            display: flex;
+            margin-bottom: 12px;
+        }
+        .ai-msg-ai { justify-content: flex-start; }
+        .ai-msg-user { justify-content: flex-end; }
+        .ai-msg-bubble {
+            max-width: 80%;
+            padding: 10px 14px;
+            border-radius: 14px;
+            font-size: 14px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .ai-msg-ai .ai-msg-bubble {
+            background: #F5F0E6;
+            color: var(--text-primary);
+            border-top-left-radius: 4px;
+        }
+        .ai-msg-user .ai-msg-bubble {
+            background: var(--accent);
+            color: #FFFFFF;
+            border-top-right-radius: 4px;
+        }
+
+        /* タイピングインジケータ */
+        .ai-typing {
+            display: inline-flex;
+            gap: 4px;
+            padding: 12px 14px;
+            background: #F5F0E6;
+            border-radius: 14px;
+            border-top-left-radius: 4px;
+            align-items: center;
+        }
+        .ai-typing span {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: #9A9589;
+            animation: aiTyping 1.2s infinite;
+        }
+        .ai-typing span:nth-child(2) { animation-delay: 0.2s; }
+        .ai-typing span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes aiTyping {
+            0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+            30% { opacity: 1; transform: translateY(-2px); }
+        }
+
+        /* サジェストチップ */
+        .ai-chat-suggestions {
+            padding: 0 20px 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+        .ai-chat-suggestions:empty { padding: 0; }
+        .ai-suggestion-chip {
+            font-size: 12px;
+            padding: 7px 12px;
+            background: #FFFFFF;
+            border: 1px solid #E6E1D6;
+            border-radius: 999px;
+            color: var(--accent);
+            cursor: pointer;
+            font-family: inherit;
+            white-space: nowrap;
+        }
+        .ai-suggestion-chip:active { background: #F5F0E6; }
+
+        /* 入力欄 */
+        .ai-chat-input-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            padding: 12px 20px;
+            border-top: 1px solid var(--border-light);
+            background: var(--bg-primary);
+            flex-shrink: 0;
+        }
+        .ai-chat-input-row input {
+            flex: 1;
+            min-width: 0;
+            border: 1px solid #E6E1D6;
+            border-radius: 999px;
+            padding: 10px 14px;
+            font-size: 14px;
+            font-family: inherit;
+            background: #FBF8F2;
+            color: var(--text-primary);
+            outline: none;
+        }
+        .ai-chat-input-row input:focus { border-color: var(--accent); }
+        .ai-chat-send {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: #FFFFFF;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .ai-chat-send:active { opacity: 0.85; }
+        .ai-chat-send svg { width: 18px; height: 18px; }
+
+        /* 下部固定サポーター CTA */
+        .ai-chat-footer-cta {
+            padding: 14px 20px calc(14px + env(safe-area-inset-bottom));
+            background: #FBF8F2;
+            border-top: 1px solid #E6E1D6;
+            cursor: pointer;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .ai-chat-footer-cta:active { background: #F5F0E6; }
+        .ai-chat-footer-cta-label {
+            font-weight: 600;
+            color: var(--accent);
+            font-size: 14px;
+        }
+        .ai-chat-footer-cta-sub {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
     </style>
 </head>
 <body>
@@ -6830,7 +7173,7 @@
                     </div>
                     <div class="sc-actions">
                         <button class="sc-cta" id="scCta" onclick="splashNext()"><span>次へ</span></button>
-                        <button class="sc-skip" onclick="splashSkip()">スキップ</button>
+                        <button class="sc-skip" id="scSkip" onclick="splashSkip()">スキップ</button>
                     </div>
                     <p class="sc-legal" id="scLegal" style="display:none;">利用を開始することで、<a href="#" onclick="showTerms(); return false;">利用規約</a>と<a href="#" onclick="showPrivacy(); return false;">プライバシーポリシー</a>に同意したものとみなされます。</p>
                 </div>
@@ -7118,6 +7461,41 @@
                     </div>
                 </div>
 
+                <!-- 開発者オプション（dev モード時のみ表示） -->
+                <div class="settings-section settings-dev-section" id="settingsDevSection" style="display:none;">
+                    <div class="settings-section-title">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="vertical-align:-2px;margin-right:6px;opacity:0.5;"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                        開発者オプション
+                    </div>
+                    <div class="dev-option-row">
+                        <div class="dev-option-label">AI チャット プロバイダ</div>
+                        <div class="dev-option-radio-group">
+                            <label class="dev-option-radio">
+                                <input type="radio" name="devAiProvider" value="mock" onchange="_onDevProviderChange(this.value)" />
+                                <span>Mock（Phase 1 キーワードマッチ）</span>
+                            </label>
+                            <label class="dev-option-radio">
+                                <input type="radio" name="devAiProvider" value="api" onchange="_onDevProviderChange(this.value)" />
+                                <span>API（Phase 2 Worker・一括 JSON）</span>
+                            </label>
+                            <label class="dev-option-radio">
+                                <input type="radio" name="devAiProvider" value="api-stream" onchange="_onDevProviderChange(this.value)" disabled />
+                                <span style="opacity:0.5;">API ストリーミング（Phase 2 Step 4・未実装）</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="dev-option-row">
+                        <div class="dev-option-label">API エンドポイント</div>
+                        <input type="text" id="devAiEndpoint" class="dev-option-input" placeholder="https://reliefnote-ai-chat.xxx.workers.dev/" onchange="_onDevEndpointChange(this.value)" />
+                    </div>
+                    <div class="dev-option-help">
+                        変更は即座に反映されます。URL パラメータ <code>?aiProvider=api&amp;aiEndpoint=...</code> でも設定可能。
+                    </div>
+                    <div class="dev-option-row">
+                        <button class="dev-option-btn" onclick="_clearDevAIConfig()">AI チャット設定を初期化</button>
+                    </div>
+                </div>
+
                 <!-- フッター -->
                 <div class="settings-footer">
                     <div class="settings-footer-privacy">
@@ -7129,7 +7507,7 @@
                         <span class="settings-footer-sep"></span>
                         <span onclick="showPrivacy()">プライバシーポリシー</span>
                     </div>
-                    <div class="settings-footer-copy">&copy; 2026 ReliefNote Inc.</div>
+                    <div class="settings-footer-copy" onclick="_onDevTap()">&copy; 2026 ReliefNote Inc.</div>
                 </div>
             </div>
         </div>
@@ -7658,6 +8036,46 @@
             <div class="confirm-sheet" id="confirmSheet" onclick="event.stopPropagation()">
                 <div class="confirm-sheet-handle"></div>
                 <div id="confirmSheetContent"></div>
+            </div>
+        </div>
+
+        <!-- AI Q&A チャット ボトムシート (Phase 1 モック) -->
+        <div id="aiChatOverlay" class="ai-chat-overlay" onclick="closeAIChat(event)">
+            <div class="ai-chat-sheet" onclick="event.stopPropagation()">
+                <div class="ai-chat-handle"></div>
+                <div class="ai-chat-header">
+                    <div class="ai-chat-header-main">
+                        <div class="ai-chat-avatar" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="6" width="18" height="13" rx="3"></rect>
+                                <circle cx="9" cy="12.5" r="1.2" fill="currentColor" stroke="none"></circle>
+                                <circle cx="15" cy="12.5" r="1.2" fill="currentColor" stroke="none"></circle>
+                                <line x1="12" y1="2.5" x2="12" y2="6"></line>
+                                <circle cx="12" cy="2.5" r="1" fill="currentColor" stroke="none"></circle>
+                            </svg>
+                        </div>
+                        <div class="ai-chat-header-text">
+                            <div class="ai-chat-title">AIアシスタント<span class="ai-chat-title-badge">BETA</span></div>
+                            <div class="ai-chat-subtitle" id="aiChatTaskName"></div>
+                        </div>
+                    </div>
+                    <button class="ai-chat-close" onclick="closeAIChat()" aria-label="閉じる">✕</button>
+                </div>
+                <div class="ai-chat-body" id="aiChatBody"></div>
+                <div class="ai-chat-suggestions" id="aiChatSuggestions"></div>
+                <div class="ai-chat-input-row">
+                    <input type="text" id="aiChatInput" placeholder="質問を入力..." autocomplete="off" />
+                    <button class="ai-chat-send" onclick="sendAIChatMessage()" aria-label="送信">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2" fill="currentColor" stroke="none"></polygon>
+                        </svg>
+                    </button>
+                </div>
+                <div class="ai-chat-footer-cta" onclick="openLineOA()">
+                    <div class="ai-chat-footer-cta-label">🤝 サポーターに直接相談する</div>
+                    <div class="ai-chat-footer-cta-sub">LINEで24時間以内に返信</div>
+                </div>
             </div>
         </div>
 
@@ -10902,6 +11320,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
             } else if (screenId === 'screen-settings') {
                 updateUserNameDisplay();
                 initSlackWebhookUI();
+                _renderDevSettings();
             } else if (screenId === 'screen-confirm') {
                 // 確認センター画面の初期表示のみ（startConfirmCenterは呼び出し元で実行済み）
                 document.getElementById('confirmQuestionArea').style.display = 'block';
@@ -11087,14 +11506,17 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
             var cta = document.getElementById('scCta');
             var ctaLabel = cta ? cta.querySelector('span') : null;
             var legal = document.getElementById('scLegal');
+            var skip = document.getElementById('scSkip');
             if (_splashIndex === _splashTotal - 1) {
                 if (ctaLabel) ctaLabel.textContent = 'はじめる';
                 if (cta) cta.setAttribute('onclick', 'startOnboarding()');
                 if (legal) legal.style.display = 'block';
+                if (skip) skip.style.display = 'none';
             } else {
                 if (ctaLabel) ctaLabel.textContent = '次へ';
                 if (cta) cta.setAttribute('onclick', 'splashNext()');
                 if (legal) legal.style.display = 'none';
+                if (skip) skip.style.display = '';
             }
         }
 
@@ -11356,9 +11778,6 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
 
             // アニメーション完了後に遷移
             setTimeout(function() {
-                var icon = container.querySelector('.generating-icon');
-                if (icon) icon.style.animation = 'none';
-
                 var ncIds = tasks.filter(function(t) {
                     var aug = Object.assign({}, t, { status: taskStatuses[t.id] });
                     return isNeedConfirmLike(aug);
@@ -13610,6 +14029,26 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                         `;
                     }
                 }
+
+                // AI Q&A エントリーカード (Phase 1 モック)
+                html += `
+                    <div class="detail-ai-entry" onclick="openAIChat('${taskId}')">
+                        <div class="detail-ai-entry-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                <path d="M9 10h.01"></path>
+                                <path d="M13 10h.01"></path>
+                                <path d="M17 10h.01"></path>
+                            </svg>
+                        </div>
+                        <div class="detail-ai-entry-body">
+                            <div class="detail-ai-entry-title">このタスクについて質問する</div>
+                            <div class="detail-ai-entry-sub">制度や手続きの一般情報をその場でお答えします</div>
+                        </div>
+                        <span class="detail-ai-entry-arrow">›</span>
+                    </div>
+                `;
+
                 html += `</div>`; // detail-body 閉じ
             } else {
                 // 準備中（heroブロック閉じ → bodyブロック）
@@ -15784,6 +16223,578 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 return fallback;
             }
         }
+
+        // ===== AI Q&A チャット (Phase 1 モック) =====
+        // LLM には接続せず、taskDetails のキーワードマッチで応答する暫定実装。
+        // UX と「有人サポートへの導線」を検証するための土台。
+        var _aiChatState = {
+            taskId: null,
+            turnCount: 0,
+            escalated: false
+        };
+
+        function openAIChat(taskId) {
+            _aiChatState = { taskId: taskId, turnCount: 0, escalated: false };
+            var task = tasks.find(function(t) { return t.id === taskId; });
+            var taskName = task ? task.title : '';
+            var subtitleEl = document.getElementById('aiChatTaskName');
+            if (subtitleEl) subtitleEl.textContent = taskName ? taskName + ' について' : '';
+
+            var body = document.getElementById('aiChatBody');
+            if (body) body.innerHTML = '';
+
+            _appendAIMessage(
+                'こんにちは。このタスクについて、制度や手続きの一般的な情報をお答えします。\n\n' +
+                '個別のご事情や判断を要するご質問は、下の「サポーターに直接相談する」からお気軽にどうぞ。'
+            );
+
+            _renderSuggestions(_generateSuggestions(taskId));
+
+            var input = document.getElementById('aiChatInput');
+            if (input) input.value = '';
+
+            document.getElementById('aiChatOverlay').classList.add('show');
+        }
+
+        function closeAIChat(event) {
+            if (event && event.target !== event.currentTarget) return;
+            var overlay = document.getElementById('aiChatOverlay');
+            if (overlay) overlay.classList.remove('show');
+        }
+
+        function sendAIChatMessage() {
+            var input = document.getElementById('aiChatInput');
+            if (!input) return;
+            var rawText = input.value.trim();
+            if (!rawText) return;
+            input.value = '';
+
+            // 0. PII 自動マスク（ユーザー入力のみ、taskContext は対象外）
+            var sanitized = _sanitizePII(rawText);
+            var text = sanitized.clean;
+
+            _appendUserMessage(text);
+            if (sanitized.count > 0 && typeof showToast === 'function') {
+                showToast('個人情報 ' + sanitized.count + ' 件を自動マスクしました');
+            }
+            _aiChatState.turnCount++;
+            _clearSuggestions();
+
+            // 1. ガードレールチェック（LLM に届く前に必ず UI 層でブロック）
+            var guardrailResponse = _checkAIGuardrails(text, _aiChatState.turnCount, _aiChatState);
+            if (guardrailResponse) {
+                _showTyping();
+                setTimeout(function() {
+                    _hideTyping();
+                    _appendAIMessage(guardrailResponse);
+                }, 400);
+                return;
+            }
+
+            // 2. プロバイダを呼び出し（mock or api は _AI_CHAT_CONFIG で切替）
+            _showTyping();
+            var start = Date.now();
+            var taskContext = _buildAITaskContext(_aiChatState.taskId);
+            var history = _getAIChatHistory(6);
+            // 履歴中の user 発言にも PII フィルタをかける（初期実装前の履歴への保険）
+            for (var hi = 0; hi < history.length; hi++) {
+                if (history[hi].role === 'user') {
+                    history[hi].content = _sanitizePII(history[hi].content).clean;
+                }
+            }
+            var provider = _getAIProvider();
+
+            provider.getResponse({
+                question: text,
+                taskId: _aiChatState.taskId,
+                taskContext: taskContext,
+                history: history
+            }).then(function(answer) {
+                // タイピングインジケータの最小表示時間
+                var elapsed = Date.now() - start;
+                var wait = Math.max(0, _AI_MIN_THINK_MS - elapsed);
+                setTimeout(function() {
+                    _hideTyping();
+                    if (answer) {
+                        // 末尾 CTA はここで必ず付加（LLM には書かせない）
+                        _appendAIMessage(answer + _AI_ESCALATION_NOTE);
+                    } else {
+                        _appendAIMessage(_AI_NO_MATCH_MESSAGE);
+                    }
+                }, wait);
+            }).catch(function(err) {
+                console.error('[ai chat] provider error:', err);
+                _hideTyping();
+                _appendAIMessage(_AI_ERROR_MESSAGE);
+            });
+        }
+
+        function _appendAIMessage(text) {
+            var body = document.getElementById('aiChatBody');
+            if (!body) return;
+            var wrap = document.createElement('div');
+            wrap.className = 'ai-msg ai-msg-ai';
+            var bubble = document.createElement('div');
+            bubble.className = 'ai-msg-bubble';
+            bubble.textContent = text;
+            wrap.appendChild(bubble);
+            body.appendChild(wrap);
+            body.scrollTop = body.scrollHeight;
+        }
+
+        function _appendUserMessage(text) {
+            var body = document.getElementById('aiChatBody');
+            if (!body) return;
+            var wrap = document.createElement('div');
+            wrap.className = 'ai-msg ai-msg-user';
+            var bubble = document.createElement('div');
+            bubble.className = 'ai-msg-bubble';
+            bubble.textContent = text;
+            wrap.appendChild(bubble);
+            body.appendChild(wrap);
+            body.scrollTop = body.scrollHeight;
+        }
+
+        function _showTyping() {
+            var body = document.getElementById('aiChatBody');
+            if (!body) return;
+            var wrap = document.createElement('div');
+            wrap.className = 'ai-msg ai-msg-ai';
+            wrap.id = 'aiChatTypingRow';
+            wrap.innerHTML = '<div class="ai-typing"><span></span><span></span><span></span></div>';
+            body.appendChild(wrap);
+            body.scrollTop = body.scrollHeight;
+        }
+
+        function _hideTyping() {
+            var row = document.getElementById('aiChatTypingRow');
+            if (row && row.parentNode) row.parentNode.removeChild(row);
+        }
+
+        function _generateSuggestions(taskId) {
+            var d = (typeof taskDetails !== 'undefined' && taskDetails) ? taskDetails[taskId] : null;
+            var task = tasks.find(function(t) { return t.id === taskId; });
+            var suggestions = [];
+            if (d && d.requiredDocs) suggestions.push('必要書類は？');
+            if (task && (task.legalDueDays || task.phase)) suggestions.push('期限はいつまで？');
+            if (d && (d.destination || d.address)) suggestions.push('どこに提出する？');
+            if (d && d.officeHours) suggestions.push('受付時間は？');
+            var steps = (typeof taskStepsData !== 'undefined' && taskStepsData && taskStepsData[taskId]) ? taskStepsData[taskId].steps_short : null;
+            if (steps && steps.length) suggestions.push('手順を教えて');
+            return suggestions.slice(0, 3);
+        }
+
+        function _renderSuggestions(list) {
+            var container = document.getElementById('aiChatSuggestions');
+            if (!container) return;
+            if (!list || !list.length) {
+                container.innerHTML = '';
+                return;
+            }
+            container.innerHTML = list.map(function(q) {
+                var safe = String(q).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+                return '<button class="ai-suggestion-chip" onclick="_onSuggestionClick(\'' + safe + '\')">' + q + '</button>';
+            }).join('');
+        }
+
+        function _onSuggestionClick(text) {
+            var input = document.getElementById('aiChatInput');
+            if (!input) return;
+            input.value = text;
+            sendAIChatMessage();
+        }
+
+        function _clearSuggestions() {
+            var container = document.getElementById('aiChatSuggestions');
+            if (container) container.innerHTML = '';
+        }
+
+        // ===== AI Q&A プロバイダ層 (Phase 2 準備) =====
+        // ガードレールと応答生成を責務分離し、mock / api を差し替えられるようにする。
+
+        // プロバイダ切替と API エンドポイント。
+        // 優先度: URL パラメータ > localStorage > デフォルト
+        // URL パラメータで上書きされた場合は localStorage に保存（リロード後も維持）
+        // 受け付けるプロバイダ識別子（'api-stream' は Phase 2 Step 4 で実装予定）
+        var _AI_PROVIDER_VALUES = ['mock', 'api', 'api-stream'];
+        // 既存ユーザーの localStorage を一度だけ強制移行するためのバージョン
+        // version が一致しない場合は保存値を破棄して最新デフォルトを使う
+        var _AI_CHAT_CONFIG_VERSION = 2;
+        var _AI_CHAT_CONFIG = (function() {
+            // Phase 2: 本番 Worker をデフォルトに
+            var cfg = {
+                provider: 'api',
+                apiEndpoint: 'https://reliefnote-ai-chat.reliefnote.workers.dev/'
+            };
+            try {
+                var saved = JSON.parse(localStorage.getItem('rn_ai_chat_config') || '{}');
+                if (saved && saved.version === _AI_CHAT_CONFIG_VERSION) {
+                    if (_AI_PROVIDER_VALUES.indexOf(saved.provider) !== -1) {
+                        cfg.provider = saved.provider;
+                    }
+                    if (typeof saved.apiEndpoint === 'string') {
+                        cfg.apiEndpoint = saved.apiEndpoint;
+                    }
+                }
+            } catch (e) { /* ignore */ }
+            try {
+                var params = new URLSearchParams(location.search);
+                var p = params.get('aiProvider');
+                var ep = params.get('aiEndpoint');
+                var changed = false;
+                if (p && _AI_PROVIDER_VALUES.indexOf(p) !== -1) { cfg.provider = p; changed = true; }
+                if (ep) { cfg.apiEndpoint = ep; changed = true; }
+                if (changed) {
+                    localStorage.setItem('rn_ai_chat_config', JSON.stringify({
+                        version: _AI_CHAT_CONFIG_VERSION,
+                        provider: cfg.provider,
+                        apiEndpoint: cfg.apiEndpoint
+                    }));
+                }
+            } catch (e) { /* ignore */ }
+            return cfg;
+        })();
+
+        function _saveAIChatConfig() {
+            try {
+                localStorage.setItem('rn_ai_chat_config', JSON.stringify({
+                    version: _AI_CHAT_CONFIG_VERSION,
+                    provider: _AI_CHAT_CONFIG.provider,
+                    apiEndpoint: _AI_CHAT_CONFIG.apiEndpoint
+                }));
+            } catch (e) { /* ignore */ }
+        }
+
+        // ---- 開発者モード（社内検証用の隠しスイッチ） ----
+        // localStorage rn_dev_mode = '1' で有効。URL ?dev=1 / ?dev=0 で切替可能。
+        // 設定画面フッターのコピーライトを 7 タップで ON/OFF できる。
+        var _DEV_TAP_STATE = { count: 0, lastTs: 0 };
+
+        function _isDevMode() {
+            try {
+                var params = new URLSearchParams(location.search);
+                var p = params.get('dev');
+                if (p === '1') {
+                    localStorage.setItem('rn_dev_mode', '1');
+                    return true;
+                }
+                if (p === '0') {
+                    localStorage.removeItem('rn_dev_mode');
+                    return false;
+                }
+                return localStorage.getItem('rn_dev_mode') === '1';
+            } catch (e) {
+                return false;
+            }
+        }
+
+        function _onDevTap() {
+            var now = Date.now();
+            if (now - _DEV_TAP_STATE.lastTs > 800) {
+                _DEV_TAP_STATE.count = 0;
+            }
+            _DEV_TAP_STATE.count++;
+            _DEV_TAP_STATE.lastTs = now;
+            if (_DEV_TAP_STATE.count >= 7) {
+                _DEV_TAP_STATE.count = 0;
+                try {
+                    if (_isDevMode()) {
+                        localStorage.removeItem('rn_dev_mode');
+                        if (typeof showToast === 'function') showToast('開発者モードを無効化しました');
+                    } else {
+                        localStorage.setItem('rn_dev_mode', '1');
+                        if (typeof showToast === 'function') showToast('開発者モードを有効化しました');
+                    }
+                } catch (e) { /* ignore */ }
+                _renderDevSettings();
+            }
+        }
+
+        function _renderDevSettings() {
+            var section = document.getElementById('settingsDevSection');
+            if (!section) return;
+            if (!_isDevMode()) {
+                section.style.display = 'none';
+                return;
+            }
+            section.style.display = '';
+            // ラジオの選択状態
+            var radios = section.querySelectorAll('input[name="devAiProvider"]');
+            for (var i = 0; i < radios.length; i++) {
+                radios[i].checked = (radios[i].value === _AI_CHAT_CONFIG.provider);
+            }
+            // エンドポイント入力
+            var ep = document.getElementById('devAiEndpoint');
+            if (ep) ep.value = _AI_CHAT_CONFIG.apiEndpoint || '';
+        }
+
+        function _onDevProviderChange(value) {
+            if (_AI_PROVIDER_VALUES.indexOf(value) === -1) return;
+            _AI_CHAT_CONFIG.provider = value;
+            _saveAIChatConfig();
+            if (typeof showToast === 'function') {
+                var label = value === 'api' ? 'API' : value === 'api-stream' ? 'API (stream)' : 'Mock';
+                showToast('プロバイダを ' + label + ' に切替');
+            }
+        }
+
+        function _onDevEndpointChange(value) {
+            _AI_CHAT_CONFIG.apiEndpoint = (value || '').trim();
+            _saveAIChatConfig();
+        }
+
+        function _clearDevAIConfig() {
+            try {
+                localStorage.removeItem('rn_ai_chat_config');
+            } catch (e) { /* ignore */ }
+            // Phase 2: 本番 Worker をデフォルトに
+            _AI_CHAT_CONFIG.provider = 'api';
+            _AI_CHAT_CONFIG.apiEndpoint = 'https://reliefnote-ai-chat.reliefnote.workers.dev/';
+            _renderDevSettings();
+            if (typeof showToast === 'function') showToast('AI チャット設定を初期化しました');
+        }
+
+        // 全応答末尾に付けるサポーター導線（ガードレール #2: UI 側ハードコード）
+        var _AI_ESCALATION_NOTE =
+            '\n\n💡 個別のご事情は下の「サポーターに直接相談する」からお尋ねください。';
+
+        // プロバイダが null を返したときの既定メッセージ（mock でキーワード未マッチ等）
+        var _AI_NO_MATCH_MESSAGE =
+            'ご質問ありがとうございます。\n\n' +
+            'このご質問は個別のご事情に関わる可能性があるため、サポーターにご相談いただくのが確実です。下の「サポーターに直接相談する」からLINEでお気軽にお尋ねください。';
+
+        // API エラー時のフォールバック
+        var _AI_ERROR_MESSAGE =
+            '申し訳ありません。一時的に応答できませんでした。\n\n' +
+            'お急ぎの場合は下の「サポーターに直接相談する」からLINEでお尋ねください。';
+
+        // タイピングインジケータの最小表示時間（ms）
+        var _AI_MIN_THINK_MS = 500;
+
+        // ---- PII フィルタ: API 送信前にユーザー入力を簡易マスク ----
+        // 対象: 質問本文と履歴中の user 発言のみ。
+        // 対象外: taskContext（マスタデータは制度情報として電話番号等を含むべき）。
+        // 名前・住所は正規表現で誤検知が多いので対象にしない。代わりに明確なパターンのみ。
+        var _PII_PATTERNS = [
+            // メールアドレス
+            { re: /[\w.+\-]+@[\w\-]+(?:\.[\w\-]+)+/g, label: '[メールアドレス]' },
+            // 電話番号（ハイフン区切り）: 03-1234-5678 / 090-1234-5678 / 0164-34-2111 等
+            // 半角/全角ハイフン・長音記号に対応
+            { re: /0\d{1,4}[-‐−－ー]\d{1,4}[-‐−－ー]\d{3,4}/g, label: '[電話番号]' },
+            // 電話番号（ハイフンなし 10-11 桁）
+            { re: /(?:^|[^\d])(0\d{9,10})(?=[^\d]|$)/g, label: '[電話番号]', group: 1 },
+            // 郵便番号: 〒123-4567 / 123-4567
+            { re: /〒?\d{3}[-‐−－ー]\d{4}(?!\d)/g, label: '[郵便番号]' },
+            // マイナンバー風 12 桁（ハイフン or スペース区切り）
+            { re: /(?:^|[^\d])(\d{4}[\s\-]\d{4}[\s\-]\d{4})(?=[^\d]|$)/g, label: '[番号]', group: 1 },
+        ];
+
+        function _sanitizePII(text) {
+            if (typeof text !== 'string' || !text) return { clean: text || '', count: 0 };
+            var clean = text;
+            var count = 0;
+            for (var i = 0; i < _PII_PATTERNS.length; i++) {
+                var p = _PII_PATTERNS[i];
+                clean = clean.replace(p.re, function(match, g1) {
+                    count++;
+                    // group 指定があればマッチ全体のうちグループ部分だけ置換
+                    if (p.group && typeof g1 === 'string') {
+                        return match.replace(g1, p.label);
+                    }
+                    return p.label;
+                });
+            }
+            return { clean: clean, count: count };
+        }
+
+        // ---- ガードレール: LLM に届く前に UI 層でブロックするルール ----
+        // 返り値: null (通す) or string (即エスカレーション応答)
+        function _checkAIGuardrails(question, turnCount, state) {
+            var q = question || '';
+            // 1. 感情ワード → 即エスカレーション
+            var emotional = /つらい|辛い|しんどい|不安|わからない|分からない|困っ|疲れ|どうしよう|悲し|泣|助けて/;
+            if (emotional.test(q)) {
+                state.escalated = true;
+                return 'お気持ちをお聞かせいただきありがとうございます。\n\n' +
+                       'AIでは十分にお応えできない内容かもしれません。サポーターが直接お話を伺いますので、下の「サポーターに直接相談する」からお気軽にご連絡ください。';
+            }
+            // 2. 3ターン後の能動エスカレーション
+            if (turnCount >= 3 && !state.escalated) {
+                state.escalated = true;
+                return '詳しくお話を伺った方がよさそうですね。\n\nこの先はサポーターに直接ご相談いただく方が確実です。下の「サポーターに直接相談する」からどうぞ。';
+            }
+            return null;
+        }
+
+        // ---- タスクコンテキスト構築（プロバイダ共通の入力）----
+        function _buildAITaskContext(taskId) {
+            var task = tasks.find(function(t) { return t.id === taskId; }) || {};
+            var d = (typeof taskDetails !== 'undefined' && taskDetails) ? (taskDetails[taskId] || {}) : {};
+            var steps = (typeof taskStepsData !== 'undefined' && taskStepsData && taskStepsData[taskId]) ? (taskStepsData[taskId].steps_short || []) : [];
+            var disp = (typeof getTaskDetailDisplay === 'function') ? getTaskDetailDisplay(taskId, d) : null;
+            return {
+                title: task.title || '',
+                actionSummary: d.actionSummary || '',
+                whyNeeded: d.whyNeeded || '',
+                requiredDocs: d.requiredDocs || '',
+                destination: (disp && disp.destination) || d.destination || '',
+                address: (disp && disp.address) || d.address || '',
+                phone: (disp && disp.phone) || d.phone || '',
+                officeHours: (disp && disp.office_hours) || d.officeHours || '',
+                doneCondition: d.doneCondition || '',
+                steps: steps,
+                phase: task.phase || '',
+                legalDueDays: task.legalDueDays || null
+            };
+        }
+
+        // ---- チャット履歴取得（DOM から、直近のユーザー発言を除いた履歴）----
+        function _getAIChatHistory(maxMessages) {
+            var body = document.getElementById('aiChatBody');
+            if (!body) return [];
+            var nodes = body.querySelectorAll('.ai-msg');
+            var history = [];
+            for (var i = 0; i < nodes.length; i++) {
+                var node = nodes[i];
+                if (node.id === 'aiChatTypingRow') continue;
+                var bubble = node.querySelector('.ai-msg-bubble');
+                if (!bubble) continue;
+                var role = node.classList.contains('ai-msg-user') ? 'user' : 'assistant';
+                history.push({ role: role, content: bubble.textContent || '' });
+            }
+            // 直前に _appendUserMessage で追加された発言は question で送るので除外
+            if (history.length && history[history.length - 1].role === 'user') {
+                history.pop();
+            }
+            if (typeof maxMessages === 'number' && history.length > maxMessages) {
+                history = history.slice(-maxMessages);
+            }
+            return history;
+        }
+
+        // ---- プロバイダ: モック（Phase 1 のキーワードマッチ）----
+        // getResponse(params) -> Promise<string | null>
+        //   string: 応答本文（UI 側で _AI_ESCALATION_NOTE が付加される）
+        //   null:   マッチなし（UI 側で _AI_NO_MATCH_MESSAGE が表示される）
+        var _aiMockProvider = {
+            getResponse: function(params) {
+                return new Promise(function(resolve) {
+                    var question = params.question || '';
+                    var taskId = params.taskId;
+                    var ctx = params.taskContext || {};
+                    var q = question;
+
+                    // 必要書類
+                    if (/必要書類|持ち物|用意|書類|何が必要|何を持|何を用意/.test(q)) {
+                        if (ctx.requiredDocs) {
+                            return resolve('必要な書類は以下の通りです：\n\n' + ctx.requiredDocs);
+                        }
+                        return resolve('このタスクには特に指定の書類は登録されていません。');
+                    }
+                    // 期限
+                    if (/期限|いつまで|締切|締め切り|間に合|いつ/.test(q)) {
+                        var savedAnswers = safeParseJSON(localStorage.getItem('answers'), {});
+                        var deathDate = savedAnswers['Q-DOD-01'];
+                        var task = tasks.find(function(t) { return t.id === taskId; }) || {};
+                        var dueDays = (typeof getTaskDueDays === 'function') ? getTaskDueDays(task) : (task.legalDueDays || null);
+                        var dl = (typeof calculateDeadline === 'function' && task.phase) ? calculateDeadline(task.phase, deathDate, dueDays) : null;
+                        if (dl && dl.hasDate) {
+                            var remainText = dl.isOverdue ? (Math.abs(dl.daysRemaining) + '日超過') : ('残り' + dl.daysRemaining + '日');
+                            return resolve('期限は ' + dl.dateStr + ' です（' + remainText + '）。\n\n' + dl.phaseLabel);
+                        }
+                        if (dl && dl.phaseLabel) {
+                            return resolve(dl.phaseLabel + '\n\n死亡日をご登録いただくと、具体的な日付もお出しできます。');
+                        }
+                        return resolve('期限に関する情報はタスク詳細の「期限」欄をご確認ください。');
+                    }
+                    // 提出先・場所
+                    if (/どこ|提出先|行き先|窓口|場所|住所/.test(q)) {
+                        var ans = [];
+                        if (ctx.destination) ans.push('提出先: ' + ctx.destination);
+                        if (ctx.address) ans.push('住所: ' + ctx.address);
+                        if (ans.length) return resolve(ans.join('\n'));
+                        return resolve('提出先の詳細はタスク詳細をご確認ください。');
+                    }
+                    // 受付時間
+                    if (/何時|時間|営業|開いて|受付/.test(q)) {
+                        if (ctx.officeHours) return resolve('受付時間: ' + ctx.officeHours);
+                        return resolve('受付時間の情報は登録されていません。事前にお電話で確認するのがおすすめです。');
+                    }
+                    // 電話
+                    if (/電話|連絡先|番号/.test(q)) {
+                        if (ctx.phone) return resolve('電話番号: ' + ctx.phone);
+                        return resolve('電話番号の情報は登録されていません。');
+                    }
+                    // 手順
+                    if (/手順|やり方|進め方|流れ|どうやって|どうすれ/.test(q)) {
+                        if (ctx.steps && ctx.steps.length) {
+                            return resolve('大まかな流れ:\n\n' + ctx.steps.map(function(s, i) { return (i + 1) + '. ' + s; }).join('\n'));
+                        }
+                        return resolve('手順の情報は登録されていません。');
+                    }
+                    // なぜ必要
+                    if (/なぜ|理由|目的|何のため/.test(q)) {
+                        if (ctx.whyNeeded) return resolve(ctx.whyNeeded);
+                        return resolve('このタスクの背景情報は登録されていません。');
+                    }
+                    // 完了条件
+                    if (/完了|終わり|済ん|終了|終わっ/.test(q)) {
+                        if (ctx.doneCondition) return resolve('完了の目安: ' + ctx.doneCondition);
+                        return resolve('完了条件の詳細はタスク詳細をご確認ください。');
+                    }
+                    // 概要
+                    if (/概要|どんな|について/.test(q)) {
+                        if (ctx.actionSummary) return resolve(ctx.actionSummary);
+                    }
+                    // マッチなし → null
+                    resolve(null);
+                });
+            }
+        };
+
+        // ---- プロバイダ: API (Phase 2 Step 3 で有効化) ----
+        var _aiApiProvider = {
+            getResponse: function(params) {
+                if (!_AI_CHAT_CONFIG.apiEndpoint) {
+                    return Promise.reject(new Error('apiEndpoint is not configured'));
+                }
+                return fetch(_AI_CHAT_CONFIG.apiEndpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        taskId: params.taskId,
+                        taskContext: params.taskContext,
+                        question: params.question,
+                        history: params.history
+                    })
+                }).then(function(res) {
+                    if (!res.ok) throw new Error('API error: ' + res.status);
+                    return res.json();
+                }).then(function(data) {
+                    return (data && data.answer) ? String(data.answer) : null;
+                });
+            }
+        };
+
+        function _getAIProvider() {
+            // 'api-stream' は Phase 2 Step 4 で実装。現状は 'api'（一括 JSON）にフォールバック。
+            if (_AI_CHAT_CONFIG.provider === 'api' || _AI_CHAT_CONFIG.provider === 'api-stream') {
+                return _aiApiProvider;
+            }
+            return _aiMockProvider;
+        }
+
+        // Enter キーで送信（IME 変換中は無視）
+        document.addEventListener('DOMContentLoaded', function() {
+            var input = document.getElementById('aiChatInput');
+            if (!input) return;
+            input.addEventListener('keydown', function(e) {
+                if (e.key !== 'Enter') return;
+                if (e.isComposing || e.keyCode === 229) return;
+                e.preventDefault();
+                sendAIChatMessage();
+            });
+        });
 
         // ========== 家族共有機能 ==========
 
