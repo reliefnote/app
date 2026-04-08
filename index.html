@@ -388,7 +388,7 @@
         .q-header {
             display: flex;
             align-items: center;
-            padding: 16px 0 12px;
+            padding: 16px 40px 12px 0;
             gap: 12px;
             flex-shrink: 0;
         }
@@ -428,16 +428,17 @@
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
+            align-items: stretch;
             min-height: 0;
-            padding: 20px 0 16px;
+            padding: 24px 0 20px;
         }
         .q-text {
-            font-size: clamp(20px, 5.5vw, 24px);
+            font-size: clamp(19px, 5vw, 22px);
             font-weight: 700;
             color: var(--text-primary);
-            line-height: 1.45;
-            letter-spacing: -0.3px;
-            margin: 0;
+            line-height: 1.5;
+            letter-spacing: -0.2px;
+            margin: 0 0 10px;
             word-break: auto-phrase;
             overflow-wrap: break-word;
         }
@@ -448,20 +449,23 @@
             line-height: 1.5;
         }
         .q-domain {
+            align-self: flex-start;
             display: inline-block;
-            padding: 3px 8px;
-            border-radius: 6px;
+            padding: 4px 10px;
+            border-radius: 999px;
             font-size: 11px;
             font-weight: 500;
-            margin-bottom: 8px;
+            margin-bottom: 14px;
             background: var(--bg-secondary);
             color: var(--text-secondary);
+            letter-spacing: 0.3px;
         }
 
         .q-options {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
+            padding-top: 8px;
             padding-bottom: max(24px, env(safe-area-inset-bottom, 24px));
             flex-shrink: 0;
         }
@@ -532,7 +536,8 @@
         .q-next-btn {
             display: block;
             width: 100%;
-            height: 52px;
+            height: 54px;
+            margin-top: 14px;
             padding: 0 16px;
             background: var(--accent);
             color: #FFFFFF;
@@ -540,6 +545,7 @@
             border-radius: 14px;
             font-size: 16px;
             font-weight: 600;
+            letter-spacing: 0.3px;
             cursor: pointer;
             transition: opacity 0.2s;
             font-family: inherit;
@@ -550,9 +556,9 @@
         .q-skip {
             display: block;
             text-align: center;
-            padding: 12px;
+            padding: 14px 12px 4px;
             color: var(--text-tertiary);
-            font-size: 14px;
+            font-size: 13px;
             cursor: pointer;
             text-decoration: none;
         }
@@ -672,13 +678,12 @@
         }
         .question-annotation {
             font-size: 13px;
-            color: var(--text-secondary);
-            line-height: 1.6;
-            margin: 4px 0 16px;
-            padding: 10px 12px;
-            background: var(--bg-warm);
-            border-left: 3px solid var(--accent);
-            border-radius: 4px;
+            color: var(--text-tertiary);
+            line-height: 1.7;
+            margin: 2px 0 4px;
+            padding: 0;
+            background: none;
+            border: none;
         }
         .question-info {
             background: var(--bg-secondary);
@@ -737,11 +742,25 @@
         }
 
         .home-header {
+            position: relative;
             background: var(--bg-primary);
             padding: 16px 16px 16px;
             margin-bottom: 0;
             border-bottom: 1px solid var(--border-light);
+            overflow: hidden;
         }
+        .home-header::before {
+            content: '';
+            position: absolute;
+            right: -40px;
+            top: -30px;
+            width: 180px;
+            height: 120px;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 120'><path d='M0 80 Q45 55 90 72 T180 68' fill='none' stroke='%233A3F32' stroke-width='1' opacity='0.08'/><path d='M0 95 Q50 72 100 85 T180 82' fill='none' stroke='%233A3F32' stroke-width='1' opacity='0.06'/><circle cx='150' cy='35' r='18' fill='none' stroke='%233A3F32' stroke-width='1' opacity='0.08'/></svg>");
+            background-repeat: no-repeat;
+            pointer-events: none;
+        }
+        .home-header > * { position: relative; z-index: 1; }
 
         .header-top {
             display: flex;
@@ -1025,6 +1044,9 @@
             font-weight: 600;
             margin-bottom: 8px;
             color: var(--text-primary);
+            padding-left: 10px;
+            border-left: 2px solid #3A3F32;
+            line-height: 1.3;
         }
 
         .consult-card {
@@ -3794,14 +3816,26 @@
         .nav-item .nav-icon svg path {
             fill: #C8C5BE;
             stroke: none;
-            transition: fill 0.2s ease;
+            transition: fill 0.2s ease, stroke 0.2s ease;
+        }
+        .nav-item .nav-icon svg.nav-icon-stroke {
+            color: #C8C5BE;
+        }
+        .nav-item .nav-icon svg.nav-icon-stroke path {
+            fill: none;
+            stroke: currentColor;
         }
 
         .nav-item.active .nav-icon svg path {
             fill: var(--accent);
         }
-        .nav-item.active[data-tab="grief"] .nav-icon svg path { fill: #E04A1F; }
-        .nav-item.active[data-tab="concierge"] .nav-icon svg path { fill: #2D54B8; }
+        .nav-item.active .nav-icon svg.nav-icon-stroke {
+            color: var(--accent);
+        }
+        .nav-item.active .nav-icon svg.nav-icon-stroke path {
+            fill: none;
+            stroke: currentColor;
+        }
 
         .nav-label {
             font-size: 10px;
@@ -3959,9 +3993,23 @@
 
         /* ヒーロー */
         .concierge-hero {
+            position: relative;
             background: #EFE9DE;
             padding: 44px 24px 36px;
+            overflow: hidden;
         }
+        .concierge-hero::before {
+            content: '';
+            position: absolute;
+            left: -60px;
+            bottom: -60px;
+            width: 220px;
+            height: 220px;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 220'><circle cx='110' cy='110' r='32' fill='none' stroke='%233A3F32' stroke-width='1' opacity='0.14'/><circle cx='110' cy='110' r='58' fill='none' stroke='%233A3F32' stroke-width='1' opacity='0.1'/><circle cx='110' cy='110' r='86' fill='none' stroke='%233A3F32' stroke-width='1' opacity='0.07'/><circle cx='110' cy='110' r='112' fill='none' stroke='%233A3F32' stroke-width='1' opacity='0.04'/></svg>");
+            background-repeat: no-repeat;
+            pointer-events: none;
+        }
+        .concierge-hero > * { position: relative; z-index: 1; }
         .concierge-avatars {
             display: flex;
             margin-bottom: 16px;
@@ -4048,7 +4096,7 @@
         .concierge-cta-btn {
             width: 100%;
             padding: 18px;
-            background: var(--accent);
+            background: #3A3F32;
             color: #FFFFFF;
             border: none;
             border-radius: 14px;
@@ -5193,72 +5241,105 @@
         .generating-screen {
             min-height: 100vh;
             min-height: 100dvh;
-            background: var(--bg-warm);
+            background: #F5F3F0;
+            background-image:
+                radial-gradient(ellipse at 50% 38%, #FFFFFF 0%, #F5F3F0 55%, #EDE9E2 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 40px 24px;
+            position: relative;
+            overflow: hidden;
+        }
+        .generating-screen::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 600'><circle cx='200' cy='300' r='120' fill='none' stroke='%233A3F32' stroke-width='0.8' opacity='0.06'/><circle cx='200' cy='300' r='180' fill='none' stroke='%233A3F32' stroke-width='0.8' opacity='0.04'/><circle cx='200' cy='300' r='240' fill='none' stroke='%233A3F32' stroke-width='0.8' opacity='0.03'/></svg>");
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+            pointer-events: none;
         }
         .generating-content {
             text-align: center;
             max-width: 300px;
+            position: relative;
+            z-index: 1;
         }
         .generating-icon {
             display: inline-block;
-            margin-bottom: 24px;
-            animation: generatingSpin 2s linear infinite;
+            margin-bottom: 28px;
+            color: #3A3F32;
+            opacity: 0;
+            animation: generatingBreath 3.2s ease-in-out infinite, generatingFadeIn 0.8s ease forwards;
         }
-        @keyframes generatingSpin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .generating-icon svg { stroke: #3A3F32; }
+        @keyframes generatingBreath {
+            0%, 100% { transform: scale(1); opacity: 0.85; }
+            50% { transform: scale(1.05); opacity: 1; }
         }
         .generating-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--text-primary);
-            line-height: 1.6;
-            margin-bottom: 28px;
+            font-size: 17px;
+            font-weight: 500;
+            color: #3A3F32;
+            line-height: 1.9;
+            letter-spacing: 0.5px;
+            margin-bottom: 36px;
             opacity: 0;
-            animation: generatingFadeIn 0.5s ease forwards;
+            animation: generatingFadeIn 0.8s ease 0.2s forwards;
         }
         .generating-steps {
             text-align: left;
             display: flex;
             flex-direction: column;
-            gap: 14px;
+            gap: 16px;
         }
         .generating-step {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             font-size: 14px;
-            color: var(--text-secondary);
+            color: rgba(58, 63, 50, 0.55);
+            letter-spacing: 0.3px;
             opacity: 0;
-            transform: translateY(8px);
+            transform: translateY(6px);
         }
         .generating-step.visible {
-            animation: generatingStepIn 0.4s ease forwards;
+            animation: generatingStepIn 0.6s ease forwards;
+            color: rgba(58, 63, 50, 0.9);
         }
         .generating-step-check {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
-            background: var(--accent);
+            background: transparent;
+            border: 1px solid rgba(58, 63, 50, 0.25);
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+        .generating-step.visible .generating-step-check {
+            background: #3A3F32;
+            border-color: #3A3F32;
         }
         .generating-step-check svg {
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
+            stroke: #F5F3F0 !important;
+            opacity: 0;
+            transition: opacity 0.3s ease 0.1s;
+        }
+        .generating-step.visible .generating-step-check svg {
+            opacity: 1;
         }
         @keyframes generatingFadeIn {
             from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
         @keyframes generatingStepIn {
-            from { opacity: 0; transform: translateY(8px); }
+            from { opacity: 0; transform: translateY(6px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
@@ -5541,7 +5622,7 @@
             display: flex;
             align-items: center;
             padding: 18px 20px 22px;
-            background: #5F8D64;
+            background: #3A3F32;
             border-bottom: none;
             flex-shrink: 0;
             overflow: hidden;
@@ -5553,7 +5634,7 @@
             top: -20px;
             width: 140px;
             height: 100px;
-            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 140 100'><path d='M30 70 C20 45 35 20 60 18 C85 16 105 35 100 60 C95 80 70 90 50 85 C40 82 33 76 30 70 Z' fill='%23F5E8D0' opacity='0.35'/><path d='M75 50 C68 32 80 12 100 12 C118 12 130 28 125 48 C120 65 100 72 85 65 C80 62 76 56 75 50 Z' fill='%23F5E8D0' opacity='0.25'/></svg>");
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 140 100'><path d='M30 70 C20 45 35 20 60 18 C85 16 105 35 100 60 C95 80 70 90 50 85 C40 82 33 76 30 70 Z' fill='%23F5F3F0' opacity='0.12'/><path d='M75 50 C68 32 80 12 100 12 C118 12 130 28 125 48 C120 65 100 72 85 65 C80 62 76 56 75 50 Z' fill='%23F5F3F0' opacity='0.08'/></svg>");
             background-repeat: no-repeat;
             pointer-events: none;
         }
@@ -5571,7 +5652,7 @@
             min-width: 40px;
             z-index: 1;
         }
-        .grief-back:active { background: rgba(245, 232, 208, 0.18); }
+        .grief-back:active { background: rgba(245, 243, 240, 0.18); }
         .grief-header-title {
             position: relative;
             flex: 1;
@@ -5597,6 +5678,9 @@
             font-weight: 700;
             color: var(--text-primary);
             margin: 0 0 10px 0;
+            padding-left: 10px;
+            border-left: 2px solid #3A3F32;
+            line-height: 1.3;
         }
         .grief-record-desc {
             font-size: 15px;
@@ -5961,7 +6045,7 @@
             align-items: center;
             gap: 6px;
             padding: 10px 16px;
-            background: var(--accent);
+            background: #E04A1F;
             color: #fff;
             border-radius: 10px;
             text-decoration: none;
@@ -6448,159 +6532,161 @@
             line-height: 1.6;
         }
 
-        /* ===== Splash Carousel ===== */
+        /* ===== Splash Carousel (simple) ===== */
         .splash-carousel {
-            background: var(--bg-warm);
-            min-height: 100vh;
-            min-height: 100dvh;
+            background: #F5F3F0;
+            height: 100vh;
+            height: 100dvh;
             display: flex;
             flex-direction: column;
             position: relative;
             overflow: hidden;
         }
-        .sc-logo {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            object-fit: cover;
-            z-index: 10;
-            box-shadow: 0 4px 12px rgba(58, 63, 50, 0.12);
-        }
         .sc-track {
-            flex: 1;
+            flex: 1 1 auto;
             display: flex;
-            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            min-height: 0;
+            transition: transform 0.6s cubic-bezier(0.22, 0.8, 0.26, 1);
             will-change: transform;
         }
         .sc-slide {
             flex: 0 0 100%;
+            min-width: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-end;
-            padding: 32px 28px 0;
-            position: relative;
-        }
-        .sc-illust {
-            flex: 1;
-            display: flex;
-            align-items: center;
             justify-content: center;
-            width: 100%;
-            max-width: 360px;
-            margin: 0 auto;
+            padding: 24px 32px;
+            overflow: hidden;
         }
-        .sc-illust svg {
-            width: 100%;
-            height: auto;
-            max-height: 46vh;
+        .sc-illust-wrap {
+            width: min(62vw, 240px);
+            aspect-ratio: 1 / 1;
+            margin-bottom: 40px;
+            flex-shrink: 0;
         }
-        .sc-ground {
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            height: 280px;
-            background: linear-gradient(to bottom, transparent, #E8DFD0 35%, #E8DFD0);
-            border-radius: 50% 50% 0 0 / 18% 18% 0 0;
-            z-index: 0;
-            pointer-events: none;
+        .sc-illust-wrap {
+            position: relative;
+            filter:
+                drop-shadow(0 1px 0 rgba(58,63,50,0.18))
+                drop-shadow(0 3px 2px rgba(58,63,50,0.10))
+                drop-shadow(0 18px 28px rgba(58,63,50,0.16));
+            transform: rotate(-0.6deg);
+            animation: scIllustFloat 5s ease-in-out infinite;
+        }
+        @keyframes scIllustFloat {
+            0%, 100% { transform: rotate(-0.6deg) translateY(0); }
+            50%      { transform: rotate(-0.6deg) translateY(-8px); }
+        }
+        .sc-illust-wrap svg,
+        .sc-illust-wrap img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+            border-radius: 22px;
+            filter: url(#paperCut);
         }
         .sc-text {
-            position: relative;
-            z-index: 1;
             text-align: center;
-            padding: 0 8px 32px;
-            max-width: 380px;
+            max-width: 340px;
         }
         .sc-headline {
             font-size: 22px;
             font-weight: 700;
-            line-height: 1.5;
-            color: var(--text-primary);
-            letter-spacing: 1px;
-            margin-bottom: 14px;
+            line-height: 1.6;
+            color: #2B2F24;
+            margin: 0 0 12px;
+            letter-spacing: 0.2px;
         }
         .sc-sub {
             font-size: 14px;
-            line-height: 1.7;
-            color: var(--text-secondary);
-            letter-spacing: 0.3px;
+            line-height: 1.8;
+            color: #6E6D67;
+            margin: 0;
         }
-        .sc-nav {
-            position: relative;
-            z-index: 2;
+        .sc-slide .sc-illust-wrap,
+        .sc-slide .sc-headline,
+        .sc-slide .sc-sub {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.22,0.8,0.26,1);
+        }
+        .sc-slide.sc-active .sc-illust-wrap { opacity: 1; transform: none; transition-delay: 0.08s; }
+        .sc-slide.sc-active .sc-headline { opacity: 1; transform: none; transition-delay: 0.22s; }
+        .sc-slide.sc-active .sc-sub { opacity: 1; transform: none; transition-delay: 0.32s; }
+        .sc-footer {
+            flex-shrink: 0;
+            padding: 16px 32px calc(24px + env(safe-area-inset-bottom));
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: space-between;
-            padding: 18px 28px calc(28px + env(safe-area-inset-bottom));
-            background: #E8DFD0;
-        }
-        .sc-skip, .sc-next {
-            background: none;
-            border: none;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-secondary);
-            cursor: pointer;
-            padding: 10px 4px;
-            letter-spacing: 0.5px;
-        }
-        .sc-next {
-            color: var(--accent);
+            gap: 18px;
         }
         .sc-dots {
             display: flex;
-            gap: 8px;
+            gap: 7px;
         }
         .sc-dot {
             width: 6px;
             height: 6px;
             border-radius: 50%;
-            background: var(--text-tertiary);
-            opacity: 0.3;
-            transition: all 0.3s ease;
+            background: #3A3F32;
+            opacity: 0.2;
+            transition: all 0.4s ease;
         }
         .sc-dot.active {
             opacity: 1;
-            width: 20px;
+            width: 22px;
             border-radius: 3px;
-            background: var(--accent);
         }
-        .sc-cta-wrap {
-            position: relative;
-            z-index: 2;
-            padding: 8px 28px 16px;
-            background: #E8DFD0;
+        .sc-actions {
+            width: 100%;
+            max-width: 340px;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 4px;
         }
         .sc-cta {
             width: 100%;
-            max-width: 340px;
-            margin: 0 auto;
-            display: block;
             padding: 16px 24px;
-            background: var(--accent);
-            color: #fff;
+            background: #3A3F32;
+            color: #F5F3F0;
             border: none;
             border-radius: 999px;
             font-size: 15px;
             font-weight: 600;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
             cursor: pointer;
-            box-shadow: 0 8px 20px rgba(58, 63, 50, 0.18);
+            font-family: inherit;
+            transition: opacity 0.2s;
         }
+        .sc-cta:active { opacity: 0.85; }
+        .sc-skip {
+            background: none;
+            border: none;
+            font-size: 13px;
+            color: #8B8A84;
+            cursor: pointer;
+            padding: 10px;
+            font-family: inherit;
+        }
+        .sc-skip:active { opacity: 0.6; }
         .sc-legal {
             text-align: center;
             font-size: 11px;
-            color: var(--text-tertiary);
-            line-height: 1.6;
-            padding: 10px 28px 0;
-            background: #E8DFD0;
+            color: #8B8A84;
+            line-height: 1.7;
+            max-width: 320px;
+            margin: 0;
         }
-        .sc-legal a { color: var(--text-secondary); text-decoration: underline; }
+        .sc-legal a { color: #3A3F32; text-decoration: underline; text-underline-offset: 2px; }
+        @media (max-height: 680px) {
+            .sc-illust-wrap { width: min(48vw, 180px); margin-bottom: 24px; }
+            .sc-headline { font-size: 20px; }
+            .sc-sub { font-size: 13px; }
+        }
     </style>
 </head>
 <body>
@@ -6609,100 +6695,68 @@
         <!-- 画面0: スプラッシュ -->
         <div id="screen-splash" class="screen active">
             <div class="splash-carousel">
+                <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+                    <defs>
+                        <filter id="paperCut" x="-10%" y="-10%" width="120%" height="120%">
+                            <feTurbulence type="fractalNoise" baseFrequency="0.018 0.032" numOctaves="3" seed="7" result="noise"/>
+                            <feDisplacementMap in="SourceGraphic" in2="noise" scale="9"/>
+                        </filter>
+                    </defs>
+                </svg>
                 <div class="sc-track" id="scTrack">
-                    <!-- Slide 1: 山と日の出 -->
-                    <div class="sc-slide">
-                        <div class="sc-illust">
-                            <svg viewBox="0 0 360 360" xmlns="http://www.w3.org/2000/svg">
-                                <!-- 太陽 -->
-                                <path d="M248 78 C228 76 212 92 212 112 C212 132 228 148 248 148 C268 148 284 132 284 112 C284 92 268 80 248 78 Z" fill="#E04A1F"/>
-                                <!-- 後ろの山 -->
-                                <path d="M40 230 C70 180 110 150 150 165 C190 178 220 145 260 160 C295 172 320 200 340 230 L340 320 L40 320 Z" fill="#7BA876"/>
-                                <!-- 前の山 -->
-                                <path d="M20 280 C60 240 100 220 145 235 C180 245 215 225 255 240 C290 252 320 270 345 290 L345 340 L20 340 Z" fill="#5F8D64"/>
-                            </svg>
+                    <!-- Slide 1: 夜明け -->
+                    <div class="sc-slide sc-active">
+                        <div class="sc-illust-wrap">
+                            <img src="images/splash/01-sun.png" alt="">
                         </div>
-                        <div class="sc-ground"></div>
                         <div class="sc-text">
-                            <div class="sc-headline">悲しみの中でも、迷わず前へ。</div>
-                            <div class="sc-sub">大切な方を失ったあとは、<br>やるべきことが多すぎて、混乱しがちです。</div>
+                            <h1 class="sc-headline">大切な方を見送った<br>あなたへ。</h1>
+                            <p class="sc-sub">悲しみのなかで向き合う手続きを、<br>ReliefNoteがそっとご案内します。</p>
                         </div>
                     </div>
-                    <!-- Slide 2: 整理された紙の束 -->
+                    <!-- Slide 2: 星（導き） -->
                     <div class="sc-slide">
-                        <div class="sc-illust">
-                            <svg viewBox="0 0 360 360" xmlns="http://www.w3.org/2000/svg">
-                                <!-- 紙の束（ペーパーカット風） -->
-                                <path d="M70 110 C68 108 70 105 73 105 L285 102 C288 102 290 105 288 108 L290 142 C290 145 287 147 284 145 L72 148 C69 148 67 145 69 142 Z" fill="#E04A1F"/>
-                                <path d="M55 155 C53 153 55 150 58 150 L295 148 C298 148 300 151 298 154 L300 188 C300 191 297 193 294 191 L57 194 C54 194 52 191 54 188 Z" fill="#F5E8D0"/>
-                                <path d="M75 200 C73 198 75 195 78 195 L280 192 C283 192 285 195 283 198 L285 232 C285 235 282 237 279 235 L77 238 C74 238 72 235 74 232 Z" fill="#2D54B8"/>
-                                <path d="M60 245 C58 243 60 240 63 240 L290 238 C293 238 295 241 293 244 L295 278 C295 281 292 283 289 281 L62 284 C59 284 57 281 59 278 Z" fill="#5F8D64"/>
-                                <!-- 上のチェック丸 -->
-                                <path d="M180 35 C155 32 135 50 135 75 C135 100 155 115 180 115 C205 115 225 100 225 75 C225 50 205 38 180 35 Z" fill="#5F8D64"/>
-                                <path d="M158 75 L175 92 L205 60" fill="none" stroke="#F5F0E6" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
+                        <div class="sc-illust-wrap">
+                            <img src="images/splash/02-star.png" alt="">
                         </div>
-                        <div class="sc-ground"></div>
                         <div class="sc-text">
-                            <div class="sc-headline">やるべきことを、ひとつずつ。</div>
-                            <div class="sc-sub">あなたの状況に合わせて、<br>必要な手続きだけをご案内します。</div>
+                            <h1 class="sc-headline">必要なことだけを、<br>正しい順番で。</h1>
+                            <p class="sc-sub">質問にお答えいただくだけで、<br>あなたに必要な手続きが整います。</p>
                         </div>
                     </div>
-                    <!-- Slide 3: 寄り添う2つの石 -->
+                    <!-- Slide 3: 貝（寄り添い） -->
                     <div class="sc-slide">
-                        <div class="sc-illust">
-                            <svg viewBox="0 0 360 360" xmlns="http://www.w3.org/2000/svg">
-                                <!-- 大きな葉 -->
-                                <path d="M105 120 C75 145 70 200 95 235 C115 265 155 280 185 265 C205 250 215 215 205 180 C195 145 165 115 130 112 C120 110 110 115 105 120 Z" fill="#5F8D64"/>
-                                <!-- 小さな葉 -->
-                                <path d="M210 165 C190 180 185 215 200 240 C215 260 245 270 270 258 C290 245 295 215 285 190 C275 165 250 150 225 152 C218 153 213 158 210 165 Z" fill="#2D54B8"/>
-                                <!-- 花 -->
-                                <path d="M175 65 C165 55 145 60 142 75 C140 88 152 100 165 100 C175 100 188 92 188 80 C188 70 182 65 175 65 Z" fill="#E04A1F"/>
-                            </svg>
+                        <div class="sc-illust-wrap">
+                            <img src="images/splash/03-shell.png" alt="">
                         </div>
-                        <div class="sc-ground"></div>
                         <div class="sc-text">
-                            <div class="sc-headline">ひとりじゃ、ありません。</div>
-                            <div class="sc-sub">分からないことは、いつでも<br>サポートチームにご相談いただけます。</div>
+                            <h1 class="sc-headline">迷われたときは、<br>どうぞお声がけください。</h1>
+                            <p class="sc-sub">ご不安なことは、サポートチームが<br>いつでもお応えいたします。</p>
                         </div>
                     </div>
-                    <!-- Slide 4: 大きな星 -->
+                    <!-- Slide 4: 空（旅立ち） -->
                     <div class="sc-slide">
-                        <div class="sc-illust">
-                            <svg viewBox="0 0 360 360" xmlns="http://www.w3.org/2000/svg">
-                                <!-- 太陽（不規則な手描き丸） -->
-                                <path d="M248 70 C222 68 198 82 188 105 C178 130 188 158 210 172 C232 186 262 182 280 162 C298 142 300 112 286 90 C276 76 262 70 248 70 Z" fill="#E04A1F"/>
-                                <!-- 後景の丘 -->
-                                <path d="M-5 240 C40 200 90 215 140 230 C185 243 230 215 280 225 C315 232 345 250 365 245 L365 365 L-5 365 Z" fill="#7BA876"/>
-                                <!-- 前景の丘 -->
-                                <path d="M-5 295 C50 260 110 280 170 290 C220 298 270 275 320 285 C345 290 360 300 365 305 L365 365 L-5 365 Z" fill="#5F8D64"/>
-                                <!-- 小さな点（種・花） -->
-                                <circle cx="80" cy="320" r="5" fill="#E04A1F"/>
-                                <circle cx="120" cy="335" r="4" fill="#F5E8D0"/>
-                                <circle cx="260" cy="325" r="5" fill="#F5E8D0"/>
-                                <circle cx="300" cy="340" r="4" fill="#E04A1F"/>
-                            </svg>
+                        <div class="sc-illust-wrap">
+                            <img src="images/splash/04-sky.png" alt="">
                         </div>
-                        <div class="sc-ground"></div>
                         <div class="sc-text">
-                            <div class="sc-headline">はじめましょう。</div>
-                            <div class="sc-sub">いくつかの質問にお答えいただくと、<br>あなた専用の手続きリストができます。</div>
+                            <h1 class="sc-headline">ご一緒に、<br>進めてまいります。</h1>
+                            <p class="sc-sub">ご質問にお答えいただくと、<br>あなただけの手続きリストができあがります。</p>
                         </div>
                     </div>
                 </div>
-                <div class="sc-cta-wrap" id="scCtaWrap" style="display:none;">
-                    <button class="sc-cta" onclick="startOnboarding()">はじめる</button>
-                    <p class="sc-legal">利用を開始することで、<a href="#" onclick="showTerms(); return false;">利用規約</a>と<a href="#" onclick="showPrivacy(); return false;">プライバシーポリシー</a>に同意したものとみなされます。</p>
-                </div>
-                <div class="sc-nav" id="scNav">
-                    <button class="sc-skip" onclick="splashSkip()">スキップ</button>
+                <div class="sc-footer">
                     <div class="sc-dots" id="scDots">
                         <div class="sc-dot active"></div>
                         <div class="sc-dot"></div>
                         <div class="sc-dot"></div>
                         <div class="sc-dot"></div>
                     </div>
-                    <button class="sc-next" onclick="splashNext()">次へ</button>
+                    <div class="sc-actions">
+                        <button class="sc-cta" id="scCta" onclick="splashNext()"><span>次へ</span></button>
+                        <button class="sc-skip" onclick="splashSkip()">スキップ</button>
+                    </div>
+                    <p class="sc-legal" id="scLegal" style="display:none;">利用を開始することで、<a href="#" onclick="showTerms(); return false;">利用規約</a>と<a href="#" onclick="showPrivacy(); return false;">プライバシーポリシー</a>に同意したものとみなされます。</p>
                 </div>
             </div>
         </div>
@@ -6718,9 +6772,6 @@
                         <div class="q-progress-bar">
                             <div class="q-progress-fill" id="qProgressFill" style="width: 12.5%"></div>
                         </div>
-                        <button class="q-close" id="qCloseBtn" onclick="showExitOnboardingDialog()">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                        </button>
                     </div>
                     <div class="q-body" id="qBody"></div>
                     <div class="q-options" id="qOptions"></div>
@@ -7694,32 +7745,36 @@
         <div class="footer-nav">
             <button class="nav-item active" data-tab="home" onclick="switchTab('home')">
                 <div class="nav-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 2.5 C11.6 2.5 11.2 2.65 10.9 2.95 L3.2 9.5 C2.7 9.95 2.5 10.55 2.6 11.15 L2.6 20.3 C2.65 21.3 3.5 22.05 4.5 22 L9 22 L9 14.5 C9 14 9.4 13.6 9.9 13.6 L14.1 13.6 C14.6 13.6 15 14 15 14.5 L15 22 L19.5 22 C20.5 22.05 21.35 21.3 21.4 20.3 L21.4 11.15 C21.5 10.55 21.3 9.95 20.8 9.5 L13.1 2.95 C12.8 2.65 12.4 2.5 12 2.5 Z"/>
+                    <svg class="nav-icon-stroke" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M9 22V12H15V22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </div>
                 <div class="nav-label">ホーム</div>
             </button>
             <button class="nav-item" data-tab="guide" onclick="switchTab('guide')">
                 <div class="nav-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M6.5 3.2 C5.7 3.3 5.1 4 5.1 4.85 L5 20.5 C4.95 21.4 5.7 22.15 6.6 22.1 L17.5 22 C18.4 22 19.1 21.25 19.05 20.35 L18.95 4.7 C18.9 3.85 18.2 3.2 17.35 3.25 L14.7 3.35 C14.7 2.5 14 1.85 13.15 1.9 L10.85 1.95 C10 2 9.35 2.7 9.4 3.55 L6.5 3.2 Z M9 8.5 C8.5 8.55 8.15 9 8.2 9.5 C8.25 10 8.7 10.35 9.2 10.3 L15.2 10.15 C15.7 10.1 16.05 9.65 16 9.15 C15.95 8.65 15.5 8.3 15 8.35 L9 8.5 Z M9.1 13 C8.6 13.05 8.25 13.5 8.3 14 C8.35 14.5 8.8 14.85 9.3 14.8 L15.3 14.65 C15.8 14.6 16.15 14.15 16.1 13.65 C16.05 13.15 15.6 12.8 15.1 12.85 L9.1 13 Z"/>
+                    <svg class="nav-icon-stroke" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9 5H7C6.46957 5 5.96086 5.21071 5.58579 5.58579C5.21071 5.96086 5 6.46957 5 7V19C5 19.5304 5.21071 20.0391 5.58579 20.4142C5.96086 20.7893 6.46957 21 7 21H17C17.5304 21 18.0391 20.7893 18.4142 20.4142C18.7893 20.0391 19 19.5304 19 19V7C19 6.46957 18.7893 5.96086 18.4142 5.58579C18.0391 5.21071 17.5304 5 17 5H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M9 5C9 4.46957 9.21071 3.96086 9.58579 3.58579C9.96086 3.21071 10.4696 3 11 3H13C13.5304 3 14.0391 3.21071 14.4142 3.58579C14.7893 3.96086 15 4.46957 15 5C15 5.53043 14.7893 6.03914 14.4142 6.41421C14.0391 6.78929 13.5304 7 13 7H11C10.4696 7 9.96086 6.78929 9.58579 6.41421C9.21071 6.03914 9 5.53043 9 5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M9 12H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M9 16H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </div>
                 <div class="nav-label">ガイド</div>
             </button>
             <button class="nav-item" data-tab="grief" onclick="switchTab('grief-care')">
                 <div class="nav-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 21.3 C11.7 21.3 11.4 21.2 11.2 21 C8.5 18.8 5.8 16.4 4.1 14 C2.6 12 1.8 9.7 2.7 7.4 C3.5 5.3 5.5 3.9 7.7 4 C9.3 4.05 10.7 4.85 11.6 6.1 C11.7 6.25 11.85 6.35 12 6.35 C12.15 6.35 12.3 6.25 12.4 6.1 C13.3 4.85 14.7 4.05 16.3 4 C18.5 3.9 20.5 5.3 21.3 7.4 C22.2 9.7 21.4 12 19.9 14 C18.2 16.4 15.5 18.8 12.8 21 C12.6 21.2 12.3 21.3 12 21.3 Z"/>
+                    <svg class="nav-icon-stroke" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </div>
                 <div class="nav-label">こころ</div>
             </button>
             <button class="nav-item" data-tab="concierge" onclick="switchTab('concierge')">
                 <div class="nav-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M5 3.2 C3.6 3.3 2.5 4.5 2.55 5.9 L2.6 16.5 C2.65 17.9 3.85 19 5.25 18.95 L7 18.9 L6.95 21.5 C6.95 21.85 7.35 22.05 7.65 21.85 L11.5 19 L18.8 18.8 C20.2 18.75 21.3 17.55 21.25 16.15 L21.2 5.55 C21.15 4.15 19.95 3.05 18.55 3.1 L5 3.2 Z"/>
+                    <svg class="nav-icon-stroke" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </div>
                 <div class="nav-label">相談</div>
@@ -10923,16 +10978,25 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 if (i === _splashIndex) d.classList.add('active');
                 else d.classList.remove('active');
             });
-            var nextBtn = document.querySelector('#scNav .sc-next');
-            var ctaWrap = document.getElementById('scCtaWrap');
-            var nav = document.getElementById('scNav');
+            var slides = document.querySelectorAll('#scTrack .sc-slide');
+            slides.forEach(function(s, i) { s.classList.remove('sc-active'); });
+            // Retrigger entrance animation on the newly visible slide
+            setTimeout(function() {
+                slides.forEach(function(s, i) {
+                    if (i === _splashIndex) s.classList.add('sc-active');
+                });
+            }, 30);
+            var cta = document.getElementById('scCta');
+            var ctaLabel = cta ? cta.querySelector('span') : null;
+            var legal = document.getElementById('scLegal');
             if (_splashIndex === _splashTotal - 1) {
-                if (ctaWrap) ctaWrap.style.display = 'block';
-                if (nav) nav.style.display = 'none';
+                if (ctaLabel) ctaLabel.textContent = 'はじめる';
+                if (cta) cta.setAttribute('onclick', 'startOnboarding()');
+                if (legal) legal.style.display = 'block';
             } else {
-                if (ctaWrap) ctaWrap.style.display = 'none';
-                if (nav) nav.style.display = 'flex';
-                if (nextBtn) nextBtn.textContent = '次へ';
+                if (ctaLabel) ctaLabel.textContent = '次へ';
+                if (cta) cta.setAttribute('onclick', 'splashNext()');
+                if (legal) legal.style.display = 'none';
             }
         }
 
@@ -11008,7 +11072,6 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
             if (_qHint) {
                 bodyHtml += `<div class="question-annotation">※${_qHint}</div>`;
             }
-            bodyHtml += '<div class="q-sub">※ あとから変更できます</div>';
             body.innerHTML = bodyHtml;
 
             let optsHtml = '';
@@ -11147,7 +11210,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
             var container = document.getElementById('generatingContent');
             container.innerHTML =
                 '<div class="generating-icon">' +
-                    '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="' + 'var(--accent)' + '" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">' +
+                    '<svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#3A3F32" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">' +
                         '<path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>' +
                         '<rect x="9" y="3" width="6" height="4" rx="1"/>' +
                         '<path d="M9 12l2 2 4-4"/>' +
@@ -11169,7 +11232,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                     '</div>' +
                     '<div class="generating-step" id="genStep3">' +
                         '<span class="generating-step-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 6 5 8.5 9.5 3.5"/></svg></span>' +
-                        '<span>完了！</span>' +
+                        '<span>準備が整いました</span>' +
                     '</div>' +
                 '</div>';
 
@@ -11816,12 +11879,20 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
 
             if (totalActiveTasks === 0) {
                 nextContainer.innerHTML = `
-                    <div style="text-align: center; padding: 40px 20px;">
-                        <div style="width: 56px; height: 56px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
-                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                    <div style="text-align: center; padding: 48px 20px 40px;">
+                        <div style="margin: 0 auto 24px; width: 140px; height: 110px;">
+                            <svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%; display:block;">
+                                <circle cx="100" cy="62" r="30" fill="#F5CD67"/>
+                                <path d="M0 115 Q50 80 100 100 T200 105 L200 140 L0 140 Z" fill="#3A3F32"/>
+                                <path d="M0 125 Q60 100 120 115 T200 118 L200 140 L0 140 Z" fill="#363646"/>
+                                <circle cx="40" cy="38" r="2" fill="#F5CD67" opacity="0.7"/>
+                                <circle cx="160" cy="30" r="2.5" fill="#F5CD67" opacity="0.6"/>
+                                <circle cx="170" cy="55" r="1.8" fill="#F5CD67" opacity="0.5"/>
+                                <circle cx="30" cy="60" r="1.8" fill="#F5CD67" opacity="0.5"/>
+                            </svg>
                         </div>
-                        <div style="font-size: 17px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">おつかれさまでした</div>
-                        <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">すべてのタスクが完了しました。<br>必要な手続きはひと段落です。</div>
+                        <div style="font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 10px; letter-spacing: 0.5px;">おつかれさまでした</div>
+                        <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.8;">すべての手続きが終わりました。<br>長い道のりを歩ききった<br>ご自身をどうか労ってください。</div>
                     </div>
                 `;
             } else if (openTasks.length === 0) {
