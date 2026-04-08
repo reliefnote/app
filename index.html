@@ -939,7 +939,7 @@
             width: 44px;
             height: 44px;
             border-radius: 50%;
-            background: var(--accent);
+            background: #EFE9DE;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -948,10 +948,8 @@
         }
 
         .care-team-icon svg {
-            width: 22px;
-            height: 22px;
-            stroke: #FFFFFF;
-            fill: none;
+            width: 24px;
+            height: 24px;
         }
 
         .care-team-content { flex: 1; }
@@ -995,7 +993,7 @@
             width: 44px;
             height: 44px;
             border-radius: 50%;
-            background: #F2F4F0;
+            background: #EFE9DE;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1004,10 +1002,8 @@
         }
 
         .healing-icon svg {
-            width: 22px;
-            height: 22px;
-            stroke: var(--accent);
-            fill: none;
+            width: 24px;
+            height: 24px;
         }
 
         .healing-content { flex: 1; }
@@ -3513,11 +3509,11 @@
         }
         .home-expert-entry-icon {
             width: 42px; height: 42px; border-radius: 50%;
-            background: #F2F4F0;
+            background: #EFE9DE;
             display: flex; align-items: center; justify-content: center;
             margin-right: 12px; flex-shrink: 0;
         }
-        .home-expert-entry-icon svg { width: 20px; height: 20px; stroke: var(--accent); }
+        .home-expert-entry-icon svg { width: 22px; height: 22px; }
         .home-expert-entry-body { flex: 1; }
         .home-expert-entry-title { font-size: 14px; font-weight: 600; color: var(--text-primary); }
         .home-expert-entry-sub { font-size: 12px; color: var(--text-tertiary); margin-top: 2px; }
@@ -3985,18 +3981,20 @@
         .concierge-content {
             display: flex;
             flex-direction: column;
-            min-height: calc(100vh - 70px);
-            min-height: calc(100dvh - 70px);
+            height: calc(100vh - 56px - env(safe-area-inset-bottom));
+            height: calc(100dvh - 56px - env(safe-area-inset-bottom));
             background: var(--bg-warm);
             position: relative;
+            overflow: hidden;
         }
 
         /* ヒーロー */
         .concierge-hero {
             position: relative;
             background: #EFE9DE;
-            padding: 44px 24px 36px;
+            padding: clamp(20px, 4.2vh, 44px) 24px clamp(18px, 3.6vh, 36px);
             overflow: hidden;
+            flex-shrink: 0;
         }
         .concierge-hero::before {
             content: '';
@@ -4012,11 +4010,11 @@
         .concierge-hero > * { position: relative; z-index: 1; }
         .concierge-avatars {
             display: flex;
-            margin-bottom: 16px;
+            margin-bottom: clamp(8px, 1.6vh, 16px);
         }
         .concierge-avatar {
-            width: 48px;
-            height: 48px;
+            width: clamp(40px, 6vh, 48px);
+            height: clamp(40px, 6vh, 48px);
             border-radius: 50%;
             background: #FFFFFF;
             border: 2px solid var(--bg-warm);
@@ -4035,7 +4033,7 @@
             height: 24px;
         }
         .concierge-hero-main {
-            font-size: 22px;
+            font-size: clamp(18px, 2.6vh, 22px);
             font-weight: 700;
             color: var(--text-primary);
             line-height: 1.5;
@@ -4044,15 +4042,18 @@
 
         /* メインコンテンツ */
         .concierge-body {
-            flex: 1;
-            padding: 28px 24px;
+            flex: 1 1 auto;
+            min-height: 0;
+            padding: clamp(16px, 3vh, 28px) 24px;
             background: var(--bg-warm);
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
         .concierge-subtitle {
-            font-size: 15px;
+            font-size: 14px;
             color: var(--text-secondary);
-            line-height: 1.7;
-            margin: 0 0 24px 0;
+            line-height: 1.65;
+            margin: 0 0 clamp(12px, 2vh, 20px) 0;
         }
         .concierge-check-list {
             list-style: none;
@@ -4062,8 +4063,8 @@
         .concierge-check-item {
             display: flex;
             align-items: center;
-            gap: 14px;
-            padding: 10px 0;
+            gap: 12px;
+            padding: clamp(6px, 1vh, 10px) 0;
         }
         .concierge-check-icon {
             width: 32px;
@@ -4090,30 +4091,38 @@
 
         /* 固定フッターCTA */
         .concierge-footer {
-            padding: 16px 24px calc(16px + env(safe-area-inset-bottom));
+            flex-shrink: 0;
+            padding: 12px 24px 14px;
             background: var(--bg-warm);
+            border-top: 1px solid rgba(58,63,50,0.06);
         }
         .concierge-cta-btn {
             width: 100%;
-            padding: 18px;
+            padding: 14px 18px 12px;
             background: #3A3F32;
             color: #FFFFFF;
             border: none;
             border-radius: 14px;
-            font-size: 16px;
-            font-weight: 600;
             cursor: pointer;
             font-family: inherit;
-            min-height: 56px;
             transition: opacity 0.15s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .concierge-cta-btn-label {
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+        .concierge-cta-btn-sub {
+            font-size: 11px;
+            font-weight: 400;
+            color: rgba(255,255,255,0.7);
+            letter-spacing: 0.2px;
         }
         .concierge-cta-btn:active { opacity: 0.85; }
-        .concierge-cta-note {
-            font-size: 13px;
-            color: var(--text-tertiary);
-            text-align: center;
-            margin-top: 10px;
-        }
 
         .toast {
             position: fixed;
@@ -6707,7 +6716,21 @@
                     <!-- Slide 1: 夜明け -->
                     <div class="sc-slide sc-active">
                         <div class="sc-illust-wrap">
-                            <img src="images/splash/01-sun.png" alt="">
+                            <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+                                <rect width="400" height="400" fill="#F2EDE1"/>
+                                <!-- soft sky band -->
+                                <rect y="0" width="400" height="240" fill="#EFE6D2"/>
+                                <!-- sun -->
+                                <circle cx="200" cy="180" r="78" fill="#F5CD67"/>
+                                <circle cx="200" cy="180" r="78" fill="none" stroke="#3A3F32" stroke-width="3"/>
+                                <!-- back hill -->
+                                <path d="M-20 280 Q90 220 200 260 T420 240 L420 420 L-20 420 Z" fill="#3A3F32"/>
+                                <!-- front hill -->
+                                <path d="M-20 320 Q120 270 230 310 T420 295 L420 420 L-20 420 Z" fill="#5C604F"/>
+                                <!-- bird -->
+                                <path d="M118 110 q10 -10 20 0 q10 -10 20 0" fill="none" stroke="#3A3F32" stroke-width="3" stroke-linecap="round"/>
+                                <path d="M260 88 q8 -8 16 0 q8 -8 16 0" fill="none" stroke="#3A3F32" stroke-width="3" stroke-linecap="round"/>
+                            </svg>
                         </div>
                         <div class="sc-text">
                             <h1 class="sc-headline">大切な方を見送った<br>あなたへ。</h1>
@@ -6717,7 +6740,21 @@
                     <!-- Slide 2: 星（導き） -->
                     <div class="sc-slide">
                         <div class="sc-illust-wrap">
-                            <img src="images/splash/02-star.png" alt="">
+                            <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+                                <rect width="400" height="400" fill="#F2EDE1"/>
+                                <!-- soft halo -->
+                                <circle cx="200" cy="200" r="150" fill="#EFE6D2"/>
+                                <circle cx="200" cy="200" r="110" fill="none" stroke="#3A3F32" stroke-width="2" stroke-dasharray="2 8" opacity="0.45"/>
+                                <!-- 4-point star (gold) -->
+                                <path d="M200 70 Q210 180 320 200 Q210 220 200 330 Q190 220 80 200 Q190 180 200 70 Z" fill="#F5CD67" stroke="#3A3F32" stroke-width="3" stroke-linejoin="round"/>
+                                <!-- center dot -->
+                                <circle cx="200" cy="200" r="10" fill="#3A3F32"/>
+                                <!-- small accent stars -->
+                                <circle cx="92" cy="100" r="4" fill="#3A3F32"/>
+                                <circle cx="318" cy="118" r="3" fill="#3A3F32"/>
+                                <circle cx="78" cy="306" r="3" fill="#3A3F32"/>
+                                <circle cx="328" cy="296" r="4" fill="#3A3F32"/>
+                            </svg>
                         </div>
                         <div class="sc-text">
                             <h1 class="sc-headline">必要なことだけを、<br>正しい順番で。</h1>
@@ -6727,7 +6764,26 @@
                     <!-- Slide 3: 貝（寄り添い） -->
                     <div class="sc-slide">
                         <div class="sc-illust-wrap">
-                            <img src="images/splash/03-shell.png" alt="">
+                            <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+                                <rect width="400" height="400" fill="#F2EDE1"/>
+                                <!-- sand band -->
+                                <path d="M0 320 Q120 300 200 320 T400 318 L400 400 L0 400 Z" fill="#EFE6D2"/>
+                                <!-- scallop shell body -->
+                                <path d="M120 300 Q90 170 200 90 Q310 170 280 300 Z" fill="#F5CD67" stroke="#3A3F32" stroke-width="3" stroke-linejoin="round"/>
+                                <!-- ribs -->
+                                <g stroke="#3A3F32" stroke-width="2.5" stroke-linecap="round" fill="none">
+                                    <path d="M200 110 L200 290"/>
+                                    <path d="M200 110 Q170 200 160 290"/>
+                                    <path d="M200 110 Q230 200 240 290"/>
+                                    <path d="M200 110 Q145 200 132 290"/>
+                                    <path d="M200 110 Q255 200 268 290"/>
+                                </g>
+                                <!-- hinge -->
+                                <circle cx="200" cy="92" r="8" fill="#3A3F32"/>
+                                <!-- small pebble -->
+                                <ellipse cx="86" cy="338" rx="14" ry="6" fill="#3A3F32"/>
+                                <ellipse cx="318" cy="346" rx="10" ry="5" fill="#3A3F32"/>
+                            </svg>
                         </div>
                         <div class="sc-text">
                             <h1 class="sc-headline">迷われたときは、<br>どうぞお声がけください。</h1>
@@ -6737,7 +6793,26 @@
                     <!-- Slide 4: 空（旅立ち） -->
                     <div class="sc-slide">
                         <div class="sc-illust-wrap">
-                            <img src="images/splash/04-sky.png" alt="">
+                            <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+                                <rect width="400" height="400" fill="#F2EDE1"/>
+                                <!-- upper sky band -->
+                                <rect width="400" height="220" fill="#EFE6D2"/>
+                                <!-- moon -->
+                                <circle cx="312" cy="96" r="38" fill="#F5CD67"/>
+                                <circle cx="312" cy="96" r="38" fill="none" stroke="#3A3F32" stroke-width="3"/>
+                                <!-- cloud -->
+                                <path d="M60 150 Q70 120 110 124 Q130 100 160 116 Q190 108 196 138 Q220 144 210 168 Q170 180 120 172 Q70 178 60 150 Z" fill="#3A3F32"/>
+                                <!-- bird flock (rising) -->
+                                <g fill="none" stroke="#3A3F32" stroke-width="3.5" stroke-linecap="round">
+                                    <path d="M120 250 q14 -14 28 0 q14 -14 28 0"/>
+                                    <path d="M196 230 q12 -12 24 0 q12 -12 24 0"/>
+                                    <path d="M256 206 q10 -10 20 0 q10 -10 20 0"/>
+                                </g>
+                                <!-- horizon -->
+                                <path d="M0 320 Q200 300 400 320 L400 400 L0 400 Z" fill="#3A3F32"/>
+                                <!-- path of light -->
+                                <line x1="200" y1="320" x2="200" y2="360" stroke="#F5CD67" stroke-width="6" stroke-linecap="round"/>
+                            </svg>
                         </div>
                         <div class="sc-text">
                             <h1 class="sc-headline">ご一緒に、<br>進めてまいります。</h1>
@@ -6813,9 +6888,14 @@
             <!-- 2. サポートチーム導線（挨拶ヘッダーの直下） -->
             <div class="home-care-team-card" onclick="showScreen('screen-concierge')">
                 <div class="care-team-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-                        <circle cx="12" cy="8" r="3"/>
-                        <path d="M6 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/>
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <!-- three figures: gold center, ink sides -->
+                        <circle cx="6.5" cy="9" r="2.2" fill="none" stroke="#3A3F32" stroke-width="1.6"/>
+                        <path d="M3 17.5c0-2 1.6-3.6 3.5-3.6s3.5 1.6 3.5 3.6" fill="none" stroke="#3A3F32" stroke-width="1.6" stroke-linecap="round"/>
+                        <circle cx="17.5" cy="9" r="2.2" fill="none" stroke="#3A3F32" stroke-width="1.6"/>
+                        <path d="M14 17.5c0-2 1.6-3.6 3.5-3.6s3.5 1.6 3.5 3.6" fill="none" stroke="#3A3F32" stroke-width="1.6" stroke-linecap="round"/>
+                        <circle cx="12" cy="7.2" r="2.6" fill="#F5CD67" stroke="#3A3F32" stroke-width="1.6"/>
+                        <path d="M7.8 16.5c0-2.3 1.9-4.2 4.2-4.2s4.2 1.9 4.2 4.2" fill="#F5CD67" stroke="#3A3F32" stroke-width="1.6" stroke-linecap="round"/>
                     </svg>
                 </div>
                 <div class="care-team-content">
@@ -6839,7 +6919,19 @@
             <!-- 5. きょうのきもち + 専門家相談 -->
             <div class="home-healing-card" onclick="_griefReturnScreen='screen-home'; showScreen('screen-grief-care')">
                 <div class="healing-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21C12 21 3 13.5 3 8C3 5 5.5 2 9 2C9 2 12 3 12 6C12 3 15 2 15 2C18.5 2 21 5 21 8C21 13.5 12 21 12 21Z"/></svg>
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <!-- small sun above gentle wave = inner weather -->
+                        <circle cx="12" cy="8.5" r="3.6" fill="#F5CD67" stroke="#3A3F32" stroke-width="1.6"/>
+                        <g stroke="#3A3F32" stroke-width="1.3" stroke-linecap="round">
+                            <line x1="12" y1="2.2" x2="12" y2="3.6"/>
+                            <line x1="5.6" y1="8.5" x2="7" y2="8.5"/>
+                            <line x1="17" y1="8.5" x2="18.4" y2="8.5"/>
+                            <line x1="7.4" y1="3.9" x2="8.4" y2="4.9"/>
+                            <line x1="15.6" y1="3.9" x2="16.6" y2="4.9"/>
+                        </g>
+                        <path d="M3 17.5 Q6.75 15 10.5 17.5 T18 17.5 T21 17.5" fill="none" stroke="#3A3F32" stroke-width="1.8" stroke-linecap="round"/>
+                        <path d="M3 20.5 Q6.75 18.5 10.5 20.5 T18 20.5 T21 20.5" fill="none" stroke="#3A3F32" stroke-width="1.4" stroke-linecap="round" opacity="0.5"/>
+                    </svg>
                 </div>
                 <div class="healing-content">
                     <p class="healing-title">きょうのきもち</p>
@@ -6850,11 +6942,14 @@
 
             <div class="home-expert-entry" onclick="showScreen('screen-experts')">
                 <div class="home-expert-entry-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                        <circle cx="9" cy="7" r="4"/>
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <!-- document with gold seal = expert certification -->
+                        <path d="M5 3 H14 L19 8 V20 a1 1 0 0 1 -1 1 H5 a1 1 0 0 1 -1 -1 V4 a1 1 0 0 1 1 -1 Z" fill="none" stroke="#3A3F32" stroke-width="1.6" stroke-linejoin="round"/>
+                        <path d="M14 3 V8 H19" fill="none" stroke="#3A3F32" stroke-width="1.6" stroke-linejoin="round"/>
+                        <line x1="7" y1="12" x2="13" y2="12" stroke="#3A3F32" stroke-width="1.4" stroke-linecap="round"/>
+                        <line x1="7" y1="15" x2="13" y2="15" stroke="#3A3F32" stroke-width="1.4" stroke-linecap="round" opacity="0.55"/>
+                        <circle cx="16" cy="16.5" r="3.2" fill="#F5CD67" stroke="#3A3F32" stroke-width="1.6"/>
+                        <path d="M14.6 16.4 L15.7 17.5 L17.5 15.4" fill="none" stroke="#3A3F32" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </div>
                 <div class="home-expert-entry-body">
@@ -7372,16 +7467,16 @@
                 <div class="concierge-hero">
                     <div class="concierge-avatars">
                         <div class="concierge-avatar">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M5.5 21c0-3.6 2.9-6.5 6.5-6.5s6.5 2.9 6.5 6.5"/></svg>
+                            <svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="3.2" fill="none" stroke="#3A3F32" stroke-width="1.6"/><path d="M5.5 20c0-3.3 2.9-5.8 6.5-5.8s6.5 2.5 6.5 5.8" fill="none" stroke="#3A3F32" stroke-width="1.6"/><path d="M8.2 7.2c0-1.4 1.7-2.8 3.8-2.8s3.8 1.4 3.8 2.8" fill="none" stroke="#3A3F32" stroke-width="1.4" stroke-linecap="round"/></svg>
                         </div>
                         <div class="concierge-avatar">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M5.5 21c0-3.6 2.9-6.5 6.5-6.5s6.5 2.9 6.5 6.5"/></svg>
+                            <svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="3.4" fill="#F5CD67" stroke="#3A3F32" stroke-width="1.6"/><path d="M5.2 20.2c0-3.4 3-6 6.8-6s6.8 2.6 6.8 6" fill="#F5CD67" stroke="#3A3F32" stroke-width="1.6"/><path d="M10 9.2 h4" stroke="#3A3F32" stroke-width="1.3" stroke-linecap="round"/></svg>
                         </div>
                         <div class="concierge-avatar">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M5.5 21c0-3.6 2.9-6.5 6.5-6.5s6.5 2.9 6.5 6.5"/></svg>
+                            <svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="3.2" fill="none" stroke="#3A3F32" stroke-width="1.6"/><path d="M5.5 20c0-3.3 2.9-5.8 6.5-5.8s6.5 2.5 6.5 5.8" fill="none" stroke="#3A3F32" stroke-width="1.6"/><path d="M6.5 7.4 Q12 3.6 17.5 7.4" fill="none" stroke="#3A3F32" stroke-width="1.4" stroke-linecap="round"/></svg>
                         </div>
                         <div class="concierge-avatar">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M5.5 21c0-3.6 2.9-6.5 6.5-6.5s6.5 2.9 6.5 6.5"/></svg>
+                            <svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="3.2" fill="none" stroke="#3A3F32" stroke-width="1.6"/><path d="M5.5 20c0-3.3 2.9-5.8 6.5-5.8s6.5 2.5 6.5 5.8" fill="none" stroke="#3A3F32" stroke-width="1.6"/><circle cx="16.5" cy="6.2" r="1.4" fill="#F5CD67" stroke="#3A3F32" stroke-width="1.2"/></svg>
                         </div>
                     </div>
                     <h2 class="concierge-hero-main">サポートチームが、<br>いつもそばにいます</h2>
@@ -7394,25 +7489,25 @@
                     <ul class="concierge-check-list">
                         <li class="concierge-check-item">
                             <div class="concierge-check-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                                <svg viewBox="0 0 24 24" fill="none"><rect x="4.5" y="3.5" width="15" height="17" rx="1.6" stroke="#3A3F32" stroke-width="1.6"/><line x1="8" y1="8.5" x2="16" y2="8.5" stroke="#3A3F32" stroke-width="1.5" stroke-linecap="round"/><line x1="8" y1="12" x2="16" y2="12" stroke="#3A3F32" stroke-width="1.5" stroke-linecap="round" opacity="0.55"/><line x1="8" y1="15.5" x2="13" y2="15.5" stroke="#3A3F32" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/><circle cx="16.2" cy="16.5" r="2.2" fill="#F5CD67" stroke="#3A3F32" stroke-width="1.4"/><path d="M15.2 16.5 L16 17.3 L17.3 15.7" stroke="#3A3F32" stroke-width="1.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
                             </div>
                             <span class="concierge-check-text">手続きの進め方を一緒に整理</span>
                         </li>
                         <li class="concierge-check-item">
                             <div class="concierge-check-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                                <svg viewBox="0 0 24 24" fill="none"><path d="M4 6.5 a2 2 0 0 1 2-2 h12 a2 2 0 0 1 2 2 v8 a2 2 0 0 1 -2 2 h-6 l-4 3.2 v-3.2 h-2 a2 2 0 0 1 -2 -2 z" fill="#F5CD67" stroke="#3A3F32" stroke-width="1.6" stroke-linejoin="round"/><path d="M9.5 9.2 c0-1.4 1.1-2.3 2.5-2.3 s2.5 0.9 2.5 2.2 c0 1.3-1.5 1.6-2.1 2.3 c-0.3 0.3-0.4 0.7-0.4 1.1" stroke="#3A3F32" stroke-width="1.4" fill="none" stroke-linecap="round"/><circle cx="12" cy="14.3" r="0.8" fill="#3A3F32"/></svg>
                             </div>
                             <span class="concierge-check-text">疑問や不安にいつでもお答え</span>
                         </li>
                         <li class="concierge-check-item">
                             <div class="concierge-check-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                                <svg viewBox="0 0 24 24" fill="none"><circle cx="5.5" cy="12" r="2.6" fill="none" stroke="#3A3F32" stroke-width="1.6"/><circle cx="18.5" cy="12" r="2.6" fill="#F5CD67" stroke="#3A3F32" stroke-width="1.6"/><line x1="8.3" y1="12" x2="15.7" y2="12" stroke="#3A3F32" stroke-width="1.6" stroke-linecap="round"/><path d="M13.8 9.8 L16 12 L13.8 14.2" stroke="#3A3F32" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
                             </div>
                             <span class="concierge-check-text">専門家への橋渡し</span>
                         </li>
                         <li class="concierge-check-item">
                             <div class="concierge-check-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                                <svg viewBox="0 0 24 24" fill="none"><rect x="8.5" y="3.5" width="11" height="13.5" rx="1.2" fill="none" stroke="#3A3F32" stroke-width="1.6"/><line x1="11" y1="7.5" x2="17" y2="7.5" stroke="#3A3F32" stroke-width="1.4" stroke-linecap="round"/><line x1="11" y1="10.5" x2="17" y2="10.5" stroke="#3A3F32" stroke-width="1.4" stroke-linecap="round" opacity="0.55"/><line x1="11" y1="13.5" x2="14.5" y2="13.5" stroke="#3A3F32" stroke-width="1.4" stroke-linecap="round" opacity="0.4"/><path d="M3.5 14 c0-1 0.8-1.8 1.8-1.8 c0.6 0 1.1 0.3 1.4 0.8 l0.9 1.4 c0.3 0.5 0.2 1.1-0.2 1.5 l-0.5 0.5 c0.7 1.5 1.9 2.7 3.4 3.4 l0.5-0.5 c0.4-0.4 1-0.5 1.5-0.2 l1.4 0.9 c0.5 0.3 0.8 0.8 0.8 1.4 c0 1-0.8 1.8-1.8 1.8 C7 21.5 3.5 18 3.5 14 z" fill="#F5CD67" stroke="#3A3F32" stroke-width="1.6" stroke-linejoin="round"/></svg>
                             </div>
                             <span class="concierge-check-text">電話や書類のサポート</span>
                         </li>
@@ -7421,8 +7516,10 @@
 
                 <!-- 固定CTA -->
                 <div class="concierge-footer">
-                    <button class="concierge-cta-btn" onclick="openLineOA()">サポーターに相談する</button>
-                    <p class="concierge-cta-note">LINEでいつでも相談できます。返信は原則24時間以内。</p>
+                    <button class="concierge-cta-btn" onclick="openLineOA()">
+                        <span class="concierge-cta-btn-label">サポーターに相談する</span>
+                        <span class="concierge-cta-btn-sub">LINEでいつでも相談・返信は原則24時間以内</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -7939,38 +8036,38 @@
             var s = size || 32;
             var faces = {
                 1: '<svg width="'+s+'" height="'+s+'" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">'
-                  + '<circle cx="16" cy="16" r="15" fill="#E8D5D5" stroke="#C4A0A0" stroke-width="1.2"/>'
-                  + '<ellipse cx="11" cy="14" rx="1.5" ry="2" fill="#C4A0A0"/>'
-                  + '<ellipse cx="21" cy="14" rx="1.5" ry="2" fill="#C4A0A0"/>'
-                  + '<path d="M10 22c1.5-2.5 4-3.5 6-3.5s4.5 1 6 3.5" stroke="#C4A0A0" stroke-width="1.5" stroke-linecap="round" fill="none"/>'
-                  + '<path d="M8 10c1-2 2.5-2.5 4-2" stroke="#C4A0A0" stroke-width="1.2" stroke-linecap="round" fill="none"/>'
-                  + '<path d="M24 10c-1-2-2.5-2.5-4-2" stroke="#C4A0A0" stroke-width="1.2" stroke-linecap="round" fill="none"/>'
-                  + '<line x1="9" y1="18" x2="7" y2="22" stroke="#C4A0A0" stroke-width="1" stroke-linecap="round"/>'
-                  + '<line x1="23" y1="18" x2="25" y2="22" stroke="#C4A0A0" stroke-width="1" stroke-linecap="round"/>'
+                  + '<circle cx="16" cy="16" r="14.2" fill="#EFE9DE" stroke="#3A3F32" stroke-width="1.4"/>'
+                  + '<circle cx="11.5" cy="14" r="1.1" fill="#3A3F32"/>'
+                  + '<circle cx="20.5" cy="14" r="1.1" fill="#3A3F32"/>'
+                  + '<path d="M10.5 22.2c1.5-2.4 3.5-3.4 5.5-3.4s4 1 5.5 3.4" stroke="#3A3F32" stroke-width="1.5" stroke-linecap="round" fill="none"/>'
+                  + '<path d="M9.8 17.5 L8.4 20.8" stroke="#F5CD67" stroke-width="1.5" stroke-linecap="round"/>'
+                  + '<path d="M22.2 17.5 L23.6 20.8" stroke="#F5CD67" stroke-width="1.5" stroke-linecap="round"/>'
                   + '</svg>',
                 2: '<svg width="'+s+'" height="'+s+'" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">'
-                  + '<circle cx="16" cy="16" r="15" fill="#E0D8CC" stroke="#B5A888" stroke-width="1.2"/>'
-                  + '<ellipse cx="11" cy="14" rx="1.5" ry="2" fill="#B5A888"/>'
-                  + '<ellipse cx="21" cy="14" rx="1.5" ry="2" fill="#B5A888"/>'
-                  + '<path d="M11 22c1.2-1.8 3-2.5 5-2.5s3.8.7 5 2.5" stroke="#B5A888" stroke-width="1.5" stroke-linecap="round" fill="none"/>'
+                  + '<circle cx="16" cy="16" r="14.2" fill="#EFE9DE" stroke="#3A3F32" stroke-width="1.4"/>'
+                  + '<circle cx="11.5" cy="14" r="1.1" fill="#3A3F32"/>'
+                  + '<circle cx="20.5" cy="14" r="1.1" fill="#3A3F32"/>'
+                  + '<path d="M11 21.8c1.2-1.6 3-2.3 5-2.3s3.8.7 5 2.3" stroke="#3A3F32" stroke-width="1.5" stroke-linecap="round" fill="none"/>'
                   + '</svg>',
                 3: '<svg width="'+s+'" height="'+s+'" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">'
-                  + '<circle cx="16" cy="16" r="15" fill="#DDD" stroke="#AAA" stroke-width="1.2"/>'
-                  + '<ellipse cx="11" cy="14" rx="1.5" ry="2" fill="#AAA"/>'
-                  + '<ellipse cx="21" cy="14" rx="1.5" ry="2" fill="#AAA"/>'
-                  + '<line x1="11" y1="21" x2="21" y2="21" stroke="#AAA" stroke-width="1.5" stroke-linecap="round"/>'
+                  + '<circle cx="16" cy="16" r="14.2" fill="#F5CD67" stroke="#3A3F32" stroke-width="1.4"/>'
+                  + '<circle cx="11.5" cy="14" r="1.1" fill="#3A3F32"/>'
+                  + '<circle cx="20.5" cy="14" r="1.1" fill="#3A3F32"/>'
+                  + '<line x1="11.5" y1="20.8" x2="20.5" y2="20.8" stroke="#3A3F32" stroke-width="1.5" stroke-linecap="round"/>'
                   + '</svg>',
                 4: '<svg width="'+s+'" height="'+s+'" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">'
-                  + '<circle cx="16" cy="16" r="15" fill="#D5E5D8" stroke="#88B598" stroke-width="1.2"/>'
-                  + '<ellipse cx="11" cy="14" rx="1.5" ry="2" fill="#88B598"/>'
-                  + '<ellipse cx="21" cy="14" rx="1.5" ry="2" fill="#88B598"/>'
-                  + '<path d="M11 20c1.2 1.8 3 2.5 5 2.5s3.8-.7 5-2.5" stroke="#88B598" stroke-width="1.5" stroke-linecap="round" fill="none"/>'
+                  + '<circle cx="16" cy="16" r="14.2" fill="#EFE9DE" stroke="#3A3F32" stroke-width="1.4"/>'
+                  + '<circle cx="11.5" cy="14" r="1.1" fill="#3A3F32"/>'
+                  + '<circle cx="20.5" cy="14" r="1.1" fill="#3A3F32"/>'
+                  + '<path d="M11 19.6c1.2 1.8 3 2.6 5 2.6s3.8-.8 5-2.6" stroke="#3A3F32" stroke-width="1.5" stroke-linecap="round" fill="none"/>'
                   + '</svg>',
                 5: '<svg width="'+s+'" height="'+s+'" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">'
-                  + '<circle cx="16" cy="16" r="15" fill="#CCE0D5" stroke="#6DA888" stroke-width="1.2"/>'
-                  + '<path d="M8.5 14c0.5-1 1.5-1.5 2.5-1.5s2 0.5 2.5 1.5" stroke="#6DA888" stroke-width="1.3" stroke-linecap="round" fill="none"/>'
-                  + '<path d="M18.5 14c0.5-1 1.5-1.5 2.5-1.5s2 0.5 2.5 1.5" stroke="#6DA888" stroke-width="1.3" stroke-linecap="round" fill="none"/>'
-                  + '<path d="M10 19c1.5 2.5 3.5 3.5 6 3.5s4.5-1 6-3.5" stroke="#6DA888" stroke-width="1.5" stroke-linecap="round" fill="none"/>'
+                  + '<circle cx="16" cy="16" r="14.2" fill="#F5CD67" stroke="#3A3F32" stroke-width="1.4"/>'
+                  + '<path d="M9.2 13.4c0.6-1 1.6-1.5 2.5-1.5s1.9 0.5 2.5 1.5" stroke="#3A3F32" stroke-width="1.4" stroke-linecap="round" fill="none"/>'
+                  + '<path d="M17.8 13.4c0.6-1 1.6-1.5 2.5-1.5s1.9 0.5 2.5 1.5" stroke="#3A3F32" stroke-width="1.4" stroke-linecap="round" fill="none"/>'
+                  + '<path d="M10 18.8c1.5 2.6 3.6 3.6 6 3.6s4.5-1 6-3.6" stroke="#3A3F32" stroke-width="1.6" stroke-linecap="round" fill="none"/>'
+                  + '<circle cx="8.5" cy="19.5" r="1.2" fill="#F2A5A5" opacity="0.7"/>'
+                  + '<circle cx="23.5" cy="19.5" r="1.2" fill="#F2A5A5" opacity="0.7"/>'
                   + '</svg>'
             };
             return faces[mood] || faces[3];
