@@ -9399,8 +9399,8 @@
             </div>
             <div class="guide-tabs" id="guideTabs">
                 <button class="tab-btn active" onclick="setGuideView('category')">やること順</button>
-                <button class="tab-btn" onclick="setGuideView('phase')">時系列順</button>
                 <button class="tab-btn" onclick="setGuideView('domain')">行き先順</button>
+                <button class="tab-btn" onclick="setGuideView('phase')">時系列順</button>
                 <button class="tab-btn" onclick="setGuideView('pinned')">ピン留め</button>
                 <div class="guide-tabs-border"></div>
                 <div class="guide-tab-indicator" id="guideTabIndicator"></div>
@@ -17963,7 +17963,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
             }
         }
 
-        const guideViews = ['category', 'phase', 'domain', 'pinned'];
+        const guideViews = ['category', 'domain', 'phase', 'pinned'];
 
         function getGuideViewIndex(view) {
             return guideViews.indexOf(view);
