@@ -1,5 +1,6 @@
 
 
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -14,8 +15,8 @@
     <style>
         :root {
             --bg-primary: #FFFFFF;
-            --bg-secondary: #FAFAF9;
-            --bg-warm: #FAFAF9;
+            --bg-secondary: #F5F4F1;
+            --bg-warm: #F5F4F1;
             --text-primary: #333333;
             --text-secondary: #7A7A7A;
             --text-tertiary: #9A9A9A;
@@ -1038,11 +1039,12 @@
         }
 
         .home-today-card {
-            background: var(--bg-primary);
+            background: #FFFFFF;
             border: 1px solid var(--border-light);
             border-radius: 12px;
             padding: 16px;
             margin-bottom: 0;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
         }
 
         .phase-message-home {
@@ -1084,7 +1086,7 @@
             border-radius: 12px;
             margin: 12px 16px 0;
             cursor: pointer;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
             transition: transform 0.15s ease, box-shadow 0.15s ease;
         }
         .home-care-team-card:active {
@@ -1138,7 +1140,7 @@
             border-radius: 12px;
             margin: 10px 16px 0;
             cursor: pointer;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
             transition: transform 0.15s ease, box-shadow 0.15s ease;
         }
         .home-healing-card:active {
@@ -17817,7 +17819,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                         nextHTML += `
                             <div style="
                                 display:flex; align-items:center; gap:12px;
-                                background: var(--bg-primary);
+                                background: #FFFFFF;
                                 border: 1px solid var(--border-light);
                                 border-radius: 12px;
                                 padding: 14px 16px;
@@ -17839,7 +17841,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 } else {
                     nextHTML = `
                         <div class="home-task-card-touch" style="
-                            background: var(--bg-primary);
+                            background: #FFFFFF;
                             border: 1px solid var(--border-light);
                             border-radius: 14px;
                             padding: 20px;
@@ -18065,12 +18067,12 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
 
         function renderGuideByLifecycle(container) {
             var lifecycleDefs = [
-                { id: 'funeral',     title: '葬儀と直後の手配',  subtitle: '搬送・届出・葬儀の準備' },
-                { id: 'cityhall',    title: '役場と公的手続き',  subtitle: '死亡届・健康保険・届出など' },
+                { id: 'funeral',     title: '葬儀と直後の手配',  subtitle: '搬送・葬儀・各所への連絡' },
+                { id: 'cityhall',    title: '役場と公的手続き',  subtitle: '死亡届・健康保険・世帯主変更など' },
                 { id: 'money',       title: 'お金と保険',        subtitle: '銀行・保険・年金の手続き' },
-                { id: 'contracts',   title: '契約と解約',        subtitle: '公共料金・携帯・サブスクの解約' },
+                { id: 'contracts',   title: '契約と解約',        subtitle: '公共料金・携帯・クレカの変更・解約' },
                 { id: 'inheritance', title: '相続と名義変更',    subtitle: '遺産分割・名義変更・相続税' },
-                { id: 'grief',       title: 'こころと供養',      subtitle: '納骨・遺品整理' }
+                { id: 'grief',       title: '供養と遺品整理',    subtitle: '納骨・遺品整理' }
             ];
 
             // 全タスクにステータスを付与
