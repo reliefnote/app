@@ -4008,6 +4008,67 @@
             color: var(--text-primary);
             line-height: 1.4;
         }
+
+        /* ===== 行き先タブ 情報カード (住所/電話/受付時間) ===== */
+        /* ごく薄いクリームで存在感を出しつつ、フェーズカード白地に溶け込む */
+        .dest-info-card {
+            margin: 8px 14px 12px;
+            padding: 4px 0;
+            background: #FBF9F4;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .dest-info-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+        .dest-info-row + .dest-info-row {
+            border-top: 1px solid rgba(60, 55, 48, 0.04);
+        }
+        .dest-info-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+            color: var(--text-tertiary);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .dest-info-body {
+            flex: 1;
+            min-width: 0;
+        }
+        .dest-info-label {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            margin-bottom: 1px;
+            letter-spacing: 0.05em;
+        }
+        .dest-info-value {
+            font-size: 14px;
+            line-height: 1.5;
+            color: var(--text-primary);
+            word-break: break-all;
+        }
+        .dest-info-phone .dest-info-value {
+            color: var(--accent);
+            font-weight: 600;
+            letter-spacing: 0.03em;
+        }
+        .dest-info-phone:active {
+            background: rgba(60, 55, 48, 0.04);
+        }
+        .dest-info-chevron {
+            margin-left: auto;
+            color: var(--text-tertiary);
+            flex-shrink: 0;
+        }
         .data-mgmt-item-desc {
             font-size: 12px;
             color: var(--text-tertiary);
@@ -9872,7 +9933,12 @@
             font-size: 12px;
             color: var(--text-secondary);
             text-align: center;
-            line-height: 1.3;
+            line-height: 1.4;
+            /* 3 択の中で「ふつう」だけ 1 行、他 2 行だと高さがズレるので固定 */
+            min-height: calc(1.4em * 2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .home-review-option.selected .home-review-option-label {
             color: var(--text-primary);
@@ -10295,8 +10361,8 @@
             </div>
             <div class="guide-tabs" id="guideTabs">
                 <button class="tab-btn active" onclick="setGuideView('lifecycle')">カテゴリー</button>
-                <button class="tab-btn" onclick="setGuideView('domain')">行き先順</button>
-                <button class="tab-btn" onclick="setGuideView('phase')">時系列順</button>
+                <button class="tab-btn" onclick="setGuideView('domain')">行き先</button>
+                <button class="tab-btn" onclick="setGuideView('phase')">時系列</button>
                 <div class="guide-tabs-border"></div>
                 <div class="guide-tab-indicator" id="guideTabIndicator"></div>
             </div>
@@ -18661,7 +18727,20 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
             showFilteredQuestions([questionId], 'screen-detail', taskId);
         }
 
+        // 初回起動時に、法定期限のあるタスクへ自動でピン留めを入れる。
+        // 既に `rn_pinned_tasks` が書かれていたら何もしない (ユーザーの解除を尊重)。
+        function _seedDefaultPinnedTasks() {
+            if (localStorage.getItem('rn_pinned_tasks') !== null) return;
+            if (!Array.isArray(tasks) || tasks.length === 0) return;
+            var defaults = tasks
+                .filter(function(t) { return t && t.legalDueDays; })
+                .map(function(t) { return t.id; });
+            safeSetItem('rn_pinned_tasks', JSON.stringify(defaults));
+        }
+
         function generateTasks() {
+            // 初期ピン留め (冪等: 既にキーが存在すれば何もしない)
+            _seedDefaultPinnedTasks();
             // 全タスクのステータスを生成（依存関係があるため収束するまで複数パス）
             let changed = true;
             let passes = 0;
@@ -19514,7 +19593,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
 
             // カード描画
             el.innerHTML = '<div class="home-review-card">'
-                + '<p class="home-review-title">ReliefNoteは<br>お役に立てていますか？</p>'
+                + '<p class="home-review-title">ここまでの使い心地を<br>聞かせてください</p>'
                 + '<div class="home-review-options">'
                 +   '<div class="home-review-option" onclick="selectReviewRating(\'positive\')">'
                 +     '<span class="home-review-option-icon"><svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">'
@@ -20249,11 +20328,6 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                     var _mOpenClass = _mIsOpen ? ' open' : '';
 
                     var _mHintCard = '';
-                    if (_isDone) {
-                        _mHintCard = '<div style="margin:16px 16px 12px; padding:14px 16px; background:#F5F8F4; border:1px solid #E5EAE3; border-radius:12px;">'
-                            + '<div style="font-size:13px; color:#7A9A7D; line-height:1.6;">お疲れさまでした。役場での届出が完了しました。</div>'
-                            + '</div>';
-                    }
 
                     var _masterTaskHtml = _buildMasterCardHtml();
 
@@ -20389,10 +20463,41 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                             <div class="phase-tasks">
                                 <div class="phase-tasks-inner">
                                     ${group.description || group.phone || group.hours ? `
-                                        <div style="padding: 10px 16px; font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
-                                            ${group.description ? `<div style="margin-bottom: 4px;">${group.description}</div>` : ''}
-                                            ${group.phone ? `<div style="margin-bottom: 4px;"><a href="tel:${group.phone}" style="color: var(--accent); text-decoration: none;">${group.phone}</a></div>` : ''}
-                                            ${group.hours ? `<div>${group.hours}</div>` : ''}
+                                        <div class="dest-info-card">
+                                            ${group.description ? `
+                                                <div class="dest-info-row">
+                                                    <span class="dest-info-icon" aria-hidden="true">
+                                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                                    </span>
+                                                    <div class="dest-info-body">
+                                                        <div class="dest-info-label">住所</div>
+                                                        <div class="dest-info-value">${escapeHtml(group.description)}</div>
+                                                    </div>
+                                                </div>
+                                            ` : ''}
+                                            ${group.phone ? `
+                                                <a class="dest-info-row dest-info-phone" href="tel:${group.phone}" aria-label="電話で ${group.phone} にかける">
+                                                    <span class="dest-info-icon" aria-hidden="true">
+                                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                                                    </span>
+                                                    <div class="dest-info-body">
+                                                        <div class="dest-info-label">電話</div>
+                                                        <div class="dest-info-value">${escapeHtml(group.phone)}</div>
+                                                    </div>
+                                                    <svg class="dest-info-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+                                                </a>
+                                            ` : ''}
+                                            ${group.hours ? `
+                                                <div class="dest-info-row">
+                                                    <span class="dest-info-icon" aria-hidden="true">
+                                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                                    </span>
+                                                    <div class="dest-info-body">
+                                                        <div class="dest-info-label">受付時間</div>
+                                                        <div class="dest-info-value">${escapeHtml(group.hours)}</div>
+                                                    </div>
+                                                </div>
+                                            ` : ''}
                                         </div>
                                     ` : ''}
                                     ${hintCard}
@@ -23686,11 +23791,71 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
         function showToast(message) {
             const toast = document.getElementById('toast');
             toast.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>' + message + '</span>';
+            // 前回のスワイプで残った inline style をリセット
+            toast.style.transform = '';
+            toast.style.opacity = '';
+            toast.style.transition = '';
             toast.classList.add('show');
-            setTimeout(() => {
+            // タイマーは毎回上書き (連続表示の打ち消し)
+            if (window._toastHideTimer) clearTimeout(window._toastHideTimer);
+            window._toastHideTimer = setTimeout(function() {
                 toast.classList.remove('show');
             }, 3000);
         }
+
+        // トーストを上スワイプで消せるようにする (指定領域から上方向へ 30px 以上)
+        (function setupToastSwipeDismiss() {
+            var toast = document.getElementById('toast');
+            if (!toast) return;
+            var startY = null;
+            var deltaY = 0;
+            function onStart(e) {
+                var pt = e.touches ? e.touches[0] : e;
+                startY = pt.clientY;
+                deltaY = 0;
+                toast.style.transition = 'none';
+            }
+            function onMove(e) {
+                if (startY === null) return;
+                var pt = e.touches ? e.touches[0] : e;
+                var dy = pt.clientY - startY;
+                if (dy < 0) {
+                    deltaY = dy;
+                    // 中央寄せの translateX(-50%) を維持しつつ縦に追従
+                    toast.style.transform = 'translateX(-50%) translateY(' + dy + 'px)';
+                    toast.style.opacity = String(Math.max(0, 1 + dy / 120));
+                }
+            }
+            function onEnd() {
+                if (startY === null) return;
+                toast.style.transition = 'transform 0.18s ease, opacity 0.18s ease';
+                if (deltaY < -30) {
+                    // 閾値超え → 上に飛ばして消す
+                    toast.style.transform = 'translateX(-50%) translateY(-140px)';
+                    toast.style.opacity = '0';
+                    if (window._toastHideTimer) clearTimeout(window._toastHideTimer);
+                    setTimeout(function() {
+                        toast.classList.remove('show');
+                        toast.style.transform = '';
+                        toast.style.opacity = '';
+                    }, 180);
+                } else {
+                    // 戻す
+                    toast.style.transform = 'translateX(-50%)';
+                    toast.style.opacity = '';
+                }
+                startY = null;
+                deltaY = 0;
+            }
+            toast.addEventListener('touchstart', onStart, { passive: true });
+            toast.addEventListener('touchmove', onMove, { passive: true });
+            toast.addEventListener('touchend', onEnd);
+            toast.addEventListener('touchcancel', onEnd);
+            // デスクトップ (検証用): ドラッグでも同じ挙動
+            toast.addEventListener('mousedown', onStart);
+            document.addEventListener('mousemove', function(e) { if (startY !== null) onMove(e); });
+            document.addEventListener('mouseup', onEnd);
+        })();
 
         function toggleQA(element) {
             element.classList.toggle('open');
