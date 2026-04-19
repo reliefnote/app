@@ -14014,6 +14014,13 @@
                 return;
             }
             if (!month || !day) return;
+            // 存在しない月日 (2/30 や 4/31 等) を防ぐ
+            var _testYear = new Date().getFullYear();
+            var _testDate = new Date(_testYear, month - 1, day);
+            if (_testDate.getMonth() !== month - 1 || _testDate.getDate() !== day) {
+                if (typeof showToast === 'function') showToast('存在しない日付です');
+                return;
+            }
             var list = safeParseJSON(localStorage.getItem('relief_note_grief_anniversaries'), []);
             if (!Array.isArray(list)) list = [];
             // 上限 50 件 (現実的な記念日数の上限)
@@ -15626,11 +15633,25 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
         function buildDestinationGroups(channel) {
             const isHokuryu = channel === 'hokuryu';
             const isFuneral = channel === 'funeral';
+            // 行き先タイプ別 SVG アイコン (14px 線画 / currentColor / opacity でやや控えめ)
+            const _SVG_ATTR = 'width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;opacity:0.65;"';
+            const ICON_YAKUBA   = '<svg ' + _SVG_ATTR + '><path d="M3 21h18"/><path d="M5 21V10l7-5 7 5v11"/><path d="M9 21v-6h6v6"/></svg>';
+            const ICON_NENKIN   = '<svg ' + _SVG_ATTR + '><rect x="6" y="3" width="12" height="18" rx="1.5"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>';
+            const ICON_HOMU     = '<svg ' + _SVG_ATTR + '><path d="M12 3v18"/><path d="M5 7h14"/><path d="M5 7l-2 5h4z"/><path d="M19 7l-2 5h4z"/><path d="M7 21h10"/></svg>';
+            const ICON_ZEIMU    = '<svg ' + _SVG_ATTR + '><path d="M7 3h10l-1 18-3-2-2 2-2-2-3 2z"/><path d="M9 9h6M9 13h6M9 17h4"/></svg>';
+            const ICON_SOUGI    = '<svg ' + _SVG_ATTR + '><path d="M12 21v-7"/><path d="M9 11c0-2.5 3-6 3-6s3 3.5 3 6-1.3 3.5-3 3.5S9 13.5 9 11z"/></svg>';
+            const ICON_BANK     = '<svg ' + _SVG_ATTR + '><circle cx="12" cy="12" r="9"/><path d="M9 9.5c.4-1 1.4-1.5 3-1.5s2.6.5 3 1.5c-.2 1-1 1.5-3 1.5s-2.5.7-2.5 1.5c0 1 1 1.5 2.5 1.5s2.6-.5 3-1.5"/></svg>';
+            const ICON_HOKEN    = '<svg ' + _SVG_ATTR + '><path d="M12 3l8 3v6c0 4.5-3.3 8.4-8 9-4.7-.6-8-4.5-8-9V6l8-3z"/></svg>';
+            const ICON_KINMU    = '<svg ' + _SVG_ATTR + '><rect x="3" y="7" width="18" height="13" rx="1.5"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/><path d="M3 13h18"/></svg>';
+            const ICON_KEISATSU = '<svg ' + _SVG_ATTR + '><path d="M12 3l8 3v6c0 4.5-3.3 8.4-8 9-4.7-.6-8-4.5-8-9V6l8-3z"/><path d="M12 9l1.2 2.4 2.6.4-1.9 1.8.4 2.6L12 15l-2.3 1.2.4-2.6L8.2 11.8l2.6-.4z"/></svg>';
+            const ICON_UNYU     = '<svg ' + _SVG_ATTR + '><path d="M5 17h14"/><path d="M6 17l-1-5h14l-1 5"/><path d="M7 12l1.5-5h7L17 12"/><circle cx="8" cy="17" r="1.5"/><circle cx="16" cy="17" r="1.5"/></svg>';
+            const ICON_TELECOM  = '<svg ' + _SVG_ATTR + '><path d="M5 12.5c2-2.5 4.5-3.5 7-3.5s5 1 7 3.5"/><path d="M2 9c3-3 6.5-4.5 10-4.5s7 1.5 10 4.5"/><circle cx="12" cy="17" r="1.5"/></svg>';
+            const ICON_JITAKU   = '<svg ' + _SVG_ATTR + '><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-7H10v7H4a1 1 0 0 1-1-1z"/></svg>';
             return [
                 {
                     id: "hokuryu_yakuba",
                     name: isHokuryu ? "北竜町役場" : "市区町村役場",
-                    icon: "●",
+                    icon: ICON_YAKUBA,
                     description: isHokuryu ? "北海道雨竜郡北竜町字和11-1" : "お住まいの市区町村役場",
                     phone: isHokuryu ? "0164-34-2111" : "",
                     hours: isHokuryu ? "平日 8:30-17:15" : "平日 8:30-17:15（一般的な目安）",
@@ -15639,7 +15660,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 {
                     id: "nenkin",
                     name: isHokuryu ? "年金事務所（砂川）" : "年金事務所",
-                    icon: "●",
+                    icon: ICON_NENKIN,
                     description: isHokuryu ? "北海道砂川市西1条北6丁目1-1" : "最寄りの年金事務所",
                     phone: isHokuryu ? "0125-52-3890" : "ねんきんダイヤル 0570-05-1165",
                     hours: "平日 8:30-17:15（一般的な目安）",
@@ -15647,8 +15668,8 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 },
                 {
                     id: "homukyoku",
-                    name: isHokuryu ? "法務局・家庭裁判所（深川/旭川）" : "法務局・家庭裁判所",
-                    icon: "●",
+                    name: isHokuryu ? "法務局・家庭裁判所(深川/旭川)" : "法務局・家庭裁判所",
+                    icon: ICON_HOMU,
                     description: isHokuryu ? "旭川地方法務局／旭川家庭裁判所深川出張所" : "管轄の法務局・家庭裁判所",
                     phone: "",
                     hours: "平日 8:30-17:15（一般的な目安）",
@@ -15657,7 +15678,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 {
                     id: "zeimusho",
                     name: isHokuryu ? "深川税務署" : "税務署",
-                    icon: "●",
+                    icon: ICON_ZEIMU,
                     description: isHokuryu ? "北海道深川市2条17番17号" : "管轄の税務署",
                     phone: isHokuryu ? "0164-23-2191" : "",
                     hours: "平日 8:30-17:00（一般的な目安）",
@@ -15666,7 +15687,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 {
                     id: "sougisha",
                     name: "葬儀社",
-                    icon: "●",
+                    icon: ICON_SOUGI,
                     description: isFuneral ? "依頼中の葬儀社が窓口になります" : "",
                     phone: "",
                     hours: "",
@@ -15675,7 +15696,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 {
                     id: "bank",
                     name: "銀行・証券会社",
-                    icon: "●",
+                    icon: ICON_BANK,
                     description: "口座のある各金融機関",
                     phone: "",
                     hours: "平日 9:00-15:00（窓口）",
@@ -15684,7 +15705,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 {
                     id: "hoken",
                     name: "保険会社・共済",
-                    icon: "●",
+                    icon: ICON_HOKEN,
                     description: "加入先の各保険会社",
                     phone: "",
                     hours: "",
@@ -15693,7 +15714,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 {
                     id: "kinmusaki",
                     name: "勤務先（自分 / 故人）",
-                    icon: "●",
+                    icon: ICON_KINMU,
                     description: "",
                     phone: "",
                     hours: "",
@@ -15702,7 +15723,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 {
                     id: "keisatsu",
                     name: isHokuryu ? "警察署（深川）" : "警察署",
-                    icon: "●",
+                    icon: ICON_KEISATSU,
                     description: isHokuryu ? "北海道深川市4条8番20号" : "最寄りの警察署",
                     phone: isHokuryu ? "0164-22-0110" : "",
                     hours: "平日 8:30-17:15（一般的な目安）",
@@ -15711,7 +15732,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 {
                     id: "unyu",
                     name: isHokuryu ? "運輸支局（旭川）" : "運輸支局・軽自動車検査協会",
-                    icon: "●",
+                    icon: ICON_UNYU,
                     description: isHokuryu ? "北海道旭川市春光町10番地" : "管轄の運輸支局／軽自動車検査協会",
                     phone: isHokuryu ? "050-5540-2003" : "",
                     hours: "平日 8:45-16:00（一般的な目安）",
@@ -15720,7 +15741,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 {
                     id: "telecom",
                     name: "携帯キャリア・通信・NHK",
-                    icon: "●",
+                    icon: ICON_TELECOM,
                     description: "",
                     phone: "",
                     hours: "",
@@ -15729,7 +15750,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 {
                     id: "jitaku",
                     name: "自宅・その他",
-                    icon: "●",
+                    icon: ICON_JITAKU,
                     description: "自宅での確認・準備作業",
                     phone: "",
                     hours: "",
@@ -17814,9 +17835,16 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 var pending = localStorage.getItem('relief_note_sync_pending');
                 if (pending === '1' && isFamilySharingActive()) {
                     // RLS 拒否 (アクセス権失効) などの永続失敗で無限リトライしないよう
-                    // 連続失敗 5 回でいったん諦める。成功すると saveCaseDataNow 内でカウンタが落ちる
+                    // 連続失敗 5 回でいったん諦める。成功すると saveCaseDataNow 内でカウンタが落ちる。
+                    // 一時障害 (503/504) の場合は 24 時間経過で自動リセットして再開する
                     var failCount = parseInt(localStorage.getItem('rn_sync_fail_count') || '0', 10) || 0;
-                    if (failCount >= 5) return;
+                    var lastFailTs = parseInt(localStorage.getItem('rn_sync_fail_ts') || '0', 10) || 0;
+                    if (failCount >= 5 && (Date.now() - lastFailTs) < 24 * 60 * 60 * 1000) return;
+                    if (failCount >= 5) {
+                        // 24h 経過 → リセットして再試行
+                        localStorage.removeItem('rn_sync_fail_count');
+                        localStorage.removeItem('rn_sync_fail_ts');
+                    }
                     localStorage.removeItem('relief_note_sync_pending');
                     performCaseSync();
                 }
@@ -18069,7 +18097,10 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                     }
                     _setSyncStatus('ok');
                     // 同期成功で連続失敗カウンタをリセット
-                    try { localStorage.removeItem('rn_sync_fail_count'); } catch (e) {}
+                    try {
+                        localStorage.removeItem('rn_sync_fail_count');
+                        localStorage.removeItem('rn_sync_fail_ts');
+                    } catch (e) {}
                     // 4. last_seen_at を更新
                     var patchHeaders = {
                         'Content-Type': 'application/json',
@@ -18095,6 +18126,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                     try {
                         var fc = parseInt(localStorage.getItem('rn_sync_fail_count') || '0', 10) || 0;
                         safeSetItem('rn_sync_fail_count', String(fc + 1));
+                        safeSetItem('rn_sync_fail_ts', String(Date.now()));
                     } catch (e) {}
                 })
                 .then(function() {
@@ -18772,7 +18804,15 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
             // ===== スクロールリセット（ここまで） =====
 
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(screenId).classList.add('active');
+            // 不正な screenId (削除された画面 / typo) で TypeError にならないよう防御
+            var _scrEl = document.getElementById(screenId);
+            if (!_scrEl) {
+                console.warn('[showScreen] screen not found:', screenId);
+                _scrEl = document.getElementById('screen-home');
+                if (!_scrEl) return; // home すら無いなら諦める
+                _currentScreenId = 'screen-home';
+            }
+            _scrEl.classList.add('active');
 
             // フッターナビの表示制御
             const footerNav = document.querySelector('.footer-nav');
@@ -22496,15 +22536,19 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 console.warn('[showTaskDetail] task not found:', taskId);
                 return;
             }
-            // イベントログ: task_started（セッション内重複防止）
+            // イベントログ: task_started（セッション内重複防止 + 完了済みは除外）
             try {
                 if (!_taskStartedThisSession[taskId]) {
                     _taskStartedThisSession[taskId] = true;
-                    var t = tasks.find(function(tk) { return tk.id === taskId; });
-                    logEvent('task_started', {
-                        task_id: taskId,
-                        task_name: t ? t.title : taskId
-                    });
+                    var _curStatus = taskStatuses[taskId] || '';
+                    // 既に完了 / 該当なしのタスクは「着手」扱いしない (task_detail_opened で別途記録)
+                    if (_curStatus !== 'DONE' && _curStatus !== 'AUTO_DONE' && _curStatus !== 'NOT_APPLICABLE') {
+                        var t = tasks.find(function(tk) { return tk.id === taskId; });
+                        logEvent('task_started', {
+                            task_id: taskId,
+                            task_name: t ? t.title : taskId
+                        });
+                    }
                 }
             } catch (e) {}
 
@@ -23066,7 +23110,11 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
             if (_footerNavEl) _footerNavEl.style.display = 'flex';
         }
 
+        var _completeLockUntil = 0;
         function completeCurrentTask() {
+            // 連打抑止 (画面遷移前のキューイングされた click を弾く)
+            if (Date.now() < _completeLockUntil) return;
+            _completeLockUntil = Date.now() + 800;
             if (currentTaskId) {
                 const currentStatus = taskStatuses[currentTaskId] || determineTaskStatus(tasks.find(t => t.id === currentTaskId));
                 toggleTaskStatus(currentTaskId);
@@ -26979,7 +27027,12 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
         function saveSlackWebhook() {
             var input = document.getElementById('slackWebhookInput');
             var url = (input ? input.value : '').trim();
-            localStorage.setItem('relief_note_slack_webhook', url);
+            // Slack webhook URL は hooks.slack.com 限定 (誤入力/任意 URL の保存防止)
+            if (url && !/^https:\/\/hooks\.slack\.com\/services\/[A-Z0-9\/]+$/.test(url)) {
+                showToast('Slack webhook URL の形式が正しくありません');
+                return;
+            }
+            safeSetItem('relief_note_slack_webhook', url);
             showToast(url ? 'Webhook URLを保存しました' : 'Webhook URLをクリアしました');
         }
 
@@ -27165,7 +27218,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
         // ========== Service Worker 登録 (キャッシュバスティング) ==========
         // HTMLは network-first、画像等は cache-first。新しいデプロイを確実に
         // ユーザーへ届けるために使用する。詳細は /sw.js を参照。
-        window.APP_VERSION = 'rn-2026-04-19';
+        window.APP_VERSION = 'rn-2026-04-19b';
         (function registerServiceWorker() {
             if (!('serviceWorker' in navigator)) return;
             // localhost / file:// での開発時はスキップしない（動作確認のため）
@@ -27423,6 +27476,12 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                     var sid = activeScreen.id;
                     if (sid === 'screen-home' && typeof renderHome === 'function') renderHome();
                     else if (sid === 'screen-guide' && typeof renderGuide === 'function') renderGuide();
+                    else if (sid === 'screen-detail' && currentTaskId && typeof showTaskDetail === 'function') {
+                        // 他タブで taskStatuses が変わったら detail も再描画して古い表示を消す
+                        showTaskDetail._skipStack = true;
+                        showTaskDetail(currentTaskId);
+                        showTaskDetail._skipStack = false;
+                    }
                 }
             }
         });
