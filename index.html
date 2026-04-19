@@ -5,11 +5,18 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <!-- HTMLはキャッシュしない: 新しいデプロイを確実に届けるため -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
+    <!-- iOS ホーム画面追加 (Add to Home Screen) -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="ReliefNote">
+    <meta name="theme-color" content="#F5F4F1">
+    <link rel="apple-touch-icon" href="./logo.png">
     <title>ReliefNote - 遺族のためのGPS</title>
     <link rel="icon" type="image/png" href="./logo.png">
     <style>
@@ -1629,43 +1636,33 @@
             color: var(--text-primary);
         }
 
-        .calendar-btn {
+        /* ヘッダー右上のアイコンボタン群 (+ とカレンダー) */
+        .guide-header-actions {
+            display: flex;
+            gap: 8px;
+        }
+        .icon-header-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             background: #FFFFFF;
             border: 1px solid #E6E1D6;
-            border-radius: 999px;
-            padding: 9px 16px 9px 13px;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 7px;
-            font-size: 13px;
+            justify-content: center;
             color: var(--accent);
-            font-weight: 600;
-            letter-spacing: 0.2px;
-            box-shadow: 0 1px 2px rgba(58, 63, 50, 0.05), 0 4px 12px rgba(58, 63, 50, 0.04);
-            transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+            box-shadow: 0 1px 2px rgba(58, 63, 50, 0.05), 0 4px 10px rgba(58, 63, 50, 0.04);
+            transition: background 0.2s ease, border-color 0.2s ease;
             -webkit-tap-highlight-color: transparent;
+            padding: 0;
         }
-
-        .calendar-btn:hover {
+        .icon-header-btn:hover {
             background: #FBF8F2;
             border-color: #D8D0BE;
-            box-shadow: 0 2px 4px rgba(58, 63, 50, 0.08), 0 6px 16px rgba(58, 63, 50, 0.06);
-            transform: translateY(-1px);
         }
-
-        .calendar-btn:active {
-            transform: translateY(0);
-            box-shadow: 0 1px 2px rgba(58, 63, 50, 0.06);
+        .icon-header-btn:active {
             background: #F5F0E6;
-        }
-
-        .calendar-btn svg {
-            width: 16px;
-            height: 16px;
-            fill: none;
-            stroke: var(--accent);
-            flex-shrink: 0;
         }
 
         .guide-tabs {
@@ -3140,10 +3137,12 @@
         /* ステップテキスト */
         .step-text {
             flex: 1;
+            min-width: 0;
             font-size: 15px;
             font-weight: 600;
             line-height: 1.5;
             color: var(--text-primary);
+            overflow-wrap: anywhere;
             transition: color 0.2s ease;
         }
 
@@ -4007,6 +4006,367 @@
             font-weight: 600;
             color: var(--text-primary);
             line-height: 1.4;
+        }
+
+        /* ===== タスク検索オーバーレイ ===== */
+        .task-search-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: var(--bg-warm);
+            z-index: 10001;
+            display: none;
+            flex-direction: column;
+            max-width: 430px;
+            margin: 0 auto;
+        }
+        .task-search-overlay.show { display: flex; }
+        .task-search-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: calc(12px + env(safe-area-inset-top)) 16px 12px;
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border-light);
+        }
+        .task-search-back {
+            width: 40px;
+            height: 40px;
+            flex-shrink: 0;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .task-search-back:active { background: var(--bg-secondary); }
+        .task-search-input-wrap {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .task-search-input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-tertiary);
+            pointer-events: none;
+        }
+        .task-search-input {
+            width: 100%;
+            padding: 11px 40px 11px 38px;
+            background: var(--bg-secondary);
+            border: 1px solid transparent;
+            border-radius: 10px;
+            font-size: 15px;
+            color: var(--text-primary);
+            font-family: inherit;
+            outline: none;
+        }
+        .task-search-input:focus {
+            border-color: var(--accent);
+            background: var(--bg-primary);
+        }
+        .task-search-clear {
+            position: absolute;
+            right: 6px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 30px;
+            height: 30px;
+            border: none;
+            background: transparent;
+            color: var(--text-tertiary);
+            cursor: pointer;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .task-search-clear:active { background: var(--bg-secondary); }
+        .task-search-results {
+            flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 4px 12px calc(24px + env(safe-area-inset-bottom));
+        }
+        .task-search-empty {
+            padding: 48px 16px;
+            text-align: center;
+            color: var(--text-tertiary);
+            font-size: 13px;
+            line-height: 1.7;
+        }
+        .task-search-section-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-tertiary);
+            letter-spacing: 0.08em;
+            padding: 14px 6px 6px;
+        }
+        .task-search-result {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 12px 10px;
+            background: var(--bg-primary);
+            border-radius: 10px;
+            margin-bottom: 6px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: background 0.15s ease;
+        }
+        .task-search-result:active {
+            background: var(--bg-secondary);
+        }
+        .task-search-result-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: var(--bg-secondary);
+            color: var(--text-tertiary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 13px;
+            margin-top: 1px;
+        }
+        .task-search-result-body {
+            flex: 1;
+            min-width: 0;
+        }
+        .task-search-result-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            line-height: 1.4;
+            word-break: break-word;
+        }
+        .task-search-result-title mark {
+            background: rgba(199, 147, 85, 0.25);
+            color: var(--text-primary);
+            font-weight: 700;
+            padding: 0 2px;
+            border-radius: 2px;
+        }
+        .task-search-result-sub {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            margin-top: 3px;
+            line-height: 1.5;
+        }
+        .task-search-result.done .task-search-result-title {
+            color: var(--text-tertiary);
+            text-decoration: line-through;
+        }
+        .task-search-empty-sub {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+
+        /* 未入力時のクイックチップ / 履歴 */
+        .task-search-chip-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 2px 6px 6px;
+        }
+        .task-search-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 7px 12px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            font-size: 13px;
+            color: var(--text-primary);
+            font-family: inherit;
+            cursor: pointer;
+            line-height: 1.3;
+        }
+        .task-search-chip:active { background: var(--bg-secondary); }
+        .task-search-chip-history {
+            color: var(--text-secondary);
+        }
+        .task-search-chip-history svg {
+            color: var(--text-tertiary);
+        }
+        .task-search-history-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-right: 6px;
+        }
+        .task-search-history-clear {
+            background: transparent;
+            border: none;
+            color: var(--text-tertiary);
+            font-size: 11px;
+            font-family: inherit;
+            cursor: pointer;
+            padding: 2px 4px;
+            letter-spacing: 0.02em;
+        }
+        .task-search-hint {
+            padding: 14px 12px 0;
+            font-size: 12px;
+            color: var(--text-tertiary);
+            line-height: 1.6;
+        }
+
+        /* フィルタチップ: 完了を含める */
+        .task-search-filter-row {
+            padding: 8px 6px 2px;
+        }
+        .task-search-filter-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-family: inherit;
+            cursor: pointer;
+        }
+        .task-search-filter-chip.active {
+            background: var(--accent-light);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .task-search-filter-chip svg { color: currentColor; }
+
+        /* ===== 自分でタスク追加フォーム ===== */
+        .custom-task-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .custom-task-label {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            letter-spacing: 0.02em;
+        }
+        .custom-task-input {
+            width: 100%;
+            padding: 12px 14px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-light);
+            border-radius: 10px;
+            font-size: 15px;
+            color: var(--text-primary);
+            font-family: inherit;
+            line-height: 1.4;
+            outline: none;
+        }
+        .custom-task-note {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            line-height: 1.5;
+            margin: 4px 2px 0;
+        }
+        .custom-task-input:focus {
+            border-color: var(--accent);
+            background: var(--bg-primary);
+        }
+        .custom-task-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 4px;
+        }
+        .custom-task-cancel,
+        .custom-task-save {
+            flex: 1;
+            min-height: 44px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+        }
+        .custom-task-cancel {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+        .custom-task-save {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+        }
+        .custom-task-save:disabled {
+            background: var(--border);
+            color: var(--text-tertiary);
+            cursor: not-allowed;
+        }
+
+        /* ===== 自分で追加したタスクのリスト ===== */
+        .custom-tasks-section {
+            margin: 14px 16px 4px;
+            padding: 14px 16px;
+            background: var(--bg-primary);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+        .custom-tasks-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .custom-tasks-title::before {
+            content: '';
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23A49B8C' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='12' y1='5' x2='12' y2='19'/%3E%3Cline x1='5' y1='12' x2='19' y2='12'/%3E%3C/svg%3E") no-repeat center;
+        }
+        .custom-task-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 4px;
+        }
+        .custom-task-item + .custom-task-item {
+            border-top: 1px solid var(--border-light);
+        }
+        .custom-task-item-title {
+            flex: 1;
+            font-size: 14px;
+            color: var(--text-primary);
+            line-height: 1.4;
+            word-break: break-word;
+        }
+        .custom-task-item.done .custom-task-item-title {
+            color: var(--text-tertiary);
+            text-decoration: line-through;
+        }
+        .custom-task-del {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: transparent;
+            color: var(--text-tertiary);
+            font-size: 18px;
+            line-height: 1;
+            cursor: pointer;
+            border-radius: 18px;
+            flex-shrink: 0;
+        }
+        .custom-task-del:active {
+            background: var(--bg-secondary);
+            color: var(--status-overdue);
         }
 
         /* ===== 行き先タブ 情報カード (住所/電話/受付時間) ===== */
@@ -5166,7 +5526,7 @@
             border-radius: 14px;
             border: none;
             box-shadow: 0 4px 16px rgba(58, 63, 50, 0.3);
-            z-index: 1000;
+            z-index: 100000;
             display: none;
             width: calc(100% - 32px);
             max-width: 398px;
@@ -10349,15 +10709,28 @@
         <div id="screen-guide" class="screen">
             <div class="guide-header">
                 <div class="guide-title">おくやみガイド</div>
-                <button class="calendar-btn" onclick="showCalendar()">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2"/>
-                        <line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="2"/>
-                    </svg>
-                    カレンダー
-                </button>
+                <div class="guide-header-actions">
+                    <button class="icon-header-btn" onclick="openTaskSearch()" aria-label="タスクを検索">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="7"/>
+                            <line x1="21" y1="21" x2="16.5" y2="16.5"/>
+                        </svg>
+                    </button>
+                    <button class="icon-header-btn" onclick="openAddCustomTaskSheet()" aria-label="タスクを追加">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19"/>
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                        </svg>
+                    </button>
+                    <button class="icon-header-btn" onclick="showCalendar()" aria-label="カレンダー">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8" y1="2" x2="8" y2="6"/>
+                            <line x1="3" y1="10" x2="21" y2="10"/>
+                        </svg>
+                    </button>
+                </div>
             </div>
             <div class="guide-tabs" id="guideTabs">
                 <button class="tab-btn active" onclick="setGuideView('lifecycle')">カテゴリー</button>
@@ -10523,6 +10896,20 @@
                             <div>
                                 <div class="data-mgmt-item-title">控えを PDF で残す</div>
                                 <div class="data-mgmt-item-desc">これまでの回答や進捗を 1 枚の書類にまとめます。印刷やメール添付にも使えます。</div>
+                            </div>
+                        </div>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                    </div>
+
+                    <!-- 北竜町チャネルのみ表示: 役場案内との対応表 PDF -->
+                    <div class="data-mgmt-item" id="dataMgmtPaperMap" onclick="generatePaperMapReport()" style="display:none;">
+                        <div class="data-mgmt-item-left">
+                            <div class="data-mgmt-item-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
+                            </div>
+                            <div>
+                                <div class="data-mgmt-item-title">役場の案内との対応表</div>
+                                <div class="data-mgmt-item-desc">同封の紙とアプリの画面がどう対応しているかを 1 枚にまとめて印刷できます。</div>
                             </div>
                         </div>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
@@ -11269,6 +11656,40 @@
                 <div class="modal-title">名前を変更</div>
                 <input type="text" id="editNameInput" class="modal-input" placeholder="名前を入力" maxlength="20">
                 <button class="btn-primary" onclick="saveEditedName()">保存</button>
+            </div>
+        </div>
+
+        <!-- タスク検索オーバーレイ -->
+        <div id="taskSearchOverlay" class="task-search-overlay">
+            <div class="task-search-header">
+                <button class="task-search-back" onclick="closeTaskSearch()" aria-label="閉じる">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                </button>
+                <div class="task-search-input-wrap">
+                    <svg class="task-search-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg>
+                    <input type="text" id="taskSearchInput" class="task-search-input" placeholder="タスクを検索 (スペース区切りで複数語)" autocomplete="off" enterkeyhint="search" oninput="_onTaskSearchInput()" onkeydown="_onTaskSearchKey(event)">
+                    <button type="button" class="task-search-clear" id="taskSearchClearBtn" onclick="_clearTaskSearch()" aria-label="クリア" style="display:none;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
+                </div>
+            </div>
+            <div id="taskSearchResults" class="task-search-results"></div>
+        </div>
+
+        <!-- 自分でタスク追加シート -->
+        <div id="addCustomTaskSheet" class="bottom-sheet-overlay" onclick="if(event.target===this)closeAddCustomTaskSheet()">
+            <div class="bottom-sheet-panel">
+                <div class="bottom-sheet-handle"></div>
+                <div class="bottom-sheet-title">自分でタスクを追加</div>
+                <div class="custom-task-form">
+                    <label class="custom-task-label" for="customTaskTitleInput">タスク名</label>
+                    <input type="text" id="customTaskTitleInput" class="custom-task-input" placeholder="例: ○○さんに連絡する" maxlength="60" oninput="_onCustomTaskInput()">
+                    <p class="custom-task-note">この端末にだけ保存されます。家族共有には反映されません。</p>
+                    <div class="custom-task-actions">
+                        <button type="button" class="custom-task-cancel" onclick="closeAddCustomTaskSheet()">キャンセル</button>
+                        <button type="button" class="custom-task-save" id="customTaskSaveBtn" onclick="saveCustomTask()" disabled>追加する</button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -12337,17 +12758,23 @@
             }
         }
 
+        var _griefDraftSaveTimer = null;
         function updateGriefCharCount(textarea) {
             var el = document.getElementById('grief-char-current');
             if (el) el.textContent = textarea.value.length;
             // 下書きを localStorage に残す。ブラウザが閉じても復元できる。
-            try {
-                if (textarea.value.length > 0) {
-                    localStorage.setItem('relief_note_grief_draft', textarea.value);
-                } else {
-                    localStorage.removeItem('relief_note_grief_draft');
-                }
-            } catch (e) {}
+            // 1 文字ごとに setItem すると長文時に重いので 400ms debounce。
+            if (_griefDraftSaveTimer) clearTimeout(_griefDraftSaveTimer);
+            _griefDraftSaveTimer = setTimeout(function() {
+                _griefDraftSaveTimer = null;
+                try {
+                    if (textarea.value.length > 0) {
+                        safeSetItem('relief_note_grief_draft', textarea.value);
+                    } else {
+                        localStorage.removeItem('relief_note_grief_draft');
+                    }
+                } catch (e) {}
+            }, 400);
         }
 
         function saveGriefLog() {
@@ -12357,7 +12784,7 @@
             var hasConsent = consentCheck ? consentCheck.checked : false;
             var log = {
                 id: 'gl_' + now.toISOString().replace(/[-:T]/g, '').slice(0, 14),
-                date: now.toISOString().split('T')[0],
+                date: _localDateString(now),
                 mood: _selectedMood,
                 sleep: _griefBodyChecks.sleep,
                 meal: _griefBodyChecks.meal,
@@ -12366,7 +12793,7 @@
                 created_at: now.toISOString(),
                 emotions: _selectedEmotions.slice()
             };
-            var logs = JSON.parse(localStorage.getItem('relief_note_grief_logs') || '[]');
+            var logs = safeParseJSON(localStorage.getItem('relief_note_grief_logs'), []);
             var todayStr = log.date;
             var existingIndex = logs.findIndex(function(l) { return l.date === todayStr; });
             if (existingIndex >= 0) {
@@ -12375,7 +12802,12 @@
             } else {
                 logs.push(log);
             }
-            localStorage.setItem('relief_note_grief_logs', JSON.stringify(logs));
+            // 上限: 最新 1500 件 (約 4 年分の日次記録) — 古いものから捨てる
+            if (logs.length > 1500) {
+                logs.sort(function(a, b) { return (a.date || '') < (b.date || '') ? -1 : 1; });
+                logs = logs.slice(logs.length - 1500);
+            }
+            safeSetItem('relief_note_grief_logs', JSON.stringify(logs));
             // 送信済みなので下書きを破棄
             try { localStorage.removeItem('relief_note_grief_draft'); } catch (e) {}
 
@@ -12483,7 +12915,7 @@
             var container = document.getElementById('mood-calendar');
             if (!container) return;
             var section = container.closest('.mood-calendar-section');
-            var logs = JSON.parse(localStorage.getItem('relief_note_grief_logs') || '[]');
+            var logs = safeParseJSON(localStorage.getItem('relief_note_grief_logs'), []);
 
             // 記録5件未満はプレビュー表示
             if (logs.length < 5) {
@@ -12519,7 +12951,7 @@
             for (var i = 29; i >= 0; i--) {
                 var d = new Date(today);
                 d.setDate(d.getDate() - i);
-                var dateStr = d.toISOString().split('T')[0];
+                var dateStr = _localDateString(d);
                 var dayLog = null;
                 for (var j = logs.length - 1; j >= 0; j--) {
                     if (logs[j].date === dateStr) { dayLog = logs[j]; break; }
@@ -12536,7 +12968,7 @@
         function renderMoodHistory() {
             var container = document.getElementById('mood-history');
             if (!container) return;
-            var logs = JSON.parse(localStorage.getItem('relief_note_grief_logs') || '[]');
+            var logs = safeParseJSON(localStorage.getItem('relief_note_grief_logs'), []);
             var recent = logs.slice(-5).reverse();
             if (recent.length === 0) {
                 container.innerHTML = '<p style="font-size:14px;color:var(--text-tertiary);text-align:center;padding:16px 0;">まだ記録がありません</p>';
@@ -12597,12 +13029,12 @@
         function renderGriefContentCards() {
             var container = document.getElementById('griefContentCards');
             if (!container) return;
-            var readArticles = JSON.parse(localStorage.getItem('relief_note_read_articles') || '[]');
+            var readArticles = safeParseJSON(localStorage.getItem('relief_note_read_articles'), []);
             container.innerHTML = GRIEF_ARTICLES.map(function(a) {
                 var isRead = readArticles.indexOf(a.id) !== -1;
-                return '<div class="grief-content-card' + (isRead ? ' read' : '') + '" onclick="showGriefArticle(\'' + a.id + '\')">'
-                    + '<p class="grief-content-title">' + a.title + '</p>'
-                    + '<span class="grief-content-time">' + (GRIEF_ARTICLE_TIMES[a.id] || '') + '</span>'
+                return '<div class="grief-content-card' + (isRead ? ' read' : '') + '" onclick="showGriefArticle(\'' + encodeURIComponent(a.id) + '\')">'
+                    + '<p class="grief-content-title">' + escapeHtml(a.title || '') + '</p>'
+                    + '<span class="grief-content-time">' + escapeHtml(GRIEF_ARTICLE_TIMES[a.id] || '') + '</span>'
                     + '</div>';
             }).join('');
         }
@@ -12613,10 +13045,10 @@
             // スクロール位置を保存
             _griefCareScrollPosition = window.scrollY;
             // 既読記録
-            var readArticles = JSON.parse(localStorage.getItem('relief_note_read_articles') || '[]');
+            var readArticles = safeParseJSON(localStorage.getItem('relief_note_read_articles'), []);
             if (readArticles.indexOf(articleId) === -1) {
                 readArticles.push(articleId);
-                localStorage.setItem('relief_note_read_articles', JSON.stringify(readArticles));
+                safeSetItem('relief_note_read_articles', JSON.stringify(readArticles));
             }
             var container = document.getElementById('griefArticleContent');
             var bodyContent = article.body.replace(/<h2>.*?<\/h2>/, '');
@@ -12981,7 +13413,7 @@
             var linkEl = document.getElementById('griefCareSuggestionLink');
             if (!container || !textEl || !linkEl) return;
 
-            var logs = JSON.parse(localStorage.getItem('relief_note_grief_logs') || '[]');
+            var logs = safeParseJSON(localStorage.getItem('relief_note_grief_logs'), []);
             var text = '';
             var linkText = '';
             var linkAction = '';
@@ -12989,7 +13421,7 @@
             // パーソナルインサイト: 1週間前との比較
             var weekAgoDate = new Date();
             weekAgoDate.setDate(weekAgoDate.getDate() - 7);
-            var weekAgoStr = weekAgoDate.toISOString().split('T')[0];
+            var weekAgoStr = _localDateString(weekAgoDate);
             var weekAgoLog = null;
             for (var i = 0; i < logs.length; i++) {
                 if (logs[i].date === weekAgoStr) { weekAgoLog = logs[i]; break; }
@@ -13060,7 +13492,8 @@
 
         // ====== 同意状態の保存・復元 ======
         function onGriefConsentChange(checkbox) {
-            localStorage.setItem('relief_note_grief_consent', checkbox.checked ? '1' : '0');
+            // safeSetItem で容量超過に対しても安全に
+            safeSetItem('relief_note_grief_consent', checkbox.checked ? '1' : '0');
             renderNurseStatus();
         }
 
@@ -13083,7 +13516,7 @@
             if (savedConsent === '1') isConsented = true;
 
             if (isConsented) {
-                var logs = JSON.parse(localStorage.getItem('relief_note_grief_logs') || '[]');
+                var logs = safeParseJSON(localStorage.getItem('relief_note_grief_logs'), []);
                 var consentedLogs = 0;
                 for (var i = 0; i < logs.length; i++) {
                     if (logs[i].consent) consentedLogs++;
@@ -13209,7 +13642,8 @@
             var now = new Date();
             var noteEl = document.getElementById('griefWaveNote');
             var wave = {
-                id: 'wv_' + now.getTime(),
+                // 同 ms 内の連打衝突を防ぐためランダム 4 桁を付与
+                id: 'wv_' + now.getTime() + '_' + Math.floor(Math.random() * 10000),
                 timestamp: now.toISOString(),
                 triggers: _waveState.triggers.slice(),
                 intensity: _waveState.intensity,
@@ -13217,6 +13651,8 @@
             };
             var waves = safeParseJSON(localStorage.getItem('relief_note_grief_waves'), []);
             waves.push(wave);
+            // 上限 1000 件 (約 200KB) で古いものから削る
+            if (waves.length > 1000) waves = waves.slice(waves.length - 1000);
             safeSetItem('relief_note_grief_waves', JSON.stringify(waves));
             if (typeof logEvent === 'function') {
                 logEvent('wave_saved', {
@@ -13580,8 +14016,13 @@
             if (!month || !day) return;
             var list = safeParseJSON(localStorage.getItem('relief_note_grief_anniversaries'), []);
             if (!Array.isArray(list)) list = [];
+            // 上限 50 件 (現実的な記念日数の上限)
+            if (list.length >= 50) {
+                if (typeof showToast === 'function') showToast('登録できる記念日は最大50件です');
+                return;
+            }
             list.push({
-                id: 'av_' + Date.now(),
+                id: 'av_' + Date.now() + '_' + Math.floor(Math.random() * 10000),
                 label: label,
                 month: month,
                 day: day,
@@ -14625,7 +15066,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 const byNumber = raw.split(/(?=(?:^|\s)\d{1,2}\.)/).map(x => x.trim()).filter(x => x);
                 return byNumber.length > 1 ? byNumber : parts;
             };
-            const stripNumbering = (s) => s.replace(/^\d{1,2}\.\s*/, '');
+            const stripNumbering = (s) => s.replace(/^\s*\d{1,2}[\.．]\s*/, '');
             taskDetails = {};
             taskStepsData = {};
             raw.rawTaskContent.forEach(tc => {
@@ -15411,6 +15852,8 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
         }
 
         function _completeMasterYakuba() {
+            // 既に完了済み (DONE) なら何もしない (連打対策、二重ログ防止)
+            if (_getMasterYakubaStatus() === 'DONE') return;
             var munTasks = _getMunicipalTasks();
             var justCompleted = 0;
             munTasks.forEach(function(t) {
@@ -15753,11 +16196,13 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
             try {
                 var params = new URLSearchParams(window.location.search);
                 var urlChannel = params.get('ch') || params.get('channel');
-                if (urlChannel) {
+                // 既知のチャネルのみ受け付ける (任意値のインジェクション防止)
+                if (urlChannel === 'hokuryu' || urlChannel === 'funeral' || urlChannel === 'direct') {
                     localStorage.setItem('relief_note_channel', urlChannel);
                 }
                 var urlPartner = params.get('partner');
-                if (urlPartner) {
+                // partner ID は英数字 + ハイフン/アンダーバーのみ許容 (PARTNER_REGISTRY 検証は initChannel で実施)
+                if (urlPartner && /^[A-Za-z0-9_-]{1,32}$/.test(urlPartner)) {
                     localStorage.setItem('relief_note_partner', urlPartner);
                 }
             } catch (e) {}
@@ -15915,10 +16360,14 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
         // _caseState.keyHash と cases.key_hash の両方が揃った状態を保証する。
         // 既に揃っていれば即 resolve、無ければ caseKey から導出して localStorage と
         // サーバ (key_hash IS NULL の場合のみ UPDATE) に反映する。
+        // init と sync から同時に呼ばれても deriveKeyHash / バックフィルが二重に走らないよう、
+        // 進行中の Promise を共有する。成功/失敗どちらでも最後にクリアする。
+        var _ensureKeyHashInFlight = null;
         function _ensureCaseKeyHash() {
             if (!_caseState.caseKey) return Promise.reject(new Error('caseKey missing'));
             if (_caseState.keyHash) return Promise.resolve(_caseState.keyHash);
-            return deriveKeyHash(_caseState.caseKey).then(function(hash) {
+            if (_ensureKeyHashInFlight) return _ensureKeyHashInFlight;
+            _ensureKeyHashInFlight = deriveKeyHash(_caseState.caseKey).then(function(hash) {
                 _caseState.keyHash = hash;
                 safeSetItem('relief_note_case_key_hash', hash);
                 // レガシーケースのバックフィル (新規作成済みなら 0 行で no-op)
@@ -15935,7 +16384,10 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                     }).catch(function() {});
                 }
                 return hash;
+            }).finally(function() {
+                _ensureKeyHashInFlight = null;
             });
+            return _ensureKeyHashInFlight;
         }
 
         // case_* テーブルへのリクエストに付ける所有証明ヘッダ。
@@ -16015,6 +16467,15 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
         function joinCase(caseId, caseKey, displayName) {
             var memberId = _generateUUID();
             var keyHash = null;
+            // 途中で失敗したときのロールバック用スナップショット
+            var _stateSnapshot = {
+                caseId: _caseState.caseId,
+                memberId: _caseState.memberId,
+                caseKey: _caseState.caseKey,
+                keyHash: _caseState.keyHash,
+                role: _caseState.role,
+                isActive: _caseState.isActive
+            };
             return verifyCaseKey(null, caseKey)
                 .catch(function() { return false; })
                 .then(function() {
@@ -16076,6 +16537,18 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                         logEvent('case_joined', { case_id: caseId });
                     }
                     return { caseId: caseId, memberId: memberId };
+                })
+                .catch(function(err) {
+                    // case_members INSERT 失敗や鍵検証失敗時に、半端な _caseState を
+                    // 参加前の状態へ巻き戻す。localStorage には何も書いていないので
+                    // メモリだけの原状復帰で十分。
+                    _caseState.caseId = _stateSnapshot.caseId;
+                    _caseState.memberId = _stateSnapshot.memberId;
+                    _caseState.caseKey = _stateSnapshot.caseKey;
+                    _caseState.keyHash = _stateSnapshot.keyHash;
+                    _caseState.role = _stateSnapshot.role;
+                    _caseState.isActive = _stateSnapshot.isActive;
+                    throw err;
                 });
         }
 
@@ -16334,7 +16807,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                                 + progressHtml
                                 + lastSeenHtml
                                 + '</div>'
-                                + (canDelete ? '<button type="button" class="family-member-del" onclick="removeFamilyMember(\'' + m.member_id + '\')" aria-label="除名">×</button>' : '')
+                                + (canDelete ? '<button type="button" class="family-member-del" data-member-id="' + escapeHtml(m.member_id) + '" onclick="removeFamilyMember(this.getAttribute(\'data-member-id\'))" aria-label="除名">×</button>' : '')
                                 + '</div>';
                         }).join('');
                     });
@@ -16892,7 +17365,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                     '<div class="bottom-sheet-panel">' +
                         '<div class="bottom-sheet-handle"></div>' +
                         '<div class="bottom-sheet-title">メモ</div>' +
-                        '<textarea id="taskMemoInput" style="width:100%;min-height:120px;border:1px solid var(--border);border-radius:12px;padding:14px;font-size:14px;font-family:inherit;resize:vertical;background:var(--bg-warm);color:var(--text-primary);line-height:1.6;box-sizing:border-box;" placeholder="手続きに必要なことをメモ…"></textarea>' +
+                        '<textarea id="taskMemoInput" maxlength="1000" style="width:100%;min-height:120px;border:1px solid var(--border);border-radius:12px;padding:14px;font-size:14px;font-family:inherit;resize:vertical;background:var(--bg-warm);color:var(--text-primary);line-height:1.6;box-sizing:border-box;" placeholder="手続きに必要なことをメモ…"></textarea>' +
                         '<div style="display:flex;gap:8px;margin-top:12px;">' +
                             '<button class="bottom-sheet-cancel" style="flex:1;" onclick="closeTaskMemo()">キャンセル</button>' +
                             '<button id="taskMemoSaveBtn" style="flex:1;padding:14px;border-radius:12px;border:none;background:var(--accent);color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;">保存</button>' +
@@ -17008,11 +17481,16 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
         }
 
         function setReminder(taskId, isoDate) {
+            var d = new Date(isoDate);
+            // 過去日付ガード: Invalid Date / 既に過ぎた時刻は受け付けない
+            if (isNaN(d.getTime()) || d.getTime() <= Date.now()) {
+                if (typeof showToast === 'function') showToast('未来の日時を指定してください');
+                return;
+            }
             var reminders = safeParseJSON(localStorage.getItem('rn_task_reminders'), {});
             reminders[taskId] = isoDate;
             safeSetItem('rn_task_reminders', JSON.stringify(reminders));
             closeReminderSheet();
-            var d = new Date(isoDate);
             var m = d.getMonth() + 1;
             var day = d.getDate();
             if (typeof showToast === 'function') showToast(m + '/' + day + ' にリマインドします');
@@ -17041,7 +17519,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
             }
             var tomorrow = new Date();
             tomorrow.setDate(tomorrow.getDate() + 1);
-            input.min = tomorrow.toISOString().split('T')[0];
+            input.min = _localDateString(tomorrow);
             input.value = '';
             input.onchange = function() {
                 if (input.value) {
@@ -17053,10 +17531,26 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
         }
 
         function _scheduleReminderNotification(taskId, isoDate) {
-            // Notification APIが利用可能なら通知を予約
-            if (!('Notification' in window)) return;
-            if (Notification.permission === 'default') {
-                Notification.requestPermission();
+            // Notification API が利用可能なら通知を予約。HTTP / 古いブラウザ /
+            // Notification 機能が制限されている iOS PWA 等では throw の可能性があるので try で包む
+            try {
+                if (!('Notification' in window)) return;
+                if (Notification.permission === 'default') {
+                    var ret = Notification.requestPermission();
+                    // 新仕様 Promise / 旧仕様 callback どちらにも対応
+                    if (ret && typeof ret.then === 'function') {
+                        ret.catch(function() {});
+                    }
+                } else if (Notification.permission === 'denied') {
+                    // ユーザーが過去に通知を拒否している場合は明示的に案内
+                    if (typeof showToast === 'function') {
+                        setTimeout(function() {
+                            showToast('通知がオフのため、アプリ起動中にお知らせします');
+                        }, 1000);
+                    }
+                }
+            } catch (e) {
+                // 通知不可でも、_checkDueReminders がトーストでフォールバックするので問題なし
             }
         }
 
@@ -17066,16 +17560,35 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
             var changed = false;
             Object.keys(reminders).forEach(function(taskId) {
                 var reminderTime = new Date(reminders[taskId]).getTime();
+                // 壊れた値 (Invalid Date) はサイレントに削除する
+                if (isNaN(reminderTime)) {
+                    delete reminders[taskId];
+                    changed = true;
+                    return;
+                }
                 if (reminderTime <= now) {
                     var task = tasks.find(function(t) { return t.id === taskId; });
                     var taskName = task ? task.title : taskId;
                     // まだ完了していないタスクのみ通知
                     var status = taskStatuses[taskId];
                     if (status !== 'DONE' && status !== 'AUTO_DONE') {
-                        if ('Notification' in window && Notification.permission === 'granted') {
-                            new Notification('リマインダー', { body: taskName, icon: 'logo.png' });
-                        } else {
-                            // フォールバック: トースト表示
+                        var notified = false;
+                        try {
+                            if ('Notification' in window && Notification.permission === 'granted') {
+                                var n = new Notification('リマインダー', { body: taskName, icon: 'logo.png', tag: 'rn-reminder-' + taskId });
+                                n.onclick = function() {
+                                    try { window.focus(); } catch (e) {}
+                                    try {
+                                        if (typeof showTaskDetail === 'function') {
+                                            showTaskDetail(taskId);
+                                        }
+                                    } catch (e) {}
+                                    try { n.close(); } catch (e) {}
+                                };
+                                notified = true;
+                            }
+                        } catch (e) { /* 通知失敗時はトーストにフォールバック */ }
+                        if (!notified) {
                             if (typeof showToast === 'function') showToast('リマインド: ' + taskName);
                         }
                     }
@@ -17300,6 +17813,10 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 _updateOfflineBanner();
                 var pending = localStorage.getItem('relief_note_sync_pending');
                 if (pending === '1' && isFamilySharingActive()) {
+                    // RLS 拒否 (アクセス権失効) などの永続失敗で無限リトライしないよう
+                    // 連続失敗 5 回でいったん諦める。成功すると saveCaseDataNow 内でカウンタが落ちる
+                    var failCount = parseInt(localStorage.getItem('rn_sync_fail_count') || '0', 10) || 0;
+                    if (failCount >= 5) return;
                     localStorage.removeItem('relief_note_sync_pending');
                     performCaseSync();
                 }
@@ -17336,19 +17853,32 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
         // URL パラメータから参加フロー
         var _pendingJoin = { caseId: null, caseKey: null };
 
+        // UUID v4 厳格チェック (caseId は UUID 形式以外を拒否してインジェクションを防ぐ)
+        var _UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+        function _isValidCaseId(s) { return typeof s === 'string' && _UUID_RE.test(s); }
+
         function checkJoinParams() {
             var params = new URLSearchParams(window.location.search);
             var joinId = params.get('join');
             var joinKey = params.get('k');
             if (joinId && joinKey) {
-                _pendingJoin.caseId = joinId;
-                _pendingJoin.caseKey = joinKey;
-                // URL パラメータを消す (鍵を URL に残さない)
+                // URL パラメータは常に消す (鍵を URL に残さない)
                 var cleanUrl = window.location.pathname;
                 if (window.history && window.history.replaceState) {
                     window.history.replaceState({}, '', cleanUrl);
                 }
-                // 参加画面を表示
+                if (!_isValidCaseId(joinId)) {
+                    if (typeof showToast === 'function') showToast('招待リンクの形式が正しくありません');
+                    return;
+                }
+                // caseKey は AES-256 base64 = 44 文字。安全な base64 文字種のみ許容
+                if (typeof joinKey !== 'string' || joinKey.length < 40 || joinKey.length > 64
+                    || !/^[A-Za-z0-9+/=]+$/.test(joinKey)) {
+                    if (typeof showToast === 'function') showToast('招待リンクの形式が正しくありません');
+                    return;
+                }
+                _pendingJoin.caseId = joinId;
+                _pendingJoin.caseKey = joinKey;
                 showJoinScreen();
             }
         }
@@ -17399,21 +17929,32 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
         }
 
         function removeFamilyMember(memberId) {
+            // 本人除名は別フロー (doLeaveCase) で処理する。誤って自分を消さないようガード
+            if (!memberId || memberId === _caseState.memberId) {
+                if (typeof showToast === 'function') showToast('自分を除名するには「この共有グループから抜ける」を使ってください');
+                return;
+            }
+            if (_caseState.role !== 'owner') {
+                if (typeof showToast === 'function') showToast('オーナーのみが除名できます');
+                return;
+            }
             if (!confirm('このメンバーを除名しますか？')) return;
             var headers = {
                 'apikey': SUPABASE_ANON_KEY,
                 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
             };
             if (_caseState.keyHash) headers['x-key-hash'] = _caseState.keyHash;
-            fetch(SUPABASE_URL + '/rest/v1/case_members?case_id=eq.' + _caseState.caseId + '&member_id=eq.' + memberId, {
+            fetch(SUPABASE_URL + '/rest/v1/case_members?case_id=eq.' + encodeURIComponent(_caseState.caseId) + '&member_id=eq.' + encodeURIComponent(memberId), {
                 method: 'DELETE',
                 headers: headers
-            }).then(function() {
+            }).then(function(res) {
+                if (!res || !res.ok) throw new Error('DELETE failed');
                 if (typeof logEvent === 'function') logEvent('family_member_removed', {});
                 _loadFamilyMembers();
+                if (typeof showToast === 'function') showToast('メンバーを除名しました');
             }).catch(function(err) {
-                console.error(err);
-                alert('除名に失敗しました');
+                console.error('[removeFamilyMember]', err);
+                if (typeof showToast === 'function') showToast('除名に失敗しました。通信状態をご確認ください');
             });
         }
 
@@ -17522,9 +18063,13 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                         return res.text().then(function(t) {
                             console.warn('[Sync] Upload failed:', t);
                             _setSyncStatus('error');
+                            // 失敗を pending として記録 → 次の online イベントで再試行される
+                            try { safeSetItem('relief_note_sync_pending', '1'); } catch (e) {}
                         });
                     }
                     _setSyncStatus('ok');
+                    // 同期成功で連続失敗カウンタをリセット
+                    try { localStorage.removeItem('rn_sync_fail_count'); } catch (e) {}
                     // 4. last_seen_at を更新
                     var patchHeaders = {
                         'Content-Type': 'application/json',
@@ -17533,7 +18078,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                         'Prefer': 'return=minimal'
                     };
                     if (_caseState.keyHash) patchHeaders['x-key-hash'] = _caseState.keyHash;
-                    fetch(SUPABASE_URL + '/rest/v1/case_members?case_id=eq.' + caseId + '&member_id=eq.' + memberId, {
+                    fetch(SUPABASE_URL + '/rest/v1/case_members?case_id=eq.' + encodeURIComponent(caseId) + '&member_id=eq.' + encodeURIComponent(memberId), {
                         method: 'PATCH',
                         headers: patchHeaders,
                         body: JSON.stringify({ last_seen_at: now })
@@ -17544,6 +18089,13 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 .catch(function(err) {
                     console.warn('[Sync] Error:', err);
                     _setSyncStatus('error');
+                    // 失敗を pending として記録 → 次の online イベントで再試行
+                    try { safeSetItem('relief_note_sync_pending', '1'); } catch (e) {}
+                    // 連続失敗カウンタを増やす (online retry の上限ガード用)
+                    try {
+                        var fc = parseInt(localStorage.getItem('rn_sync_fail_count') || '0', 10) || 0;
+                        safeSetItem('rn_sync_fail_count', String(fc + 1));
+                    } catch (e) {}
                 })
                 .then(function() {
                     _syncInProgress = false;
@@ -17607,10 +18159,21 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                             SYNC_FIELDS.forEach(function(f) {
                                 var otherTs = other.timestamps[f.key] || '';
                                 var myTs = myTimestamps[f.key] || '';
-                                if (otherTs > myTs && other.data[f.key] !== undefined) {
-                                    // 相手のデータが新しい → ローカルに反映
+                                var hasOther = other.data[f.key] !== undefined;
+                                if (!hasOther) return;
+                                // 通常: タイムスタンプ比較で新しい方を採用
+                                var shouldMerge = otherTs > myTs;
+                                // フォールバック: ローカルが空 (null/undefined) で相手にデータがある場合は
+                                // タイムスタンプ無しでも採用 (旧クライアントの field_timestamps 欠落対策)
+                                if (!shouldMerge && !myTs) {
+                                    var localVal = localStorage.getItem(f.localKey);
+                                    if (localVal === null || localVal === undefined || localVal === '') {
+                                        shouldMerge = true;
+                                    }
+                                }
+                                if (shouldMerge) {
                                     safeSetItem(f.localKey, other.data[f.key]);
-                                    myTimestamps[f.key] = otherTs;
+                                    myTimestamps[f.key] = otherTs || new Date().toISOString();
                                     merged = true;
                                 }
                             });
@@ -17641,7 +18204,14 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                                     }
                                 }
                             } catch(e) { newlyDone = []; /* ignore notification errors */ }
-                            if (typeof renderHome === 'function') renderHome();
+                            // 現在画面を再描画 (detail/guide 等が古いまま残らないように)
+                            if (typeof rerenderCurrentScreen === 'function') {
+                                try { rerenderCurrentScreen(); } catch (e) {
+                                    if (typeof renderHome === 'function') renderHome();
+                                }
+                            } else if (typeof renderHome === 'function') {
+                                renderHome();
+                            }
                             // コンフリクト通知（完了通知がなかった場合のみ汎用メッセージ）
                             if (newlyDone.length === 0 && typeof showToast === 'function') showToast('家族のデータを同期しました');
                         }
@@ -17671,12 +18241,16 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
             };
         }
 
-        // visibilitychange で復帰時に同期
+        // visibilitychange で復帰時に同期 (30秒に1回まで throttle)
         if (typeof document !== 'undefined') {
+            var _lastVisSync = 0;
             document.addEventListener('visibilitychange', function() {
-                if (document.visibilityState === 'visible' && isFamilySharingActive()) {
-                    performCaseSync();
-                }
+                if (document.visibilityState !== 'visible') return;
+                if (!isFamilySharingActive()) return;
+                var now = Date.now();
+                if (now - _lastVisSync < 30000) return; // 連続タブ切替で連射しない
+                _lastVisSync = now;
+                performCaseSync();
             });
         }
 
@@ -17685,13 +18259,97 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
         var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl4c2pxc3hqanVndndreHBreXBuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM1NTMxMzQsImV4cCI6MjA4OTEyOTEzNH0.vjrRMcjZZThjHY5P3zlz1uJJ0Y2awHqyI1h1AFvO2jk';
 
         // イベントログ記録関数（Supabase送信 + localStorageフォールバック）
+        // ローカルタイムゾーンでの YYYY-MM-DD を返す (toISOString は UTC ベースなので日付ずれを起こす)
+        function _localDateString(d) {
+            var dt = d || new Date();
+            var y = dt.getFullYear();
+            var m = String(dt.getMonth() + 1).padStart(2, '0');
+            var day = String(dt.getDate()).padStart(2, '0');
+            return y + '-' + m + '-' + day;
+        }
+
+        function _markEventSent(eventId) {
+            try {
+                var arr = safeParseJSON(localStorage.getItem('relief_note_event_logs'), []);
+                for (var i = 0; i < arr.length; i++) {
+                    if (arr[i] && arr[i].id === eventId) { arr[i].sent = true; break; }
+                }
+                safeSetItem('relief_note_event_logs', JSON.stringify(arr));
+            } catch (e) {}
+        }
+        // 同時 flush 防止用 in-flight Set (同じイベント ID を二重送信させない)
+        var _flushInFlight = (typeof Set !== 'undefined') ? new Set() : null;
+        function _flushUnsentEvents() {
+            try {
+                if (typeof navigator !== 'undefined' && navigator.onLine === false) return;
+                if (typeof SUPABASE_URL === 'undefined' || typeof SUPABASE_ANON_KEY === 'undefined') return;
+                var arr = safeParseJSON(localStorage.getItem('relief_note_event_logs'), []);
+                var pending = arr.filter(function(e) {
+                    if (!e || e.sent !== false) return false;
+                    if (_flushInFlight && _flushInFlight.has(e.id)) return false;
+                    return true;
+                });
+                if (pending.length === 0) return;
+                // 一度に大量送信しないよう先頭 50 件まで
+                pending.slice(0, 50).forEach(function(e) {
+                    if (_flushInFlight) _flushInFlight.add(e.id);
+                    fetch(SUPABASE_URL + '/rest/v1/event_logs', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'apikey': SUPABASE_ANON_KEY,
+                            'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+                            'Prefer': 'return=minimal'
+                        },
+                        body: JSON.stringify({ user_id: e.user_id, event_type: e.event_type, event_data: e.event_data })
+                    }).then(function(res) {
+                        if (res && res.ok) _markEventSent(e.id);
+                    }).catch(function() {}).then(function() {
+                        if (_flushInFlight) _flushInFlight.delete(e.id);
+                    });
+                });
+            } catch (e) {}
+        }
+        if (typeof window !== 'undefined') {
+            window.addEventListener('online', function() { setTimeout(_flushUnsentEvents, 1000); });
+            // 起動から少し遅らせて初回 flush
+            setTimeout(_flushUnsentEvents, 5000);
+        }
+
+        // 匿名ユーザーID (端末固有 UUID)。本名 (rn_user_name) と分離して
+        // event_logs.user_id にはこちらを入れる。運営から本名は見えなくする。
+        // メモ化して localStorage 書き込み失敗時もセッション中は同じ ID を返す。
+        var _anonIdCache = null;
+        function _getAnonId() {
+            if (_anonIdCache) return _anonIdCache;
+            var id = localStorage.getItem('rn_anon_id');
+            // UUID 形式 (8-4-4-4-12 hex) を厳格チェック。anon-fallback 等は弾く
+            if (id && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) {
+                _anonIdCache = id;
+                return id;
+            }
+            try {
+                id = (typeof crypto !== 'undefined' && crypto.randomUUID)
+                    ? crypto.randomUUID()
+                    : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                        var r = Math.random() * 16 | 0;
+                        return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+                    });
+                safeSetItem('rn_anon_id', id);
+            } catch (e) { id = 'anon-fallback'; }
+            _anonIdCache = id;
+            return id;
+        }
+
         function logEvent(eventType, eventData) {
             try {
                 var _params = new URLSearchParams(window.location.search);
-                var channel = _params.get('ch') || _params.get('channel')
+                var rawCh = _params.get('ch') || _params.get('channel')
                     || localStorage.getItem('relief_note_channel')
                     || 'direct';
-                var userId = localStorage.getItem('rn_user_name') || 'anonymous';
+                // 既知のチャネル以外は 'direct' に正規化 (URL ?ch=任意値 のインジェクション防止)
+                var channel = (rawCh === 'hokuryu' || rawCh === 'funeral' || rawCh === 'direct') ? rawCh : 'direct';
+                var userId = _getAnonId();
                 var data = {};
                 if (eventData) {
                     var keys = Object.keys(eventData);
@@ -17702,12 +18360,34 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 data.channel = channel;
                 data.partner = window.currentPartnerId || '';
 
-                // Supabase に非同期送信（fire-and-forget）
-                var supabasePayload = {
+                // localStorage にも保存（オフライン対策。sent: false で未送信扱い）
+                var logs = safeParseJSON(localStorage.getItem('relief_note_event_logs'), []);
+                var entry = {
+                    id: Date.now() + '-' + Math.random().toString(36).substr(2, 9),
                     user_id: userId,
                     event_type: eventType,
-                    event_data: data
+                    event_data: data,
+                    created_at: new Date().toISOString(),
+                    sent: false
                 };
+                logs.push(entry);
+                if (logs.length > 1000) {
+                    // 送信済みエントリを優先的に削除し、未送信エントリは最大限保持する
+                    // (オフライン長時間使用時のロギング漏れ防止)
+                    var unsent = logs.filter(function(e) { return e && e.sent === false; });
+                    var sent = logs.filter(function(e) { return e && e.sent === true; });
+                    if (unsent.length >= 1000) {
+                        // 未送信だけで上限超え → 最新 1000 件
+                        logs = unsent.slice(unsent.length - 1000);
+                    } else {
+                        // 送信済みを古い方から捨てて 1000 件に揃える
+                        var keepSent = 1000 - unsent.length;
+                        logs = sent.slice(sent.length - keepSent).concat(unsent);
+                    }
+                }
+                safeSetItem('relief_note_event_logs', JSON.stringify(logs));
+
+                // Supabase に非同期送信、成功したら sent: true に更新
                 fetch(SUPABASE_URL + '/rest/v1/event_logs', {
                     method: 'POST',
                     headers: {
@@ -17716,28 +18396,56 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                         'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
                         'Prefer': 'return=minimal'
                     },
-                    body: JSON.stringify(supabasePayload)
+                    body: JSON.stringify({ user_id: userId, event_type: eventType, event_data: data })
+                }).then(function(res) {
+                    if (res && res.ok) _markEventSent(entry.id);
                 }).catch(function(e) {
                     console.warn('[EVENT SEND ERROR]', e);
                 });
-
-                // フォールバック：localStorageにも保存（オフライン対策）
-                var logs = safeParseJSON(localStorage.getItem('relief_note_event_logs'), []);
-                logs.push({
-                    id: Date.now() + '-' + Math.random().toString(36).substr(2, 9),
-                    user_id: userId,
-                    event_type: eventType,
-                    event_data: data,
-                    created_at: new Date().toISOString()
-                });
-                if (logs.length > 1000) {
-                    logs = logs.slice(logs.length - 1000);
-                }
-                safeSetItem('relief_note_event_logs', JSON.stringify(logs));
                 console.log('[EVENT]', eventType, data);
             } catch (e) {
                 console.warn('[EVENT ERROR]', e);
             }
+        }
+
+        // ===== セッション計測 =====
+        // 起動時に session_start、可視性が hidden になったら session_end を送る。
+        // session_id は端末のセッション (タブの可視期間) ごとに UUID を発行し、
+        // 同じセッション内のイベントを join できるようにする。
+        var _sessionId = null;
+        var _sessionStartTs = null;
+        function _startSession() {
+            if (_sessionId) return; // 既に進行中なら何もしない (load + visibilitychange の競合対策)
+            _sessionId = (typeof crypto !== 'undefined' && crypto.randomUUID)
+                ? crypto.randomUUID()
+                : Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+            _sessionStartTs = Date.now();
+            try {
+                logEvent('session_start', { session_id: _sessionId });
+            } catch (e) {}
+        }
+        function _endSession() {
+            if (!_sessionId) return;
+            var dur = Math.round((Date.now() - _sessionStartTs) / 1000);
+            try {
+                logEvent('session_end', { session_id: _sessionId, duration_sec: dur });
+            } catch (e) {}
+            _sessionId = null;
+        }
+        if (typeof document !== 'undefined') {
+            document.addEventListener('visibilitychange', function() {
+                if (document.visibilityState === 'hidden') {
+                    _endSession();
+                } else if (document.visibilityState === 'visible' && !_sessionId) {
+                    _startSession();
+                }
+            });
+            // beforeunload はモバイルで発火しないことが多いが念のため
+            window.addEventListener('pagehide', _endSession);
+        }
+        // 起動完了後に session_start
+        if (typeof window !== 'undefined') {
+            window.addEventListener('load', function() { setTimeout(_startSession, 100); });
         }
 
         // デバッグ用ログ閲覧画面
@@ -17997,13 +18705,47 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
             // showScreen は自画面の再描画でも呼ばれるので、同じ画面なら保存不要。
             if (_currentScreenId && _currentScreenId !== screenId) {
                 _captureScreenScroll(_currentScreenId);
+                // 確認センターから離れる時はフィルタモード state も必ずクリア
+                // (popstate やプログラム遷移で exitConfirmCenter を経由しないケースがある)
+                if (_currentScreenId === 'screen-confirm' && screenId !== 'screen-confirm') {
+                    window._filteredMode = false;
+                    window._filteredQuestions = null;
+                    window._filteredReturnScreen = null;
+                    window._filteredCurrentIndex = 0;
+                    window._filteredTaskId = null;
+                    window._filteredPhaseId = null;
+                }
+                // 開いたままのダイアログ/オーバーレイを次画面に持ち越さない
+                document.querySelectorAll('.dialog-overlay.show, .bottom-sheet-overlay.show').forEach(function(el) {
+                    el.classList.remove('show');
+                });
+                // モーダル type の display:block 系オーバーレイも閉じる
+                var revertOverlay = document.getElementById('revertModalOverlay');
+                var revertModal = document.getElementById('revertModal');
+                if (revertOverlay && revertOverlay.style.display === 'block') revertOverlay.style.display = 'none';
+                if (revertModal && revertModal.style.display === 'block') revertModal.style.display = 'none';
+                if (typeof revertTargetTaskId !== 'undefined') revertTargetTaskId = null;
+                // detail 画面から離れる時は task_detail_opened の dedup キーもリセット
+                if (_currentScreenId === 'screen-detail' && screenId !== 'screen-detail') {
+                    window._lastDetailLoggedTaskId = null;
+                }
             }
+            var _prevScreenId = _currentScreenId;
             _currentScreenId = screenId;
             // 履歴に追加（popstate中は除く）
             if (screenId === 'screen-onboarding' && typeof currentQuestionIndex !== 'undefined') {
                 pushScreenState(screenId, 'q' + currentQuestionIndex);
             } else {
                 pushScreenState(screenId);
+            }
+            // screen_viewed ログ (ファネル分析用)。同画面の再描画は除外
+            if (typeof logEvent === 'function' && _prevScreenId !== screenId) {
+                try {
+                    logEvent('screen_viewed', {
+                        screen_id: screenId,
+                        from_screen: _prevScreenId || ''
+                    });
+                } catch (e) {}
             }
 
             // ===== スクロールリセット（包括的） =====
@@ -18119,8 +18861,30 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 _renderDevSettings();
                 updateHiddenTasksMgmt();
                 updateDataMgmtAnsweredDesc();
+                // 北竜町チャネル時のみ「役場の案内との対応表」行を表示
+                var _paperMapEl = document.getElementById('dataMgmtPaperMap');
+                if (_paperMapEl) {
+                    _paperMapEl.style.display = (window.currentChannelId === 'hokuryu') ? '' : 'none';
+                }
             } else if (screenId === 'screen-confirm') {
                 // 確認センター画面の初期表示（startConfirmCenterは呼び出し元で実行済み）
+            } else if (screenId === 'screen-calendar') {
+                // popstate / deep link で直接到達した時のためのフォールバック描画
+                // (通常は showCalendar() 経由で entered)
+                if (typeof renderCalendar === 'function') {
+                    var deathDate = answers && answers['Q-DOD-01'];
+                    var noDateMessage = document.getElementById('calendarNoDateMessage');
+                    var calendarContainer = document.getElementById('calendarContainer');
+                    if (!deathDate) {
+                        if (noDateMessage) noDateMessage.style.display = 'block';
+                        if (calendarContainer) calendarContainer.style.display = 'none';
+                    } else {
+                        if (noDateMessage) noDateMessage.style.display = 'none';
+                        if (calendarContainer) calendarContainer.style.display = 'block';
+                        try { renderCalendar(); } catch (e) {}
+                        if (typeof checkOverdueTasks === 'function') { try { checkOverdueTasks(); } catch (e) {} }
+                    }
+                }
             }
 
             // 汎用復元: ブロックリストに入っていない画面で、かつ個別復元ロジック (home/guide
@@ -18149,8 +18913,14 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
         }
 
         // LINE公式アカウントを開く
+        var _lineOpenedAt = 0;
         function openLineOA() {
-            window.open(LINE_OA_URL, '_blank');
+            // 連打で複数タブが開かないよう 2 秒デバウンス
+            var now = Date.now();
+            if (now - _lineOpenedAt < 2000) return;
+            _lineOpenedAt = now;
+            // noopener,noreferrer で tabnabbing と opener 経由のアクセスを防ぐ
+            window.open(LINE_OA_URL, '_blank', 'noopener,noreferrer');
         }
 
         // ===== 利用規約・プライバシーポリシー =====
@@ -18235,9 +19005,9 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 + '<div class="legal-section-text">お問い合わせ：<a href="mailto:reliefnote@gmail.com" class="legal-contact-link">reliefnote@gmail.com</a></div>'
                 + '<div class="legal-section-title">2. 取得する情報</div>'
                 + '<div class="legal-section-text">本サービスでは、以下の情報を取得します。</div>'
-                + '<div class="legal-section-text legal-indent">(1) ご利用者様が入力する情報：お名前（ニックネーム可）、故人との続柄、故人に関する状況情報（手続きの要否判定に使用）</div>'
-                + '<div class="legal-section-text legal-indent">(2) 自動的に取得する情報：サービスの利用状況（タスクの生成・着手・完了等の操作履歴）、アクセス元の識別情報（URLパラメータによるチャネル情報）、ブラウザの種類・アクセス日時</div>'
-                + '<div class="legal-section-text legal-indent">(3) ご利用者様が任意で提供する情報：アンケートへの回答内容、LINE等を通じたお問い合わせ内容</div>'
+                + '<div class="legal-section-text legal-indent">(1) ご利用者様が入力する情報：お名前（ニックネーム可）、故人との続柄、故人に関する状況情報（手続きの要否判定に使用）。お名前および続柄はご利用者様の端末（ブラウザ）内でのみ保管され、サーバーには送信されません。</div>'
+                + '<div class="legal-section-text legal-indent">(2) 自動的に取得する情報：サービスの利用状況（タスクの生成・着手・完了、画面遷移、セッションの開始・終了、滞在時間等の操作履歴）、アクセス元の識別情報（URLパラメータによるチャネル情報）、ブラウザの種類・アクセス日時。これらは端末ごとに発行されるランダムな匿名ID（端末固有UUID）に紐付けて記録されます。お名前等の個人を特定する情報はサーバーに送信されません。</div>'
+                + '<div class="legal-section-text legal-indent">(3) ご利用者様が任意で提供する情報：アンケート（使い心地レビュー含む）への回答内容、LINE等を通じたお問い合わせ内容</div>'
                 + '<div class="legal-section-title">3. 利用目的</div>'
                 + '<div class="legal-section-text">取得した情報は、以下の目的で利用します。</div>'
                 + '<div class="legal-section-text legal-indent">(1) 本サービスの提供（手続きタスクの自動生成・管理機能の提供）</div>'
@@ -18248,14 +19018,14 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 + '<div class="legal-section-title">4. データの保存</div>'
                 + '<div class="legal-section-text legal-indent">(1) ご利用者様が入力した情報およびタスクの進捗状況は、ご利用者様のブラウザ（localStorage）に保存されます。サーバーにアカウント情報は保存されません。</div>'
                 + '<div class="legal-section-text legal-indent">(2) 利用状況の記録（操作ログ）は、外部データベースサービス（Supabase Inc. 所在地：米国、サーバー所在地：東京リージョン）に送信・保存されます。</div>'
-                + '<div class="legal-section-text legal-indent">(3) 操作ログに含まれる情報は、お名前（入力された場合）、操作の種類、チャネル情報、操作日時です。</div>'
+                + '<div class="legal-section-text legal-indent">(3) 操作ログに含まれる情報は、端末固有の匿名ID（UUID）、操作の種類、画面遷移、セッション情報、チャネル情報、操作日時です。お名前・連絡先などの個人を特定する情報は含まれません。</div>'
                 + '<div class="legal-section-title">5. 第三者提供</div>'
                 + '<div class="legal-section-text">本サービスは、以下の場合を除き、取得した個人情報を第三者に提供しません。</div>'
                 + '<div class="legal-section-text legal-indent">(1) ご利用者様の同意がある場合</div>'
                 + '<div class="legal-section-text legal-indent">(2) 法令に基づく場合</div>'
                 + '<div class="legal-section-text legal-indent">(3) 上記4(2)に記載のデータベースサービスへの保存（サービス運営に必要な委託先として）</div>'
                 + '<div class="legal-section-title">6. データの保持期間</div>'
-                + '<div class="legal-section-text">操作ログは、実証実験の終了後1年間保持した後、削除します。ブラウザに保存されたデータは、ご利用者様自身がブラウザのデータを消去することで削除できます。</div>'
+                + '<div class="legal-section-text">操作ログは記録から180日後にサーバー側で自動削除されます。ブラウザに保存されたデータは、ご利用者様自身がブラウザのデータを消去することで削除できます。</div>'
                 + '<div class="legal-section-title">7. ご利用者様の権利</div>'
                 + '<div class="legal-section-text">ご利用者様は、以下の権利を有します。</div>'
                 + '<div class="legal-section-text legal-indent">(1) ご自身の操作ログの開示を求めること</div>'
@@ -18413,14 +19183,14 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 q.options.forEach(opt => {
                     const selected = answers[q.id] === opt.value ? ' selected' : '';
                     const isUncertain = uncertainValues.includes(opt.value) || exclusiveOpts.includes(opt.value);
-                    optsHtml += `<button class="q-option${isUncertain ? ' q-option-uncertain' : ''}${selected}" onclick="selectSingle('${q.id}', '${opt.value}')">${opt.label}</button>`;
+                    optsHtml += `<button class="q-option${isUncertain ? ' q-option-uncertain' : ''}${selected}" onclick="selectSingle('${q.id}', '${opt.value}')">${escapeHtml(opt.label)}</button>`;
                 });
                 optsHtml += '<a class="q-skip" onclick="skipQuestion()">いまは答えない</a>';
             } else if (q.type === 'multi') {
                 q.options.forEach(opt => {
                     const selected = answers[q.id] && answers[q.id].includes(opt.value) ? ' selected' : '';
                     const isUncertain = uncertainValues.includes(opt.value) || exclusiveOpts.includes(opt.value);
-                    optsHtml += `<button class="q-option${isUncertain ? ' q-option-uncertain' : ''}${selected}" onclick="selectMulti('${q.id}', '${opt.value}')">${opt.label}</button>`;
+                    optsHtml += `<button class="q-option${isUncertain ? ' q-option-uncertain' : ''}${selected}" onclick="selectMulti('${q.id}', '${opt.value}')">${escapeHtml(opt.label)}</button>`;
                 });
 
                 const isLastQuestion = currentQuestionIndex === onboardingQuestions.length - 1;
@@ -18430,7 +19200,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 optsHtml += '<a class="q-skip" onclick="skipQuestion()">いまは答えない</a>';
             } else if (q.type === 'date') {
                 const value = answers[q.id] || '';
-                const todayStr = new Date().toISOString().split('T')[0];
+                const todayStr = _localDateString();
                 optsHtml += `<input type="date" class="q-date-input" id="dateInput" max="${todayStr}" value="${value}" onchange="selectDate('${q.id}', this.value)">`;
 
                 const isLastQuestion = currentQuestionIndex === onboardingQuestions.length - 1;
@@ -18452,8 +19222,8 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
 
         function selectSingle(qid, value) {
             answers[qid] = value;
-            saveData();
-            regenerateAllTaskStatuses(); // ルールエンジン再実行
+            // saveData は regenerateAllTaskStatuses 内で呼ばれるため二重実行しない
+            regenerateAllTaskStatuses();
             nextQuestion();
         }
 
@@ -18474,15 +19244,31 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 }
             }
 
-            saveData();
-            regenerateAllTaskStatuses(); // ルールエンジン再実行
+            // saveData は regenerateAllTaskStatuses 内で呼ばれる
+            regenerateAllTaskStatuses();
             renderQuestion();
         }
 
         function selectDate(qid, value) {
+            // 死亡日 (Q-DOD-01) の未来日は受け付けない (max 属性 + 二重ガード)
+            if (qid === 'Q-DOD-01' && value) {
+                try {
+                    var p = String(value).split('-');
+                    var y = parseInt(p[0], 10), m = parseInt(p[1], 10), d = parseInt(p[2], 10);
+                    if (!isNaN(y) && !isNaN(m) && !isNaN(d)) {
+                        var entered = new Date(y, m - 1, d);
+                        var today = new Date();
+                        today.setHours(0, 0, 0, 0);
+                        if (entered.getTime() > today.getTime()) {
+                            if (typeof showToast === 'function') showToast('未来の日付は入力できません');
+                            return;
+                        }
+                    }
+                } catch (e) {}
+            }
             answers[qid] = value;
-            saveData();
-            regenerateAllTaskStatuses(); // ルールエンジン再実行
+            // saveData は regenerateAllTaskStatuses 内で呼ばれる
+            regenerateAllTaskStatuses();
             renderQuestion(); // 次へボタンを活性化
         }
 
@@ -18491,14 +19277,15 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
             const name = nameInput.value.trim();
             if (name) {
                 safeSetItem('rn_user_name', name);
-                logEvent('user_registered', { name: name });
+                // 実名を Supabase に送らない。登録経路と入力長だけ記録する
+                logEvent('user_registered', { has_name: true, name_length: name.length });
                 nextQuestion(); // Move to first question
             }
         }
 
         function skipNameInFlow() {
             safeSetItem('rn_user_name', 'ゲスト');
-            logEvent('user_registered', { name: 'ゲスト' });
+            logEvent('user_registered', { has_name: false, name_length: 0 });
             nextQuestion(); // Move to first question
         }
 
@@ -18518,7 +19305,13 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
             nextQuestion();
         }
 
+        var _nextQuestionLock = false;
         function nextQuestion() {
+            // 連打 (短時間の多重発火) で複数問飛ばしてしまうのを防ぐ
+            if (_nextQuestionLock) return;
+            _nextQuestionLock = true;
+            setTimeout(function() { _nextQuestionLock = false; }, 350);
+
             if (currentQuestionIndex < onboardingQuestions.length - 1) {
                 currentQuestionIndex++;
                 safeSetItem('rn_onboarding_index', String(currentQuestionIndex));
@@ -18771,8 +19564,13 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
         function calculateWeeks() {
             const deathDate = answers['Q-DOD-01'];
             if (!deathDate) return '--';
-
-            const death = new Date(deathDate);
+            // タイムゾーン依存と Invalid Date を避け、YYYY-MM-DD をパーツ分解
+            const parts = String(deathDate).split('-');
+            if (parts.length < 3) return '--';
+            const yy = parseInt(parts[0], 10), mm = parseInt(parts[1], 10), dd = parseInt(parts[2], 10);
+            if (isNaN(yy) || isNaN(mm) || isNaN(dd)) return '--';
+            const death = new Date(yy, mm - 1, dd);
+            if (isNaN(death.getTime())) return '--';
             const now = new Date();
             const diffTime = Math.abs(now - death);
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -18783,8 +19581,13 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
         // 現在フェーズの判定
         function getCurrentPhase(deathDateStr) {
             if (!deathDateStr) return 'H24';
-            const parts = deathDateStr.split('-');
-            const death = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+            const parts = String(deathDateStr).split('-');
+            // 不正フォーマットは初期フェーズ扱いにフォールバック (NaN 計算で誤判定するのを防ぐ)
+            if (parts.length < 3) return 'H24';
+            const yy = parseInt(parts[0], 10), mm = parseInt(parts[1], 10), dd = parseInt(parts[2], 10);
+            if (isNaN(yy) || isNaN(mm) || isNaN(dd)) return 'H24';
+            const death = new Date(yy, mm - 1, dd);
+            if (isNaN(death.getTime())) return 'H24';
             const today = new Date();
             today.setHours(0, 0, 0, 0);
             death.setHours(0, 0, 0, 0);
@@ -19186,10 +19989,16 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
             let currentPhase = 'H24';
 
             if (deathDate) {
-                const parts = deathDate.split('-');
-                const deathDateObj = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
-                const today = new Date();
-                const elapsedDays = Math.floor((today - deathDateObj) / (1000 * 60 * 60 * 24));
+                const parts = String(deathDate).split('-');
+                const _yy = parseInt(parts[0], 10), _mm = parseInt(parts[1], 10), _dd = parseInt(parts[2], 10);
+                let elapsedDays = 0;
+                if (parts.length >= 3 && !isNaN(_yy) && !isNaN(_mm) && !isNaN(_dd)) {
+                    const deathDateObj = new Date(_yy, _mm - 1, _dd);
+                    if (!isNaN(deathDateObj.getTime())) {
+                        const today = new Date();
+                        elapsedDays = Math.floor((today - deathDateObj) / (1000 * 60 * 60 * 24));
+                    }
+                }
 
                 if (elapsedDays >= 301) {
                     currentPhase = 'Y3';
@@ -19224,7 +20033,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
             // きょうのきもちカードのサブテキスト更新
             var healingSub = document.getElementById('healingCardSub');
             if (healingSub) {
-                var griefLogs = JSON.parse(localStorage.getItem('relief_note_grief_logs') || '[]');
+                var griefLogs = safeParseJSON(localStorage.getItem('relief_note_grief_logs'), []);
                 if (griefLogs.length > 0) {
                     var lastLog = griefLogs[griefLogs.length - 1];
                     var moodLabelMap = { 1: 'つらい', 2: '沈んでいる', 3: 'ふつう', 4: '少し穏やか', 5: '穏やか' };
@@ -19648,7 +20457,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
             var area = document.getElementById('reviewCommentArea');
             if (area) {
                 area.innerHTML = '<div class="home-review-comment">'
-                    + '<textarea id="reviewCommentText" placeholder="ひとことあればお聞かせください（任意）" rows="2"></textarea>'
+                    + '<textarea id="reviewCommentText" maxlength="500" placeholder="ひとことあればお聞かせください（任意）" rows="2"></textarea>'
                     + '<div class="home-review-actions">'
                     +   '<button class="home-review-submit" onclick="submitReview()">送信する</button>'
                     + '</div>'
@@ -20063,7 +20872,9 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                             var legalDateHtml = '';
                             var deathDate = window.deathDate || null;
                             if (t.legalDueDays && deathDate) {
-                                var dueDate = new Date(deathDate);
+                                // YYYY-MM-DD をパーツ分解して Date を組むことでタイムゾーン依存を回避
+                                var _ddParts = String(deathDate).split('-');
+                                var dueDate = new Date(parseInt(_ddParts[0]), parseInt(_ddParts[1]) - 1, parseInt(_ddParts[2]));
                                 dueDate.setDate(dueDate.getDate() + t.legalDueDays);
                                 var y = dueDate.getFullYear();
                                 var m = dueDate.getMonth() + 1;
@@ -20327,8 +21138,6 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                     var _mIsOpen = window._accordionState[_mKey] !== undefined ? window._accordionState[_mKey] : (index === 0);
                     var _mOpenClass = _mIsOpen ? ' open' : '';
 
-                    var _mHintCard = '';
-
                     var _masterTaskHtml = _buildMasterCardHtml();
 
                     html += '<div class="phase-section' + _mOpenClass + '" data-phase-id="' + group.id + '">'
@@ -20346,7 +21155,6 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                         + '</div>'
                         + '</div>'
                         + '<div class="phase-tasks"><div class="phase-tasks-inner">'
-                        + _mHintCard
                         + _masterTaskHtml
                         + '</div></div>'
                         + '</div></div>';
@@ -20476,7 +21284,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                                                 </div>
                                             ` : ''}
                                             ${group.phone ? `
-                                                <a class="dest-info-row dest-info-phone" href="tel:${group.phone}" aria-label="電話で ${group.phone} にかける">
+                                                <a class="dest-info-row dest-info-phone" href="tel:${encodeURIComponent(group.phone)}" aria-label="電話で ${escapeHtml(group.phone)} にかける">
                                                     <span class="dest-info-icon" aria-hidden="true">
                                                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                                                     </span>
@@ -20589,7 +21397,8 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 let extraInfo = '';
                 let borderStyle = '';
 
-                let taskTitle = t.title;
+                // CSV マスタ由来とはいえ innerHTML に直結するので防御的にエスケープ
+                let taskTitle = escapeHtml(t.title || '');
                 const priorityBadge = '';
 
                 if (!isDone) {
@@ -20647,7 +21456,8 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 const isNotApplicable = t.status === 'NOT_APPLICABLE';
                 const isCompleted = isDone || isAutoDone || isNotApplicable;
 
-                let taskTitle = t.title;
+                // CSV マスタ由来とはいえ innerHTML に直結するので防御的にエスケープ
+                let taskTitle = escapeHtml(t.title || '');
                 const priorityBadge = '';
 
                 if (!isCompleted) {
@@ -20814,6 +21624,427 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
             } else if (currentGuideView === 'pinned') {
                 renderGuideByPinned(container);
             }
+            // どのタブでも、自分で追加したタスクは末尾に表示する
+            appendCustomTasksSection(container);
+        }
+
+        // ===== ユーザーが自分で追加したタスク =====
+        function _loadCustomTasks() {
+            var list = safeParseJSON(localStorage.getItem('rn_custom_tasks'), []);
+            return Array.isArray(list) ? list : [];
+        }
+        function _writeCustomTasks(list) {
+            safeSetItem('rn_custom_tasks', JSON.stringify(list));
+        }
+        function appendCustomTasksSection(container) {
+            if (!container) return;
+            var list = _loadCustomTasks();
+            if (list.length === 0) return;
+            // 未完了を上、完了を下。同じ状態内では追加新しい順 (created_at desc)
+            // 元配列を破壊しないように slice
+            var sorted = list.slice().sort(function(a, b) {
+                var aDone = a.status === 'DONE' ? 1 : 0;
+                var bDone = b.status === 'DONE' ? 1 : 0;
+                if (aDone !== bDone) return aDone - bDone;
+                var aT = a.created_at || '';
+                var bT = b.created_at || '';
+                if (aT === bT) return 0;
+                return aT < bT ? 1 : -1;
+            });
+            var itemsHtml = sorted.map(function(t) {
+                var done = t.status === 'DONE';
+                return '<div class="custom-task-item' + (done ? ' done' : '') + '">'
+                    + '<input type="checkbox" class="task-checkbox"' + (done ? ' checked' : '')
+                    +   ' onclick="toggleCustomTaskStatus(\'' + t.id + '\')">'
+                    + '<div class="custom-task-item-title">' + escapeHtml(t.title) + '</div>'
+                    + '<button class="custom-task-del" onclick="deleteCustomTask(\'' + t.id + '\')" aria-label="削除">×</button>'
+                    + '</div>';
+            }).join('');
+            var wrapper = document.createElement('div');
+            wrapper.className = 'custom-tasks-section';
+            wrapper.innerHTML = '<div class="custom-tasks-title">自分で追加したタスク</div>' + itemsHtml;
+            container.appendChild(wrapper);
+        }
+
+        // ===== タスク検索 =====
+        // クイック絞り込み: 未入力時に表示するよく使う検索語
+        var _TASK_SEARCH_QUICK_KEYWORDS = [
+            '相続', '年金', '保険', '銀行', '役場', '葬儀', '税', '健康保険', '相続放棄'
+        ];
+        var _TASK_SEARCH_HISTORY_KEY = 'rn_task_search_history';
+        var _TASK_SEARCH_HISTORY_MAX = 5;
+        var _taskSearchIncludeDone = false;
+
+        // 日本語検索用テキスト正規化:
+        //  - 全角英数記号 → 半角
+        //  - カタカナ → ひらがな (かな揺れ吸収)
+        //  - 各種ハイフン → 長音「ー」
+        //  - 小文字化
+        function _normalizeSearchText(text) {
+            if (!text) return '';
+            var s = String(text);
+            s = s.replace(/[！-～]/g, function(c) { return String.fromCharCode(c.charCodeAt(0) - 0xFEE0); });
+            s = s.replace(/\u3000/g, ' ');
+            s = s.replace(/[\u30A1-\u30F6]/g, function(c) { return String.fromCharCode(c.charCodeAt(0) - 0x60); });
+            s = s.replace(/[\-‐‑‒–—―]/g, 'ー');
+            return s.toLowerCase();
+        }
+
+        function _tokenizeSearchQuery(raw) {
+            if (!raw) return [];
+            return raw.split(/[\s\u3000]+/).map(function(s) { return s.trim(); }).filter(Boolean);
+        }
+
+        // トークンが全てマッチしたときのみスコアを返す (AND 検索)。0 なら不一致。
+        // スコア重み: タイトル前方一致 > タイトル部分一致 > 届出先 > 概要 > 必要書類 > 住所 > FAQ
+        function _scoreTaskMatch(task, detail, tokens) {
+            var title = _normalizeSearchText(task.title || '');
+            var destination = _normalizeSearchText(detail && detail.destination || '');
+            var actionSummary = _normalizeSearchText(detail && detail.actionSummary || '');
+            var requiredDocs = _normalizeSearchText(detail && detail.requiredDocs || '');
+            var address = _normalizeSearchText(detail && detail.address || '');
+            var faq = _normalizeSearchText(detail && detail.faq || '');
+            var steps = _normalizeSearchText(detail && Array.isArray(detail.steps) ? detail.steps.join(' ') : '');
+
+            var total = 0;
+            for (var i = 0; i < tokens.length; i++) {
+                var t = _normalizeSearchText(tokens[i]);
+                if (!t) continue;
+                var score = 0;
+                var idx = title.indexOf(t);
+                if (idx === 0) score = 100;
+                else if (idx > 0) score = 60;
+                else if (destination.indexOf(t) !== -1) score = 40;
+                else if (actionSummary.indexOf(t) !== -1) score = 25;
+                else if (requiredDocs.indexOf(t) !== -1) score = 20;
+                else if (address.indexOf(t) !== -1) score = 15;
+                else if (steps.indexOf(t) !== -1) score = 12;
+                else if (faq.indexOf(t) !== -1) score = 10;
+                else return 0; // 1 つでも全フィールドに無ければ脱落
+                total += score;
+            }
+            return total;
+        }
+
+        function _scoreCustomTaskMatch(task, tokens) {
+            var title = _normalizeSearchText(task.title || '');
+            var total = 0;
+            for (var i = 0; i < tokens.length; i++) {
+                var t = _normalizeSearchText(tokens[i]);
+                if (!t) continue;
+                var idx = title.indexOf(t);
+                if (idx === 0) total += 100;
+                else if (idx > 0) total += 60;
+                else return 0;
+            }
+            return total;
+        }
+
+        function _loadSearchHistory() {
+            var list = safeParseJSON(localStorage.getItem(_TASK_SEARCH_HISTORY_KEY), []);
+            return Array.isArray(list) ? list : [];
+        }
+        function _saveSearchHistory(term) {
+            if (!term) return;
+            var list = _loadSearchHistory().filter(function(x) { return x !== term; });
+            list.unshift(term);
+            if (list.length > _TASK_SEARCH_HISTORY_MAX) list = list.slice(0, _TASK_SEARCH_HISTORY_MAX);
+            safeSetItem(_TASK_SEARCH_HISTORY_KEY, JSON.stringify(list));
+        }
+        function _clearSearchHistory() {
+            safeSetItem(_TASK_SEARCH_HISTORY_KEY, JSON.stringify([]));
+            _onTaskSearchInput(true);
+        }
+
+        function openTaskSearch() {
+            var overlay = document.getElementById('taskSearchOverlay');
+            if (!overlay) return;
+            var input = document.getElementById('taskSearchInput');
+            // 直前のクエリは保持する (詳細→戻る で続けて絞り込みたい遷移を想定)。
+            // 入力をクリアしたい時は X ボタンで明示的に。
+            var existing = input && input.value ? input.value : '';
+            _onTaskSearchInput(true);
+            overlay.classList.add('show');
+            setTimeout(function() {
+                if (input) {
+                    input.focus();
+                    // フォーカス時にカーソルを末尾に持ってくる
+                    try { input.setSelectionRange(input.value.length, input.value.length); } catch (e) {}
+                }
+            }, 100);
+        }
+        function closeTaskSearch() {
+            var overlay = document.getElementById('taskSearchOverlay');
+            if (overlay) overlay.classList.remove('show');
+        }
+        function _clearTaskSearch() {
+            var input = document.getElementById('taskSearchInput');
+            if (input) { input.value = ''; input.focus(); }
+            _onTaskSearchInput(true);
+        }
+        // 入力ごとに即 render すると 57 タスク × トークン数のスコアリングが連射される。
+        // クリア/チップ即時実行はそのまま、文字入力時だけ 120ms debounce する。
+        var _taskSearchDebounceTimer = null;
+        function _onTaskSearchInput(immediate) {
+            var input = document.getElementById('taskSearchInput');
+            var clearBtn = document.getElementById('taskSearchClearBtn');
+            var query = input ? input.value : '';
+            if (clearBtn) clearBtn.style.display = query.length > 0 ? 'inline-flex' : 'none';
+            if (immediate === true) {
+                if (_taskSearchDebounceTimer) clearTimeout(_taskSearchDebounceTimer);
+                _taskSearchDebounceTimer = null;
+                _renderTaskSearchResults(query);
+                return;
+            }
+            if (_taskSearchDebounceTimer) clearTimeout(_taskSearchDebounceTimer);
+            _taskSearchDebounceTimer = setTimeout(function() {
+                _taskSearchDebounceTimer = null;
+                _renderTaskSearchResults(query);
+            }, 120);
+        }
+        function _applySearchQuery(term) {
+            var input = document.getElementById('taskSearchInput');
+            if (!input) return;
+            input.value = term;
+            input.focus();
+            _onTaskSearchInput(true);
+        }
+        function _toggleSearchDoneFilter() {
+            _taskSearchIncludeDone = !_taskSearchIncludeDone;
+            _onTaskSearchInput(true);
+        }
+        function _onTaskSearchKey(event) {
+            if (event && event.key === 'Enter') {
+                event.preventDefault();
+                // 入力待ちの debounce があれば即時 render してから先頭を開く
+                _onTaskSearchInput(true);
+                _openFirstSearchResult();
+            } else if (event && event.key === 'Escape') {
+                closeTaskSearch();
+            }
+        }
+        function _openFirstSearchResult() {
+            var first = document.querySelector('#taskSearchResults .task-search-result');
+            if (!first) return;
+            first.click();
+        }
+
+        function _renderTaskSearchResults(rawQuery) {
+            var container = document.getElementById('taskSearchResults');
+            if (!container) return;
+            var raw = (rawQuery || '').trim();
+            var tokens = _tokenizeSearchQuery(raw);
+
+            // --- 未入力時: クイックキーワード + 履歴 ---
+            if (tokens.length === 0) {
+                var history = _loadSearchHistory();
+                // チップ群は data-q 属性で値を持ち、delegated handler で受ける
+                // (履歴に '/" などが入ってもインジェクションが起きない)
+                var html = '';
+                html += '<div class="task-search-section-title">よく検索されるキーワード</div>';
+                html += '<div class="task-search-chip-row">';
+                _TASK_SEARCH_QUICK_KEYWORDS.forEach(function(kw) {
+                    html += '<button type="button" class="task-search-chip" data-q="' + escapeHtml(kw) + '" onclick="_applySearchQuery(this.getAttribute(\'data-q\'))">' + escapeHtml(kw) + '</button>';
+                });
+                html += '</div>';
+                if (history.length > 0) {
+                    html += '<div class="task-search-section-title task-search-history-head">直近の検索 <button type="button" class="task-search-history-clear" onclick="_clearSearchHistory()">履歴を消す</button></div>';
+                    html += '<div class="task-search-chip-row">';
+                    history.forEach(function(h) {
+                        html += '<button type="button" class="task-search-chip task-search-chip-history" data-q="' + escapeHtml(h) + '" onclick="_applySearchQuery(this.getAttribute(\'data-q\'))">'
+                            + '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>'
+                            + '<span>' + escapeHtml(h) + '</span></button>';
+                    });
+                    html += '</div>';
+                }
+                html += '<div class="task-search-hint">スペースで区切ると複数の語で絞り込めます (例: 相続 放棄)</div>';
+                container.innerHTML = html;
+                return;
+            }
+
+            // --- 入力あり: スコアリング検索 ---
+            var standardMatches = [];
+            if (Array.isArray(tasks)) {
+                tasks.forEach(function(t) {
+                    if (!t || !t.title) return;
+                    var status = taskStatuses[t.id] || determineTaskStatus(t);
+                    if (status === 'NOT_APPLICABLE') return;
+                    if (typeof isTaskHidden === 'function' && isTaskHidden(t.id)) return;
+                    var isDone = status === 'DONE' || status === 'AUTO_DONE';
+                    if (isDone && !_taskSearchIncludeDone) return;
+                    var detail = (typeof taskDetails !== 'undefined' && taskDetails) ? taskDetails[t.id] : null;
+                    var score = _scoreTaskMatch(t, detail, tokens);
+                    if (score > 0) {
+                        standardMatches.push({ task: t, status: status, dest: detail && detail.destination, score: score });
+                    }
+                });
+                standardMatches.sort(function(a, b) { return b.score - a.score; });
+            }
+            var customMatches = [];
+            _loadCustomTasks().forEach(function(t) {
+                var isDone = t.status === 'DONE';
+                if (isDone && !_taskSearchIncludeDone) return;
+                var s = _scoreCustomTaskMatch(t, tokens);
+                if (s > 0) customMatches.push({ task: t, score: s });
+            });
+            customMatches.sort(function(a, b) { return b.score - a.score; });
+
+            var filterChip = '<div class="task-search-filter-row">'
+                + '<button type="button" class="task-search-filter-chip' + (_taskSearchIncludeDone ? ' active' : '') + '" onclick="_toggleSearchDoneFilter()">'
+                + '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+                + (_taskSearchIncludeDone ? '<polyline points="20 6 9 17 4 12"/>' : '<rect x="3" y="3" width="18" height="18" rx="3"/>')
+                + '</svg>'
+                + '<span>完了したタスクも含める</span></button></div>';
+
+            if (standardMatches.length === 0 && customMatches.length === 0) {
+                container.innerHTML = filterChip
+                    + '<div class="task-search-empty">「' + escapeHtml(raw) + '」に一致するタスクはありません。<br><span class="task-search-empty-sub">別のことばや、ひらがな/カタカナをお試しください。</span></div>';
+                return;
+            }
+
+            // 履歴保存 (非空クエリのみ。複数語の場合は原文のままを保存)
+            _saveSearchHistory(raw);
+
+            var html = filterChip;
+            if (standardMatches.length > 0) {
+                html += '<div class="task-search-section-title">タスク (' + standardMatches.length + ')</div>';
+                standardMatches.forEach(function(m) {
+                    var isDone = m.status === 'DONE' || m.status === 'AUTO_DONE';
+                    html += '<div class="task-search-result' + (isDone ? ' done' : '') + '" onclick="_openTaskFromSearch(\'' + m.task.id + '\')">'
+                        + '<div class="task-search-result-icon">' + (isDone ? '✓' : '○') + '</div>'
+                        + '<div class="task-search-result-body">'
+                        +   '<div class="task-search-result-title">' + _highlightAllTokens(m.task.title, tokens) + '</div>'
+                        + (m.dest ? '<div class="task-search-result-sub">' + _highlightAllTokens(m.dest, tokens) + '</div>' : '')
+                        + '</div>'
+                        + '</div>';
+                });
+            }
+            if (customMatches.length > 0) {
+                html += '<div class="task-search-section-title">自分で追加したタスク (' + customMatches.length + ')</div>';
+                customMatches.forEach(function(m) {
+                    var isDone = m.task.status === 'DONE';
+                    html += '<div class="task-search-result' + (isDone ? ' done' : '') + '" onclick="_toggleCustomFromSearch(\'' + m.task.id + '\')">'
+                        + '<div class="task-search-result-icon">' + (isDone ? '✓' : '○') + '</div>'
+                        + '<div class="task-search-result-body">'
+                        +   '<div class="task-search-result-title">' + _highlightAllTokens(m.task.title, tokens) + '</div>'
+                        +   '<div class="task-search-result-sub">自分で追加</div>'
+                        + '</div>'
+                        + '</div>';
+                });
+            }
+            container.innerHTML = html;
+        }
+
+        // 複数トークンを全てハイライト。
+        // サロゲートペア (絵文字など) に耐えるため Array.from で文字単位に扱う。
+        // 正規化は BMP 範囲の英数字/カナのみ 1:1 置換なので、文字数は保存される前提。
+        function _highlightAllTokens(text, tokens) {
+            if (!text) return '';
+            if (!tokens || tokens.length === 0) return escapeHtml(text);
+            var origChars = Array.from(text);           // 文字 (サロゲートペア結合済) 単位
+            var normChars = Array.from(_normalizeSearchText(text));
+            if (origChars.length !== normChars.length) {
+                // 例外時は単純に元文字列を返す (ハイライトを諦めて壊さない)
+                return escapeHtml(text);
+            }
+            var normJoined = normChars.join('');
+            var marks = new Array(origChars.length).fill(false);
+            tokens.forEach(function(raw) {
+                var t = _normalizeSearchText(raw);
+                if (!t) return;
+                var tChars = Array.from(t);
+                var from = 0;
+                while (true) {
+                    // charIndex → codeUnitIndex を 1 文字ずつ進めて探す
+                    var found = -1;
+                    for (var ci = from; ci <= normChars.length - tChars.length; ci++) {
+                        var ok = true;
+                        for (var k = 0; k < tChars.length; k++) {
+                            if (normChars[ci + k] !== tChars[k]) { ok = false; break; }
+                        }
+                        if (ok) { found = ci; break; }
+                    }
+                    if (found === -1) break;
+                    for (var j = found; j < found + tChars.length; j++) marks[j] = true;
+                    from = found + tChars.length;
+                }
+            });
+            var out = '';
+            var inMark = false;
+            for (var i = 0; i < origChars.length; i++) {
+                if (marks[i] && !inMark) { out += '<mark>'; inMark = true; }
+                else if (!marks[i] && inMark) { out += '</mark>'; inMark = false; }
+                out += escapeHtml(origChars[i]);
+            }
+            if (inMark) out += '</mark>';
+            return out;
+        }
+
+        function _openTaskFromSearch(taskId) {
+            closeTaskSearch();
+            if (typeof showTaskDetail === 'function') {
+                // detailReturnScreen を設定して正しい戻り先を伝える
+                if (typeof detailReturnScreen !== 'undefined') detailReturnScreen = 'screen-guide';
+                showTaskDetail(taskId);
+            }
+        }
+        function _toggleCustomFromSearch(taskId) {
+            toggleCustomTaskStatus(taskId);
+            // 結果リストも更新
+            var input = document.getElementById('taskSearchInput');
+            _renderTaskSearchResults(input ? input.value : '');
+        }
+
+        function openAddCustomTaskSheet() {
+            var overlay = document.getElementById('addCustomTaskSheet');
+            if (!overlay) return;
+            var input = document.getElementById('customTaskTitleInput');
+            if (input) input.value = '';
+            _onCustomTaskInput();
+            overlay.classList.add('show');
+            // モバイルでフォーカス + ソフトキーボード起動
+            setTimeout(function() { if (input) input.focus(); }, 120);
+        }
+        function closeAddCustomTaskSheet() {
+            var overlay = document.getElementById('addCustomTaskSheet');
+            if (overlay) overlay.classList.remove('show');
+        }
+        function _onCustomTaskInput() {
+            var input = document.getElementById('customTaskTitleInput');
+            var btn = document.getElementById('customTaskSaveBtn');
+            if (!input || !btn) return;
+            btn.disabled = input.value.trim().length === 0;
+        }
+        function saveCustomTask() {
+            var input = document.getElementById('customTaskTitleInput');
+            if (!input) return;
+            var title = input.value.trim();
+            if (!title) return;
+            var list = _loadCustomTasks();
+            list.push({
+                id: 'custom_' + Date.now() + '_' + Math.floor(Math.random() * 10000),
+                title: title,
+                status: 'OPEN',
+                created_at: new Date().toISOString()
+            });
+            _writeCustomTasks(list);
+            closeAddCustomTaskSheet();
+            if (typeof showToast === 'function') showToast('タスクを追加しました');
+            if (typeof renderGuide === 'function') renderGuide();
+        }
+        function toggleCustomTaskStatus(taskId) {
+            var list = _loadCustomTasks();
+            var target = list.find(function(t) { return t.id === taskId; });
+            if (!target) return;
+            target.status = (target.status === 'DONE') ? 'OPEN' : 'DONE';
+            _writeCustomTasks(list);
+            if (typeof renderGuide === 'function') renderGuide();
+        }
+        function deleteCustomTask(taskId) {
+            if (!confirm('このタスクを削除しますか？')) return;
+            var list = _loadCustomTasks().filter(function(t) { return t.id !== taskId; });
+            _writeCustomTasks(list);
+            if (typeof renderGuide === 'function') renderGuide();
         }
 
         let _guideSwipeAttached = false;
@@ -21123,11 +22354,16 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 console.log(`[RN] regenerateAllTaskStatuses: ${passes}パス, ${changes.length}件変更`);
                 changes.forEach(c => console.log('  ' + c));
             }
-            // 依存関係デバッグ（毎回出力）
-            const _d706status = taskStatuses['RN-D7-06'];
-            const _admAnswer = answers['Q-ADMIN-DN-01'];
-            const _d707status = taskStatuses['RN-D7-07'];
-            console.log(`[ReliefNote:dep] Q-ADMIN-DN-01=${JSON.stringify(_admAnswer)} → RN-D7-06=${_d706status}, RN-D7-07=${_d707status}, isResolved(D7-06)=${isTaskResolved('RN-D7-06')}`);
+            if (passes >= 5 && changed) {
+                console.warn('[RN] regenerateAllTaskStatuses: 5パスで収束しませんでした。ルールに循環依存がある可能性があります');
+            }
+            // 依存関係デバッグ (dev フラグ時のみ出力)
+            if (window.RN_DEBUG_DEPS) {
+                const _d706status = taskStatuses['RN-D7-06'];
+                const _admAnswer = answers['Q-ADMIN-DN-01'];
+                const _d707status = taskStatuses['RN-D7-07'];
+                console.log(`[ReliefNote:dep] Q-ADMIN-DN-01=${JSON.stringify(_admAnswer)} → RN-D7-06=${_d706status}, RN-D7-07=${_d707status}, isResolved(D7-06)=${isTaskResolved('RN-D7-06')}`);
+            }
             saveData();
         }
 
@@ -21647,10 +22883,10 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                                                 return `
                                                     <div class="detail-faq-item" onclick="toggleFAQ(this)">
                                                         <div class="detail-faq-question">
-                                                            <span>${question}</span>
+                                                            <span>${escapeHtml(question)}</span>
                                                             <span class="detail-faq-arrow">▼</span>
                                                         </div>
-                                                        <div class="detail-faq-answer">${replaceTaskIdLinks(markGlossaryTerms(answer))}</div>
+                                                        <div class="detail-faq-answer">${replaceTaskIdLinks(markGlossaryTerms(escapeHtml(answer)))}</div>
                                                     </div>
                                                 `;
                                             }
@@ -21759,7 +22995,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                         if (!depTask) return;
                         const btn = document.createElement('button');
                         btn.className = 'btn-blocked-dep';
-                        btn.innerHTML = '<span class="btn-blocked-dep-title">' + depTask.title + '</span><span class="btn-blocked-dep-label">を先に完了してください</span>';
+                        btn.innerHTML = '<span class="btn-blocked-dep-title">' + escapeHtml(depTask.title || '') + '</span><span class="btn-blocked-dep-label">を先に完了してください</span>';
                         btn.onclick = function() { _returnTaskStack.push(taskId); _returnToTaskId = taskId; showTaskDetail(depId); };
                         blockedContainer.appendChild(btn);
                     });
@@ -21802,6 +23038,20 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
             if (_moreBtn) _moreBtn.style.display = '';
 
             showScreen('screen-detail');
+
+            // task_detail_opened ログ (screen_viewed の dedup で取りこぼす detail→detail 遷移を補う)
+            // 同じ taskId の連続呼び出し (タスク完了後の再描画など) は記録しない
+            if (typeof logEvent === 'function' && window._lastDetailLoggedTaskId !== taskId) {
+                window._lastDetailLoggedTaskId = taskId;
+                try {
+                    var _t = (typeof tasks !== 'undefined') ? tasks.find(function(x) { return x.id === taskId; }) : null;
+                    logEvent('task_detail_opened', {
+                        task_id: taskId,
+                        task_status: (typeof taskStatuses !== 'undefined') ? (taskStatuses[taskId] || '') : '',
+                        task_phase: _t ? (_t.phase || '') : ''
+                    });
+                } catch (e) {}
+            }
 
             // URLハッシュにtaskIdを含めてリロード時に復元できるようにする
             try {
@@ -21873,7 +23123,8 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
             return text.replace(/→?(RN-[A-Z0-9]+-[0-9]+)へ?/g, function(match, taskId) {
                 const refTask = tasks.find(t => t.id === taskId);
                 if (!refTask) return match;
-                return `<a href="javascript:void(0)" onclick="event.stopPropagation(); showTaskDetail('${taskId}')" style="color: var(--accent); text-decoration: underline; cursor: pointer;">→ ${refTask.title}</a>`;
+                // refTask.title は CSV 由来。innerHTML 経由になるので escape しておく
+                return `<a href="javascript:void(0)" onclick="event.stopPropagation(); showTaskDetail('${taskId}')" style="color: var(--accent); text-decoration: underline; cursor: pointer;">→ ${escapeHtml(refTask.title || '')}</a>`;
             });
         }
 
@@ -22055,21 +23306,21 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 const uncertainOpts = question.options.filter(o => uncertainValues.includes(o.value));
 
                 normalOpts.forEach(opt => {
-                    optionsHtml += `<button class="confirm-sheet-option" onclick="answerConfirmSheet('${questionId}', '${opt.value}')">${opt.label}</button>`;
+                    optionsHtml += `<button class="confirm-sheet-option" onclick="answerConfirmSheet('${questionId}', '${opt.value}')">${escapeHtml(opt.label)}</button>`;
                 });
                 uncertainOpts.forEach(opt => {
-                    optionsHtml += `<button class="confirm-sheet-option uncertain" onclick="answerConfirmSheetUnknown('${questionId}', '${opt.value}', '${taskId}')">${opt.label}</button>`;
+                    optionsHtml += `<button class="confirm-sheet-option uncertain" onclick="answerConfirmSheetUnknown('${questionId}', '${opt.value}', '${taskId}')">${escapeHtml(opt.label)}</button>`;
                 });
             } else if (question.type === 'multi') {
                 const exclusiveVals = question.exclusiveOptions || [];
                 optionsHtml += `<div class="confirm-sheet-multi-hint">あてはまるものをすべて選んでください</div>`;
                 question.options.forEach(opt => {
                     const isUncertain = opt.value === 'UNKNOWN' || opt.value === 'NONE';
-                    optionsHtml += `<button class="confirm-sheet-option${isUncertain ? ' uncertain' : ''}" id="csopt-${opt.value}" onclick="toggleConfirmSheetMulti('${questionId}', '${opt.value}', ${JSON.stringify(exclusiveVals).replace(/"/g, '&quot;')})">${opt.label}</button>`;
+                    optionsHtml += `<button class="confirm-sheet-option${isUncertain ? ' uncertain' : ''}" id="csopt-${opt.value}" onclick="toggleConfirmSheetMulti('${questionId}', '${opt.value}', ${JSON.stringify(exclusiveVals).replace(/"/g, '&quot;')})">${escapeHtml(opt.label)}</button>`;
                 });
                 optionsHtml += `<button class="confirm-sheet-submit" id="confirmSheetSubmit" disabled onclick="submitConfirmSheetMulti('${questionId}')">決定する</button>`;
             } else if (question.type === 'date') {
-                var todayMax = new Date().toISOString().split('T')[0];
+                var todayMax = _localDateString();
                 optionsHtml = `
                     <input type="date" id="confirmSheetDateInput" max="${todayMax}" style="width: 100%; padding: 14px; border: 1px solid var(--border); border-radius: 12px; font-size: 15px; margin-bottom: 8px;">
                     <button class="confirm-sheet-option" style="background: var(--accent); color: white; border-color: var(--accent);" onclick="answerConfirmSheetDate('${questionId}')">回答する</button>
@@ -22333,7 +23584,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
             if (disp && disp.phone) {
                 const phoneNumber = disp.phone.split(/[／\/（]/)[0].replace(/[^0-9+-]/g, '');
                 const destName = disp.destination || '問い合わせ先';
-                html += `<a href="tel:${phoneNumber}" class="confirm-sheet-phone-btn">📞 ${destName}に電話する</a>`;
+                html += `<a href="tel:${encodeURIComponent(phoneNumber)}" class="confirm-sheet-phone-btn">📞 ${escapeHtml(destName)}に電話する</a>`;
             }
 
             html += `<button class="confirm-sheet-close-btn" onclick="uncertainConfirmSheet('${taskId}')">あとで確認する</button>`;
@@ -22533,7 +23784,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 optionsHtml += '<button class="q-next-btn" id="bulkConfirmSubmit"' + submitDisabled + ' onclick="submitBulkConfirmMulti(\'' + q.questionId + '\')">決定する</button>';
             } else if (q.answerType === 'date') {
                 var dateVal = (typeof existingAnswer === 'string' && existingAnswer.match(/^\d{4}-\d{2}-\d{2}$/)) ? existingAnswer : '';
-                var todayMax = new Date().toISOString().split('T')[0];
+                var todayMax = _localDateString();
                 optionsHtml = '<input type="date" class="q-date-input" id="bulkConfirmDateInput" max="' + todayMax + '" value="' + dateVal + '">';
                 optionsHtml += '<button class="q-next-btn" onclick="answerBulkConfirmDate(\'' + q.questionId + '\')">回答する</button>';
             }
@@ -23195,18 +24446,18 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 const uncertainOpts = q.options.filter(o => uncertainValues.indexOf(o.value) >= 0);
                 normalOpts.forEach(opt => {
                     const selected = answers[q.id] === opt.value ? ' selected' : '';
-                    optionsHtml += `<button class="q-option${selected}" onclick="selectSingleConfirm('${q.id}', '${opt.value}')">${opt.label}</button>`;
+                    optionsHtml += `<button class="q-option${selected}" onclick="selectSingleConfirm('${q.id}', '${opt.value}')">${escapeHtml(opt.label)}</button>`;
                 });
                 uncertainOpts.forEach(opt => {
                     const selected = answers[q.id] === opt.value ? ' selected' : '';
-                    optionsHtml += `<button class="q-option q-option-uncertain${selected}" onclick="selectSingleConfirm('${q.id}', '${opt.value}')">${opt.label}</button>`;
+                    optionsHtml += `<button class="q-option q-option-uncertain${selected}" onclick="selectSingleConfirm('${q.id}', '${opt.value}')">${escapeHtml(opt.label)}</button>`;
                 });
             } else if (q.type === 'multi') {
                 q.options.forEach(opt => {
                     const isUncertain = opt.value === 'UNKNOWN' || opt.value === 'NONE';
                     const uCls = isUncertain ? ' q-option-uncertain' : '';
                     const selected = answers[q.id] && answers[q.id].includes(opt.value) ? ' selected' : '';
-                    optionsHtml += `<button class="q-option${uCls}${selected}" onclick="selectMultiConfirm('${q.id}', '${opt.value}')">${opt.label}</button>`;
+                    optionsHtml += `<button class="q-option${uCls}${selected}" onclick="selectMultiConfirm('${q.id}', '${opt.value}')">${escapeHtml(opt.label)}</button>`;
                 });
 
                 const isLastQuestion = currentConfirmIndex === confirmQuestions.length - 1;
@@ -23216,7 +24467,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 optionsHtml += `<button class="q-next-btn" id="confirmNextBtn" onclick="nextConfirmQuestion()"${btnDisabled}>${btnText}</button>`;
             } else if (q.type === 'date') {
                 const value = answers[q.id] || '';
-                const todayStr = new Date().toISOString().split('T')[0];
+                const todayStr = _localDateString();
                 optionsHtml += `<input type="date" class="q-date-input" id="confirmDateInput" max="${todayStr}" value="${value}" onchange="selectDateConfirm('${q.id}', this.value)">`;
 
                 const isLastQuestion = currentConfirmIndex === confirmQuestions.length - 1;
@@ -23790,7 +25041,9 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
         // ユーティリティ
         function showToast(message) {
             const toast = document.getElementById('toast');
-            toast.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>' + message + '</span>';
+            // message は escapeHtml を通す。CSV マスタや AI 応答由来の文字列が
+            // innerHTML で評価されるのを防ぐ。
+            toast.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>' + escapeHtml(String(message == null ? '' : message)) + '</span>';
             // 前回のスワイプで残った inline style をリセット
             toast.style.transform = '';
             toast.style.opacity = '';
@@ -23840,9 +25093,9 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                         toast.style.opacity = '';
                     }, 180);
                 } else {
-                    // 戻す
+                    // 戻す (opacity は '1' を明示してトランジションで確実に復帰させる)
                     toast.style.transform = 'translateX(-50%)';
-                    toast.style.opacity = '';
+                    toast.style.opacity = '1';
                 }
                 startY = null;
                 deltaY = 0;
@@ -24031,8 +25284,8 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                     }
                     html += '<div class="answer-summary-item" onclick="openAnswerEdit(\'' + q.id + '\')">';
                     html += '<div class="answer-summary-item-left">';
-                    html += '<div class="answer-summary-item-q">' + q.text + '</div>';
-                    html += '<div class="answer-summary-item-a' + (isUnanswered ? ' unanswered' : '') + '">' + displayAnswer + '</div>';
+                    html += '<div class="answer-summary-item-q">' + escapeHtml(q.text) + '</div>';
+                    html += '<div class="answer-summary-item-a' + (isUnanswered ? ' unanswered' : '') + '">' + escapeHtml(displayAnswer) + '</div>';
                     html += '</div>';
                     html += '<div class="answer-summary-item-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>';
                     html += '</div>';
@@ -24509,7 +25762,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                         localStorage.removeItem('rn_dev_mode');
                         if (typeof showToast === 'function') showToast('開発者モードを無効化しました');
                     } else {
-                        localStorage.setItem('rn_dev_mode', '1');
+                        safeSetItem('rn_dev_mode', '1');
                         if (typeof showToast === 'function') showToast('開発者モードを有効化しました');
                     }
                 } catch (e) { /* ignore */ }
@@ -25338,6 +26591,10 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
 
         // クリップボードにコピー
         function fallbackCopyToClipboard(url) {
+            if (!navigator.clipboard || !navigator.clipboard.writeText) {
+                prompt('以下のリンクをコピーしてください:', url);
+                return;
+            }
             navigator.clipboard.writeText(url).then(() => {
                 showToastShare('リンクをコピーしました。\nLINEやメールで家族に送ってください。\n\n※ 最新の状態を共有するには、\n再度このボタンを押してください。');
             }).catch(() => {
@@ -25369,11 +26626,146 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
         }
 
         // PDF進捗レポート生成
+        // ===== 役場の案内 × アプリ 対応表 PDF =====
+        // 北竜町役場が配布している紙の案内と、アプリのどの画面がどう対応しているかを
+        // A4 1 枚にまとめて印刷/PDF 保存できる。町との打ち合わせ用 + 遺族が並べて確認するため。
+        function generatePaperMapReport() {
+            if (typeof showToast === 'function') showToast('対応表を作成しています…');
+            setTimeout(function() {
+                try {
+                    _runPaperMapReport();
+                } catch (e) {
+                    console.error('[generatePaperMapReport]', e);
+                    if (typeof showToast === 'function') showToast('対応表の作成に失敗しました');
+                }
+            }, 50);
+        }
+        function _runPaperMapReport() {
+            // PDF 内部でのみ使う: 紙の案内ステップ番号↔タスクの対応
+            // 町からの正式な番号が届いたらここを更新する
+            var PAPER_STEPS = {
+                'RN-H24-01': 1,
+                'RN-H24-02': 2,
+                'RN-D7-01':  3,
+                'RN-D7-02':  4,
+                'RN-D7-06':  5,
+                'RN-D7-07':  6,
+                'RN-D14-01': 7,
+                'RN-D14-08': 8
+            };
+            var rows = [];
+            if (Array.isArray(tasks)) {
+                var mapped = tasks.filter(function(t) { return PAPER_STEPS[t.id]; });
+                mapped.sort(function(a, b) { return PAPER_STEPS[a.id] - PAPER_STEPS[b.id]; });
+                mapped.forEach(function(t) {
+                    var step = PAPER_STEPS[t.id];
+                    var detail = (typeof taskDetails !== 'undefined' && taskDetails) ? taskDetails[t.id] : null;
+                    var dest = (detail && detail.destination) || (typeof getTaskDestination === 'function' ? getTaskDestination(t.id) : '') || '';
+                    rows.push({
+                        step: String(step),
+                        paperItem: t.title,
+                        appLocation: 'ガイド → 行き先: ' + (dest || '役場'),
+                        extra: t.legalDueDays ? '法定期限 ' + t.legalDueDays + '日以内' : ''
+                    });
+                });
+            }
+            // 役場外のタスク群 (アプリ独自価値) のサマリ
+            var externalSummary = [
+                { paper: '（紙の案内なし）', app: '行き先: 銀行・証券会社', extra: '口座凍結・相続手続き' },
+                { paper: '（紙の案内なし）', app: '行き先: 保険会社・共済', extra: '死亡保険金・共済金の請求' },
+                { paper: '（紙の案内なし）', app: '行き先: 故人の勤務先', extra: '退職金・未払給与・遺族厚生年金の問い合わせ' },
+                { paper: '（紙の案内なし）', app: 'こころのケア', extra: 'きょうのきもちの記録・保健師との共有（任意）' },
+                { paper: '（紙の案内なし）', app: '家族で手続きを分担', extra: '暗号化された招待リンクで家族と同期' }
+            ];
+
+            var html = '<!DOCTYPE html><html><head><meta charset="utf-8">'
+                + '<title>役場の案内とアプリの対応表 - ReliefNote</title>'
+                + '<style>'
+                + '@page { size: A4; margin: 18mm 16mm; }'
+                + 'body { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", sans-serif; color: #333; font-size: 12px; line-height: 1.6; margin: 0; }'
+                + '.doc-head { text-align: center; padding-bottom: 10px; border-bottom: 2px solid #3A3F32; margin-bottom: 14px; }'
+                + '.doc-title { font-size: 18px; font-weight: 700; color: #3A3F32; margin: 0 0 4px; }'
+                + '.doc-sub { font-size: 12px; color: #666; margin: 0; }'
+                + '.doc-lead { background: #F7F2E4; border-radius: 8px; padding: 10px 14px; margin-bottom: 14px; font-size: 11.5px; line-height: 1.7; color: #5C4A2E; }'
+                + 'h2 { font-size: 13px; font-weight: 700; color: #3A3F32; margin: 18px 0 6px; border-left: 3px solid #7A9A7D; padding-left: 8px; }'
+                + 'table { width: 100%; border-collapse: collapse; font-size: 11px; }'
+                + 'thead th { background: #F5F0E6; font-weight: 600; color: #555; padding: 6px 8px; text-align: left; border-bottom: 1.5px solid #CCC4B1; }'
+                + 'tbody td { padding: 6px 8px; border-bottom: 1px solid #EEE; vertical-align: top; }'
+                + 'tbody tr:last-child td { border-bottom: none; }'
+                + '.step-no { font-weight: 700; color: #7A6C52; text-align: center; width: 28px; }'
+                + '.extra { color: #888; font-size: 10px; }'
+                + '.foot { margin-top: 20px; font-size: 10px; color: #888; text-align: center; padding-top: 10px; border-top: 1px solid #DDD; }'
+                + '@media print { body { padding: 0; } button { display: none !important; } }'
+                + '</style></head><body>'
+                + '<div class="doc-head">'
+                +   '<h1 class="doc-title">役場の案内とアプリの対応表</h1>'
+                +   '<p class="doc-sub">北竜町役場 × ReliefNote　／　' + new Date().toISOString().slice(0,10) + '</p>'
+                + '</div>'
+                + '<div class="doc-lead">'
+                +   '同封の案内用紙（北竜町役場発行）と、ReliefNote アプリ内の対応画面をまとめたものです。<br>'
+                +   '<strong>紙に載っている手続きはすべてアプリでも確認できます。</strong>アプリでは加えて、'
+                +   '役場以外の手続き（銀行・保険・年金など）や、家族での分担・こころの記録もご案内します。'
+                + '</div>'
+                + '<h2>役場内の手続き（紙の案内と対応）</h2>'
+                + '<table>'
+                +   '<thead><tr><th class="step-no">番号</th><th>紙の案内項目</th><th>アプリ内の場所</th><th>補足</th></tr></thead>'
+                +   '<tbody>'
+                + (rows.length === 0
+                    ? '<tr><td colspan="4" style="text-align:center;color:#999;">ステップ番号が未設定です。役場からの正式な番号が届いてから表示されます。</td></tr>'
+                    : rows.map(function(r) {
+                        return '<tr>'
+                            + '<td class="step-no">' + escapeHtml(r.step) + '</td>'
+                            + '<td>' + escapeHtml(r.paperItem) + '</td>'
+                            + '<td>' + escapeHtml(r.appLocation) + '</td>'
+                            + '<td class="extra">' + escapeHtml(r.extra) + '</td>'
+                            + '</tr>';
+                    }).join(''))
+                +   '</tbody>'
+                + '</table>'
+                + '<h2>アプリで扱う追加の領域（紙には載っていない内容）</h2>'
+                + '<table>'
+                +   '<thead><tr><th style="width:30%;">領域</th><th>アプリ内の場所</th><th>補足</th></tr></thead>'
+                +   '<tbody>'
+                + externalSummary.map(function(r) {
+                    return '<tr>'
+                        + '<td>' + escapeHtml(r.paper) + '</td>'
+                        + '<td>' + escapeHtml(r.app) + '</td>'
+                        + '<td class="extra">' + escapeHtml(r.extra) + '</td>'
+                        + '</tr>';
+                }).join('')
+                +   '</tbody>'
+                + '</table>'
+                + '<div class="foot">'
+                +   'この対応表は遺族支援のために作成されたものです。紙の案内用紙の番号に変更があった場合は、最新の案内用紙をご優先ください。'
+                + '</div>'
+                + '</body></html>';
+
+            var reportWindow = window.open('', '_blank');
+            if (reportWindow) {
+                try {
+                    reportWindow.document.write(html);
+                    reportWindow.document.close();
+                    reportWindow.onload = function() { try { reportWindow.print(); } catch (e) {} };
+                } catch (e) {
+                    if (typeof showToast === 'function') showToast('印刷ウィンドウの生成に失敗しました');
+                }
+            } else {
+                if (typeof showToast === 'function') showToast('ポップアップを許可してください');
+            }
+        }
+
         function generateProgressReport() {
             // PDF 生成〜新規タブ起動までは数百ms の無反応期間があるので、トーストで反応を返す
             if (typeof showToast === 'function') showToast('PDF を作成しています…');
             // 体感で少し待ってから重い処理を開始（トーストの表示確定）
-            setTimeout(_runProgressReport, 50);
+            setTimeout(function() {
+                try {
+                    _runProgressReport();
+                } catch (e) {
+                    console.error('[generateProgressReport]', e);
+                    if (typeof showToast === 'function') showToast('PDF の作成に失敗しました');
+                }
+            }, 50);
         }
 
         function _runProgressReport() {
@@ -25455,7 +26847,11 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                 '<title>進捗レポート - ' + escapeHtml(deceasedName) + '</title>' +
                 '<style>' +
                 'body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans",sans-serif;margin:0;padding:24px;color:#333;line-height:1.6;}' +
-                '@media print{body{padding:16px;}button{display:none!important;}}' +
+                '@media print{body{padding:16px;}button{display:none!important;}@page{size:A4;margin:14mm;}' +
+                  /* 大量タスクで行が分断されたり、フェーズ見出しがページ末尾で孤立しないようにする */
+                  'table{page-break-inside:auto;}tr{page-break-inside:avoid;page-break-after:auto;}' +
+                  'h3{page-break-after:avoid;}div{page-break-inside:avoid;}' +
+                '}' +
                 '</style></head><body>' +
                 '<div style="max-width:700px;margin:0 auto;">' +
                 '<div style="text-align:center;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid #3A3F32;">' +
@@ -25480,9 +26876,13 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
 
             var reportWindow = window.open('', '_blank');
             if (reportWindow) {
-                reportWindow.document.write(html);
-                reportWindow.document.close();
-                reportWindow.onload = function() { reportWindow.print(); };
+                try {
+                    reportWindow.document.write(html);
+                    reportWindow.document.close();
+                    reportWindow.onload = function() { try { reportWindow.print(); } catch (e) {} };
+                } catch (e) {
+                    showToast('印刷ウィンドウの生成に失敗しました');
+                }
             } else {
                 showToast('ポップアップがブロックされました。ブラウザの設定を確認してください。');
             }
@@ -25556,6 +26956,10 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
                     if (e.name === 'AbortError') return;
                 }
             }
+            if (!navigator.clipboard || !navigator.clipboard.writeText) {
+                prompt('以下をコピーしてください:', text);
+                return;
+            }
             navigator.clipboard.writeText(text).then(function() {
                 showToastShare('テキストをコピーしました。\nLINEやメールに貼り付けて送ってください。');
             }).catch(function() {
@@ -25603,14 +27007,23 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
             // 同日同理由の重複送信防止
             if (!payload.isTest) {
                 var sentKey = 'relief_note_alert_sent';
-                var sentData = JSON.parse(localStorage.getItem(sentKey) || '{}');
+                var sentData = safeParseJSON(localStorage.getItem(sentKey), {});
                 var todayKey = payload.date + '_' + (payload.reasons || []).sort().join(',');
                 if (sentData[todayKey]) return;
                 sentData[todayKey] = true;
-                localStorage.setItem(sentKey, JSON.stringify(sentData));
+                // 90日より古いキー (YYYY-MM-DD_... 形式) を捨てる
+                try {
+                    var cutoff = _localDateString(new Date(Date.now() - 90 * 24 * 60 * 60 * 1000));
+                    Object.keys(sentData).forEach(function(k) {
+                        var d = (k || '').split('_')[0];
+                        if (d && d < cutoff) delete sentData[k];
+                    });
+                } catch (e) {}
+                safeSetItem(sentKey, JSON.stringify(sentData));
             }
 
-            var userName = localStorage.getItem('relief_note_user_name') || '利用者';
+            // ユーザー名キーは rn_user_name に統一済み (旧 relief_note_user_name は書き込み無し)
+            var userName = localStorage.getItem('rn_user_name') || '利用者';
             var reasonLabels = {
                 'sleep_no': '睡眠がとれていない',
                 'meal_no': '食事がとれていない',
@@ -25752,7 +27165,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
         // ========== Service Worker 登録 (キャッシュバスティング) ==========
         // HTMLは network-first、画像等は cache-first。新しいデプロイを確実に
         // ユーザーへ届けるために使用する。詳細は /sw.js を参照。
-        window.APP_VERSION = 'rn-2026-04-09';
+        window.APP_VERSION = 'rn-2026-04-19';
         (function registerServiceWorker() {
             if (!('serviceWorker' in navigator)) return;
             // localhost / file:// での開発時はスキップしない（動作確認のため）
@@ -25897,8 +27310,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
             if (savedBulkState && savedBulkState.active && userName && hasAnswers) {
                 try {
                     generateTasks();
-                    updateUserNameDisplay();
-                    renderHome();
+                    // updateUserNameDisplay / renderHome は showScreen 内で実行されるので二重呼び出ししない
                     showScreen('screen-home');
                 } catch (e) {
                     console.warn('[RN] ホーム復帰に失敗、状態を破棄:', e);
@@ -25908,8 +27320,6 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
             } else if (userName && hasAnswers) {
                 // 名前 + 回答済み → ホーム画面
                 generateTasks();
-                updateUserNameDisplay();
-                renderHome();
                 showScreen('screen-home');
             } else if (userName && !hasAnswers) {
                 // 名前あり、質問未回答 → 質問画面（名前入力スキップして質問から開始）
@@ -26004,7 +27414,7 @@ CH-FUN-149,task,RN-Y3-01,phone,HIDE,`
 
         // マルチタブ同期: 別タブで answers / taskStatuses / confirmStatuses が変更されたら反映
         window.addEventListener('storage', function(e) {
-            if (e.key === 'rn_answers' || e.key === 'rn_task_statuses' || e.key === 'rn_confirm_statuses') {
+            if (e.key === 'answers' || e.key === 'taskStatuses' || e.key === 'confirmStatuses') {
                 loadData();
                 if (typeof regenerateAllTaskStatuses === 'function') regenerateAllTaskStatuses();
                 // 現在表示中の画面を再描画
