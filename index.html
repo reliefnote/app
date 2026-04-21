@@ -116,6 +116,12 @@
             box-sizing: border-box;
         }
 
+        html {
+            /* iOS Chrome のオーバースクロール (ラバーバンド) で下に隙間が見えるのを防ぐ。
+               フッターナビと同色にしておくことで、下端の隙間が開いてもフッターと一体に見える */
+            background: var(--bg-primary);
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Noto Sans JP', sans-serif;
             font-size: clamp(14px, 3.8vw, 15px);
@@ -123,6 +129,7 @@
             color: var(--text-primary);
             background: var(--bg-secondary);
             -webkit-font-smoothing: antialiased;
+            overscroll-behavior-y: none;
         }
 
         .app-container {
@@ -28366,7 +28373,7 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
         // ========== Service Worker 登録 (キャッシュバスティング) ==========
         // HTMLは network-first、画像等は cache-first。新しいデプロイを確実に
         // ユーザーへ届けるために使用する。詳細は /sw.js を参照。
-        window.APP_VERSION = 'rn-2026-04-21-phase6b';
+        window.APP_VERSION = 'rn-2026-04-21-phase6c';
         (function registerServiceWorker() {
             if (!('serviceWorker' in navigator)) return;
             // localhost / file:// での開発時はスキップしない（動作確認のため）
