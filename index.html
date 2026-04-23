@@ -3552,6 +3552,105 @@
             100% { box-shadow: 0 0 0 0 rgba(185,95,62,0); background: #FFFFFF; }
         }
 
+        /* タスク文脈バナー（専門家画面の最上部、タスクから遷移した時のみ表示） */
+        .expert-task-context {
+            background: linear-gradient(180deg, #FFFFFF 0%, #FAF6F0 100%);
+            border: 1px solid var(--border-light);
+            border-left: 3px solid var(--accent, #B95F3E);
+            border-radius: 14px;
+            padding: 14px 16px 12px;
+            margin: 0 0 14px;
+        }
+        .expert-task-context-head {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            letter-spacing: 0.3px;
+            margin-bottom: 4px;
+        }
+        .expert-task-context-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+        .expert-task-context-card {
+            background: #FFFFFF;
+            border: 1px solid var(--border-light);
+            border-radius: 10px;
+            padding: 12px;
+            margin-top: 8px;
+        }
+        .expert-task-context-card-head {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        .expert-task-context-card-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: #F5EFE5;
+            color: var(--accent, #B95F3E);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .expert-task-context-card-icon svg { width: 18px; height: 18px; }
+        .expert-task-context-card-title {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .expert-task-context-card-fee {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+        .expert-task-context-card-fee strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+        .expert-task-context-card-note {
+            font-size: 12.5px;
+            color: var(--text-primary);
+            line-height: 1.55;
+            margin-bottom: 10px;
+        }
+        .expert-task-context-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 12px;
+            background: var(--accent, #B95F3E);
+            color: #FFFFFF;
+            border: none;
+            border-radius: 8px;
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: opacity 0.15s;
+        }
+        .expert-task-context-cta:active { opacity: 0.8; }
+        .expert-task-context-cta svg { width: 13px; height: 13px; }
+        .expert-task-context-cta.secondary {
+            background: #FFFFFF;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+        .expert-task-context-cta-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
         /* 専門家選びのヒント (アコーディオンセクション) */
         .expert-tips-section {
             background: #FFFFFF;
@@ -11749,7 +11848,7 @@
                 <span class="healing-arrow">›</span>
             </div>
 
-            <div class="home-expert-entry" onclick="showScreen('screen-experts')">
+            <div class="home-expert-entry" onclick="navigateToExpertsForTask(null)">
                 <div class="home-expert-entry-icon">
                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <!-- document with gold seal = expert certification -->
@@ -12075,7 +12174,7 @@
         <!-- 画面: 専門家リスト -->
         <div id="screen-experts" class="screen">
             <div class="expert-screen-header">
-                <button class="expert-back-btn" onclick="showScreen('screen-home')">
+                <button class="expert-back-btn" onclick="_handleExpertsBack()">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
                 </button>
                 <span class="expert-screen-title">専門家に相談する</span>
@@ -12087,6 +12186,9 @@
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8B7355" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                     <span>掲載にあたり紹介料などは一切いただいておらず、中立的な立場で情報をご案内しています。</span>
                 </div>
+
+                <!-- タスクから遷移した時だけ表示される文脈バナー -->
+                <div id="expertTaskContext" class="expert-task-context" style="display:none;"></div>
 
                 <!-- ===== 専門家選びの基本 (全チャネル共通) ===== -->
                 <div class="expert-tips-section">
@@ -22243,7 +22345,7 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
                 if (ex.necessity === 'REQUIRED') badge = '<span class="task-expert-badge required">ほぼ必須</span>';
                 else if (ex.necessity === 'RECOMMENDED') badge = '<span class="task-expert-badge recommended">おすすめ</span>';
 
-                html += '<div class="task-expert-row" role="button" tabindex="0" onclick="navigateToExpertsByProfession(\'' + escapeHtml(ex.profession) + '\')">'
+                html += '<div class="task-expert-row" role="button" tabindex="0" onclick="navigateToExpertsForTask(\'' + escapeHtml(taskId) + '\')">'
                     +   '<div class="task-expert-row-icon">' + _getExpertProfessionIcon(ex.profession) + '</div>'
                     +   '<div class="task-expert-row-main">'
                     +     '<div class="task-expert-row-head">'
@@ -22264,8 +22366,101 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
             return html;
         }
 
-        // 専門家画面へ遷移し、指定の士業カードへスクロール&ハイライト
+        // 士業ごとの公式検索/相談サイト
+        var PROFESSION_DIRECTORY = {
+            '弁護士':       { label: '弁護士を探す',           url: 'https://www.nichibenren.or.jp/legal_advice.html' },
+            '司法書士':     { label: '司法書士を探す',         url: 'https://www.shiho-shoshi.or.jp/consulting/' },
+            '税理士':       { label: '税理士を探す',           url: 'https://www.zeirishikensaku.jp/' },
+            '行政書士':     { label: '行政書士を探す',         url: 'https://www.gyosei.or.jp/consultation/' },
+            '社労士':       { label: '社労士を探す',           url: 'https://www.shakaihokenroumushi.jp/consult/' },
+            '遺品整理業者': { label: '遺品整理士認定協会で探す', url: 'https://www.is-mind.org/' }
+        };
+
+        // 専門家画面からの戻り先タスク（タスク詳細から遷移した時にセット）
+        var _expertReturnTaskId = null;
+
+        // 専門家画面へ遷移（タスク文脈付き）
+        function navigateToExpertsForTask(taskId) {
+            _expertReturnTaskId = taskId || null;
+            renderExpertTaskContext(taskId);
+            showScreen('screen-experts');
+            // スクロール位置をトップに
+            setTimeout(function() {
+                var body = document.querySelector('#screen-experts .expert-screen-body') || document.querySelector('#screen-experts');
+                if (body) { try { body.scrollTo({ top: 0, behavior: 'auto' }); } catch (e) { body.scrollTop = 0; } }
+            }, 0);
+        }
+
+        // 戻るボタンハンドラ（タスク経由なら戻る、そうでなければホーム）
+        function _handleExpertsBack() {
+            if (_expertReturnTaskId) {
+                var tid = _expertReturnTaskId;
+                _expertReturnTaskId = null;
+                var ctxEl = document.getElementById('expertTaskContext');
+                if (ctxEl) { ctxEl.style.display = 'none'; ctxEl.innerHTML = ''; }
+                showTaskDetail(tid);
+                return;
+            }
+            var ctxEl = document.getElementById('expertTaskContext');
+            if (ctxEl) { ctxEl.style.display = 'none'; ctxEl.innerHTML = ''; }
+            showScreen('screen-home');
+        }
+
+        // タスク文脈バナー（該当タスクの task_expert_map エントリをカード化）
+        function renderExpertTaskContext(taskId) {
+            var el = document.getElementById('expertTaskContext');
+            if (!el) return;
+            if (!taskId) { el.style.display = 'none'; el.innerHTML = ''; return; }
+            var experts = (taskExpertMap && taskExpertMap[taskId]) || [];
+            if (experts.length === 0) { el.style.display = 'none'; el.innerHTML = ''; return; }
+            var task = tasks.find(function(t) { return t.id === taskId; });
+            var taskTitle = task ? task.title : '';
+
+            var html = '<div class="expert-task-context-head">このタスクで頼める専門家</div>'
+                + '<div class="expert-task-context-title">' + escapeHtml(taskTitle) + '</div>';
+
+            experts.forEach(function(ex) {
+                var feeText = ex.feeLow === ex.feeHigh
+                    ? (ex.feeLow / 10000).toFixed(1).replace(/\.0$/, '') + '万' + ex.feeUnit
+                    : (ex.feeLow / 10000).toFixed(1).replace(/\.0$/, '') + '〜' + (ex.feeHigh / 10000).toFixed(1).replace(/\.0$/, '') + '万' + ex.feeUnit;
+                var badge = '';
+                if (ex.necessity === 'REQUIRED') badge = '<span class="task-expert-badge required">ほぼ必須</span>';
+                else if (ex.necessity === 'RECOMMENDED') badge = '<span class="task-expert-badge recommended">おすすめ</span>';
+
+                var dir = PROFESSION_DIRECTORY[ex.profession];
+                var ctaHtml = '';
+                if (dir) {
+                    ctaHtml = '<div class="expert-task-context-cta-row">'
+                        + '<a class="expert-task-context-cta" href="' + dir.url + '" target="_blank" rel="noopener noreferrer">'
+                        +   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>'
+                        +   escapeHtml(dir.label)
+                        + '</a>'
+                        + '</div>';
+                }
+
+                html += '<div class="expert-task-context-card">'
+                    +   '<div class="expert-task-context-card-head">'
+                    +     '<div class="expert-task-context-card-icon">' + _getExpertProfessionIcon(ex.profession) + '</div>'
+                    +     '<div class="expert-task-context-card-title">'
+                    +       '<span>' + escapeHtml(ex.profession) + '</span>'
+                    +       badge
+                    +     '</div>'
+                    +   '</div>'
+                    +   '<div class="expert-task-context-card-fee">費用目安 <strong>' + feeText + '</strong></div>'
+                    +   '<div class="expert-task-context-card-note">' + escapeHtml(ex.note) + '</div>'
+                    +   ctaHtml
+                    + '</div>';
+            });
+
+            el.innerHTML = html;
+            el.style.display = 'block';
+        }
+
+        // 後方互換: 既存の呼び出し側（タスク詳細以外）で使われている可能性があるため残す
         function navigateToExpertsByProfession(profession) {
+            _expertReturnTaskId = null;
+            var ctxEl = document.getElementById('expertTaskContext');
+            if (ctxEl) { ctxEl.style.display = 'none'; ctxEl.innerHTML = ''; }
             showScreen('screen-experts');
             setTimeout(function() {
                 var cards = document.querySelectorAll('#screen-experts .expert-card-v2');
