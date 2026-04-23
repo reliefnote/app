@@ -3552,6 +3552,179 @@
             100% { box-shadow: 0 0 0 0 rgba(185,95,62,0); background: #FFFFFF; }
         }
 
+        /* 近隣の司法書士を探すエントリボタン（screen-experts 内） */
+        .local-experts-cta {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            width: 100%;
+            padding: 16px;
+            background: #FFFFFF;
+            border: 1px solid var(--border-light);
+            border-left: 3px solid var(--accent, #B95F3E);
+            border-radius: 14px;
+            margin: 0 0 14px;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            font-family: inherit;
+            text-align: left;
+        }
+        .local-experts-cta:active { background: var(--bg-secondary); }
+        .local-experts-cta-icon {
+            width: 44px; height: 44px; border-radius: 10px;
+            background: #F5EFE5; color: var(--accent, #B95F3E);
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .local-experts-cta-icon svg { width: 22px; height: 22px; }
+        .local-experts-cta-body { flex: 1; min-width: 0; }
+        .local-experts-cta-title {
+            font-size: 15px; font-weight: 700; color: var(--text-primary);
+            margin-bottom: 3px;
+        }
+        .local-experts-cta-sub {
+            font-size: 12px; color: var(--text-secondary); line-height: 1.45;
+        }
+        .local-experts-cta-arrow {
+            color: var(--text-tertiary); flex-shrink: 0;
+        }
+
+        /* 近隣の司法書士一覧画面 */
+        #screen-local-experts .expert-screen-body { padding: 16px; padding-bottom: 80px; }
+        .local-experts-lead {
+            background: #FAF6F0;
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: 12px 14px;
+            font-size: 12.5px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            margin-bottom: 14px;
+        }
+        .local-experts-lead strong {
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+        .local-experts-filter {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+            position: sticky;
+            top: 0;
+            background: var(--bg-primary, #FAF9F7);
+            padding: 4px 0 6px;
+            z-index: 2;
+        }
+        .local-experts-chip {
+            padding: 7px 14px;
+            background: #FFFFFF;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            font-family: inherit;
+        }
+        .local-experts-chip.active {
+            background: var(--accent, #B95F3E);
+            color: #FFFFFF;
+            border-color: var(--accent, #B95F3E);
+        }
+        .local-experts-area-heading {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12.5px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin: 16px 2px 8px;
+        }
+        .local-experts-area-heading svg { width: 13px; height: 13px; }
+        .local-experts-card {
+            background: #FFFFFF;
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 10px;
+        }
+        .local-experts-card-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        .local-experts-card-name {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.4;
+            flex: 1;
+        }
+        .local-experts-card-tag {
+            display: inline-block;
+            font-size: 10.5px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 999px;
+            background: #F5EFE5;
+            color: var(--accent, #B95F3E);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .local-experts-card-tag.general {
+            background: #F0EFEC;
+            color: var(--text-tertiary);
+        }
+        .local-experts-card-addr {
+            font-size: 12.5px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+        .local-experts-card-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .local-experts-call {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 9px 14px;
+            background: var(--accent, #B95F3E);
+            color: #FFFFFF;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 700;
+            text-decoration: none;
+            min-height: 36px;
+        }
+        .local-experts-call svg { width: 13px; height: 13px; }
+        .local-experts-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 9px 13px;
+            background: #FFFFFF;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            font-size: 12.5px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .local-experts-link svg { width: 12px; height: 12px; }
+        .local-experts-footnote {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            line-height: 1.6;
+            margin: 18px 4px 0;
+            text-align: center;
+        }
+
         /* 役場マスタータスクのチェックリスト */
         .yakuba-check-row {
             display: flex;
@@ -12808,6 +12981,18 @@
                 <!-- ===== 北竜町版（非表示、?ch=hokuryuで表示） ===== -->
                 <div id="expertHokuryuContent" style="display:none">
 
+                <!-- 近隣の相続対応司法書士を探すエントリ -->
+                <button type="button" class="local-experts-cta" onclick="openLocalExpertsScreen()">
+                    <div class="local-experts-cta-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    </div>
+                    <div class="local-experts-cta-body">
+                        <div class="local-experts-cta-title">📍 近隣の相続対応 司法書士を探す</div>
+                        <div class="local-experts-cta-sub">深川・滝川・砂川・旭川・留萌の司法書士 12 件を掲載（紹介料 0 円）</div>
+                    </div>
+                    <svg class="local-experts-cta-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+
                 <!-- 北竜町役場 -->
                 <div class="expert-card-v2">
                     <div class="expert-card-v2-top">
@@ -13106,6 +13291,30 @@
                 </div>
 
                 </div><!-- /expertHokuryuContent -->
+            </div>
+        </div>
+
+        <!-- 近隣の司法書士一覧画面 -->
+        <div id="screen-local-experts" class="screen">
+            <div class="expert-screen-header">
+                <button class="expert-back-btn" onclick="closeLocalExpertsScreen()" aria-label="戻る">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+                </button>
+                <span class="expert-screen-title">近隣の相続対応 司法書士</span>
+                <span style="width:24px;"></span>
+            </div>
+            <div class="expert-screen-body">
+                <div class="local-experts-lead">
+                    <strong>紹介料は 0 円。</strong>しまの葬儀社・ReliefNote と掲載事務所の間で
+                    金銭のやり取りはありません。中立の立場でご案内しています。
+                    料金や対応範囲は、直接各事務所にご確認ください。
+                </div>
+                <div class="local-experts-filter" id="localExpertsFilter"></div>
+                <div id="localExpertsList"></div>
+                <div class="local-experts-footnote">
+                    情報は旭川・札幌司法書士会の公式会員名簿（2026 年時点）をもとに掲載。
+                    事務所の移転・閉業等は各公式情報をご確認ください。
+                </div>
             </div>
         </div>
 
@@ -22553,6 +22762,125 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
 
             html += '</div>';
             return html;
+        }
+
+        // 近隣の相続対応 司法書士リスト（北竜町から行ける距離圏）
+        // 出典: 旭川司法書士会・札幌司法書士会 公式会員名簿（2026年時点）
+        // 紹介料ゼロ・キックバックなしで中立掲載
+        var LOCAL_SHOSHI_LIST = [
+            { id: 'fk-aoki', area: '深川', name: '青木裕幸司法書士事務所',
+              address: '深川市西町 8-44', phone: '0164-22-3820', phoneDial: '0164223820',
+              tag: '相続登記対応' },
+            { id: 'fk-ono', area: '深川', name: '大野事務所（大野仁）',
+              address: '深川市 2 条 18-5', phone: '0164-23-3837', phoneDial: '0164233837',
+              tag: '相続登記対応' },
+            { id: 'fk-ueda', area: '深川', name: 'うえだ司法書士事務所（上田景康）',
+              address: '深川市 3 条 8-20 シマビル 2F', phone: '0164-37-1966', phoneDial: '0164371966',
+              tag: '相続登記対応' },
+            { id: 'tk-hatakeyama', area: '滝川', name: '畠山かおる司法書士事務所',
+              address: '滝川市明神町 3-9-13', phone: '0125-22-2666', phoneDial: '0125222666',
+              tag: '相続・遺言・民事信託', url: 'https://takikawa.mypl.net/shop/00000359948/' },
+            { id: 'tk-sugawara', area: '滝川', name: '菅原宏司法書士事務所',
+              address: '滝川市新町 1 丁目 11-10', phone: '0125-22-2225', phoneDial: '0125222225',
+              tag: '相続登記対応' },
+            { id: 'tk-matsubara', area: '滝川', name: '松原弘枝司法書士事務所',
+              address: '滝川市大町 2 丁目 5-23 振興公社管理ビル 2F', phone: '0125-23-8186', phoneDial: '0125238186',
+              tag: '相続登記対応' },
+            { id: 'sn-saito', area: '砂川', name: '齊藤智基司法書士・行政書士事務所',
+              address: '砂川市西 1 条南 10 丁目 2-6-1', phone: '0125-74-4866', phoneDial: '0125744866',
+              tag: '相続登記対応' },
+            { id: 'as-nakamura', area: '旭川', name: '中村孝俊司法書士事務所',
+              address: '旭川市 3 条通 9 丁目 551-2 ダイメックスビル 2F', phone: '0166-25-6606', phoneDial: '0166256606',
+              tag: '相続専門', url: 'https://syoshinakamura.com/' },
+            { id: 'as-nojima', area: '旭川', name: '野嶋司法書士事務所',
+              address: '旭川市豊岡 4 条 1 丁目 2-21', phone: '0166-37-9911', phoneDial: '0166379911',
+              tag: '相続・遺言', url: 'https://www.nojimaoffice.com/' },
+            { id: 'as-kawakami', area: '旭川', name: '河上合同事務所',
+              address: '旭川市花咲町 4 丁目（裁判所横）', phone: '0166-51-6368', phoneDial: '0166516368',
+              tag: '相続登記', url: 'https://www.kawakami-godo.com/' },
+            { id: 'rm-ito-t', area: '留萌', name: '伊藤徳彦司法書士事務所',
+              address: '留萌市花園町 2 丁目 2-13 信和商事ビル 2F', phone: '0164-42-6978', phoneDial: '0164426978',
+              tag: '相続登記対応' },
+            { id: 'rm-suzuki', area: '留萌', name: '鈴木直樹司法書士事務所',
+              address: '留萌市沖見町 1 丁目 81-2', phone: '0164-44-4191', phoneDial: '0164444191',
+              tag: '相続登記対応' }
+        ];
+        // エリア定義（北竜町から近い順）
+        var LOCAL_SHOSHI_AREAS = [
+            { key: '深川', label: '深川', drive: '車で約 15 分' },
+            { key: '滝川', label: '滝川', drive: '車で約 30 分' },
+            { key: '砂川', label: '砂川', drive: '車で約 45 分' },
+            { key: '旭川', label: '旭川', drive: '車で約 60 分' },
+            { key: '留萌', label: '留萌', drive: '車で約 60 分' }
+        ];
+        var _localExpertsFilter = 'all'; // 'all' or area key
+
+        function openLocalExpertsScreen() {
+            showScreen('screen-local-experts');
+            _localExpertsFilter = 'all';
+            _renderLocalExpertsFilter();
+            _renderLocalExpertsList();
+            setTimeout(function() {
+                var body = document.querySelector('#screen-local-experts .expert-screen-body');
+                if (body) { try { body.scrollTo({ top: 0 }); } catch (e) { body.scrollTop = 0; } }
+            }, 0);
+        }
+        function closeLocalExpertsScreen() {
+            showScreen('screen-experts');
+        }
+        function _setLocalExpertsFilter(key) {
+            _localExpertsFilter = key;
+            _renderLocalExpertsFilter();
+            _renderLocalExpertsList();
+        }
+        function _renderLocalExpertsFilter() {
+            var el = document.getElementById('localExpertsFilter');
+            if (!el) return;
+            var html = '';
+            html += '<button type="button" class="local-experts-chip' + (_localExpertsFilter === 'all' ? ' active' : '') + '" onclick="_setLocalExpertsFilter(\'all\')">すべて (' + LOCAL_SHOSHI_LIST.length + ')</button>';
+            LOCAL_SHOSHI_AREAS.forEach(function(a) {
+                var count = LOCAL_SHOSHI_LIST.filter(function(s) { return s.area === a.key; }).length;
+                if (count === 0) return;
+                html += '<button type="button" class="local-experts-chip' + (_localExpertsFilter === a.key ? ' active' : '') + '" onclick="_setLocalExpertsFilter(\'' + a.key + '\')">' + escapeHtml(a.label) + ' (' + count + ')</button>';
+            });
+            el.innerHTML = html;
+        }
+        function _renderLocalExpertsList() {
+            var el = document.getElementById('localExpertsList');
+            if (!el) return;
+            var html = '';
+            LOCAL_SHOSHI_AREAS.forEach(function(area) {
+                if (_localExpertsFilter !== 'all' && _localExpertsFilter !== area.key) return;
+                var offices = LOCAL_SHOSHI_LIST.filter(function(s) { return s.area === area.key; });
+                if (offices.length === 0) return;
+                html += '<div class="local-experts-area-heading">'
+                    +   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>'
+                    +   '<span>' + escapeHtml(area.label) + '（' + escapeHtml(area.drive) + '）</span>'
+                    + '</div>';
+                offices.forEach(function(o) {
+                    var tagClass = (o.tag && (o.tag.indexOf('専門') >= 0 || o.tag.indexOf('遺言') >= 0 || o.tag.indexOf('民事信託') >= 0 || o.tag.indexOf('相続登記') === 0)) ? '' : ' general';
+                    html += '<div class="local-experts-card">'
+                        +   '<div class="local-experts-card-head">'
+                        +     '<div class="local-experts-card-name">' + escapeHtml(o.name) + '</div>'
+                        +     (o.tag ? '<span class="local-experts-card-tag' + tagClass + '">' + escapeHtml(o.tag) + '</span>' : '')
+                        +   '</div>'
+                        +   '<div class="local-experts-card-addr">' + escapeHtml(o.address) + '</div>'
+                        +   '<div class="local-experts-card-actions">'
+                        +     '<a class="local-experts-call" href="tel:' + escapeHtml(o.phoneDial) + '">'
+                        +       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>'
+                        +       escapeHtml(o.phone)
+                        +     '</a>'
+                        +     (o.url ? '<a class="local-experts-link" href="' + escapeHtml(o.url) + '" target="_blank" rel="noopener noreferrer">'
+                            + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>'
+                            + 'サイトを見る</a>' : '')
+                        +   '</div>'
+                        + '</div>';
+                });
+            });
+            if (!html) {
+                html = '<div style="padding:24px; text-align:center; color:var(--text-tertiary); font-size:13px;">このエリアには掲載事務所がありません。</div>';
+            }
+            el.innerHTML = html;
         }
 
         // 士業ごとの公式検索/相談サイト
