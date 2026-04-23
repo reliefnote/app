@@ -3651,61 +3651,6 @@
             flex-wrap: wrap;
         }
 
-        /* 緊急タスク用の公的窓口バナー */
-        .expert-emergency {
-            background: #FEF7EC;
-            border: 1px solid #F5CD67;
-            border-radius: 12px;
-            padding: 12px 14px;
-            margin-bottom: 10px;
-        }
-        .expert-emergency-title {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 12px;
-            font-weight: 700;
-            color: #8B5A00;
-            margin-bottom: 8px;
-        }
-        .expert-emergency-title svg { width: 14px; height: 14px; }
-        .expert-emergency-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            padding: 8px 0;
-            border-top: 1px solid rgba(139,90,0,0.15);
-        }
-        .expert-emergency-row:first-of-type { border-top: none; padding-top: 4px; }
-        .expert-emergency-row:last-of-type { padding-bottom: 0; }
-        .expert-emergency-info { flex: 1; min-width: 0; }
-        .expert-emergency-name {
-            font-size: 13.5px;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-        .expert-emergency-sub {
-            font-size: 11.5px;
-            color: var(--text-secondary);
-            margin-top: 1px;
-        }
-        .expert-emergency-call {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            padding: 7px 11px;
-            background: #FFFFFF;
-            color: #8B5A00;
-            border: 1px solid #F5CD67;
-            border-radius: 999px;
-            font-size: 12.5px;
-            font-weight: 700;
-            text-decoration: none;
-            flex-shrink: 0;
-        }
-        .expert-emergency-call svg { width: 12px; height: 12px; }
-
         /* 費用の透明化（補足ノート） */
         .expert-cost-note {
             font-size: 11px;
@@ -22485,7 +22430,7 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
                 if (ex.necessity === 'REQUIRED') badge = '<span class="task-expert-badge required">ほぼ必須</span>';
                 else if (ex.necessity === 'RECOMMENDED') badge = '<span class="task-expert-badge recommended">おすすめ</span>';
 
-                html += '<div class="task-expert-row" role="button" tabindex="0" onclick="navigateToExpertsForTask(\'' + escapeHtml(taskId) + '\')">'
+                html += '<div class="task-expert-row" role="button" tabindex="0" onclick="navigateToExpertsForTask(\'' + escapeHtml(taskId) + '\', \'' + escapeHtml(ex.profession) + '\')">'
                     +   '<div class="task-expert-row-icon">' + _getExpertProfessionIcon(ex.profession) + '</div>'
                     +   '<div class="task-expert-row-main">'
                     +     '<div class="task-expert-row-head">'
@@ -22520,15 +22465,27 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
         var _expertReturnTaskId = null;
 
         // 専門家画面へ遷移（タスク文脈付き）
-        function navigateToExpertsForTask(taskId) {
+        // profession を渡すと、該当士業カードへスクロール&ハイライトする
+        function navigateToExpertsForTask(taskId, profession) {
             _expertReturnTaskId = taskId || null;
             renderExpertTaskContext(taskId);
             showScreen('screen-experts');
-            // スクロール位置をトップに
             setTimeout(function() {
                 var body = document.querySelector('#screen-experts .expert-screen-body') || document.querySelector('#screen-experts');
+                if (profession) {
+                    // タスク文脈バナー内の該当カードにスクロール
+                    var card = document.querySelector('#expertTaskContext .expert-task-context-card[data-profession="' + profession + '"]');
+                    if (card) {
+                        try { card.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+                        catch (e) { card.scrollIntoView(); }
+                        card.classList.add('expert-card-highlight');
+                        setTimeout(function() { card.classList.remove('expert-card-highlight'); }, 2400);
+                        return;
+                    }
+                }
+                // profession 指定なし or カード見つからず → 画面トップへ
                 if (body) { try { body.scrollTo({ top: 0, behavior: 'auto' }); } catch (e) { body.scrollTop = 0; } }
-            }, 0);
+            }, 50);
         }
 
         // 戻るボタンハンドラ（タスク経由なら戻る、そうでなければホーム）
@@ -22544,45 +22501,6 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
             var ctxEl = document.getElementById('expertTaskContext');
             if (ctxEl) { ctxEl.style.display = 'none'; ctxEl.innerHTML = ''; }
             showScreen('screen-home');
-        }
-
-        // 緊急タスク判定: 法定期限があるタスク (LEGAL) のみ。バナー文言「期限のあるタスク」に
-        // 正確に一致させるため、CLAIM_WINDOW や CRITICAL 単体では対象外。
-        function _isUrgentExpertTask(task) {
-            if (!task) return false;
-            return task.dueType === 'LEGAL';
-        }
-
-        // 緊急タスク向け: 今すぐ相談できる公的窓口バナー
-        function _buildEmergencyContactsHtml() {
-            var channel = 'direct';
-            try { channel = localStorage.getItem('relief_note_channel') || 'direct'; } catch (e) {}
-            var contacts = [];
-            if (channel === 'hokuryu') {
-                contacts.push({ name: '北竜町役場 住民課', sub: '死亡届・保険・年金の相談窓口', phone: '0164342111', display: '0164-34-2111' });
-            }
-            contacts.push({ name: '法テラス', sub: '法律全般の無料相談（国が設立）', phone: '0570078374', display: '0570-078374' });
-            contacts.push({ name: '消費者ホットライン', sub: '悪徳業者・高額請求トラブル', phone: '188', display: '188' });
-
-            var html = '<div class="expert-emergency">'
-                + '<div class="expert-emergency-title">'
-                +   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>'
-                +   '<span>期限のあるタスクです。迷ったら今すぐ無料相談を</span>'
-                + '</div>';
-            contacts.forEach(function(c) {
-                html += '<div class="expert-emergency-row">'
-                    +   '<div class="expert-emergency-info">'
-                    +     '<div class="expert-emergency-name">' + escapeHtml(c.name) + '</div>'
-                    +     '<div class="expert-emergency-sub">' + escapeHtml(c.sub) + '</div>'
-                    +   '</div>'
-                    +   '<a class="expert-emergency-call" href="tel:' + c.phone + '">'
-                    +     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>'
-                    +     escapeHtml(c.display)
-                    +   '</a>'
-                    + '</div>';
-            });
-            html += '</div>';
-            return html;
         }
 
         // 電話で伝える雛形テキストを生成（タスク・士業ごとにカスタマイズ）
@@ -22645,11 +22563,7 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
             var task = tasks.find(function(t) { return t.id === taskId; });
             var taskTitle = task ? task.title : '';
 
-            var html = '';
-            if (_isUrgentExpertTask(task)) {
-                html += _buildEmergencyContactsHtml();
-            }
-            html += '<div class="expert-task-context-head">このタスクで頼める専門家</div>'
+            var html = '<div class="expert-task-context-head">このタスクで頼める専門家</div>'
                 + '<div class="expert-task-context-title">' + escapeHtml(taskTitle) + '</div>';
 
             experts.forEach(function(ex) {
@@ -22689,7 +22603,7 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
                     + '</div>'
                     + '</div>';
 
-                html += '<div class="expert-task-context-card">'
+                html += '<div class="expert-task-context-card" data-profession="' + escapeHtml(ex.profession) + '">'
                     +   '<div class="expert-task-context-card-head">'
                     +     '<div class="expert-task-context-card-icon">' + _getExpertProfessionIcon(ex.profession) + '</div>'
                     +     '<div class="expert-task-context-card-title">'
