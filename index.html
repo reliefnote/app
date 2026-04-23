@@ -4595,11 +4595,41 @@
             padding: 4px 12px calc(24px + env(safe-area-inset-bottom));
         }
         .task-search-empty {
-            padding: 48px 16px;
+            padding: 48px 16px 16px;
             text-align: center;
             color: var(--text-tertiary);
             font-size: 13px;
             line-height: 1.7;
+        }
+        .task-search-empty-cta-wrap {
+            padding: 0 12px 24px;
+            text-align: center;
+        }
+        .task-search-empty-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 18px;
+            background: var(--accent, #B95F3E);
+            color: #FFFFFF;
+            border: none;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            max-width: 100%;
+            white-space: normal;
+            line-height: 1.4;
+            text-align: left;
+        }
+        .task-search-empty-cta:active { opacity: 0.85; }
+        .task-search-empty-cta svg { flex-shrink: 0; }
+        .task-search-empty-cta-hint {
+            font-size: 11.5px;
+            color: var(--text-tertiary);
+            margin-top: 10px;
+            line-height: 1.5;
         }
         .task-search-section-title {
             font-size: 11px;
@@ -13186,8 +13216,8 @@
                 </button>
                 <div class="task-search-input-wrap">
                     <svg class="task-search-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg>
-                    <input type="text" id="taskSearchInput" class="task-search-input" placeholder="タスクを検索 (スペース区切りで複数語)" autocomplete="off" enterkeyhint="search" oninput="_onTaskSearchInput()" onkeydown="_onTaskSearchKey(event)">
-                    <button type="button" class="task-search-clear" id="taskSearchClearBtn" onclick="_clearTaskSearch()" aria-label="クリア" style="display:none;">
+                    <input type="text" id="taskSearchInput" class="task-search-input" placeholder="タスクを検索 (スペース区切りで複数語)" autocomplete="off" enterkeyhint="search" oninput="_onTaskSearchInput()" onkeydown="_onTaskSearchKey(event)" oncompositionstart="_onTaskSearchComposition(true)" oncompositionend="_onTaskSearchComposition(false)">
+                    <button type="button" class="task-search-clear" id="taskSearchClearBtn" onmousedown="event.preventDefault()" ontouchstart="event.preventDefault()" onclick="_clearTaskSearch()" aria-label="クリア" style="display:none;">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                     </button>
                 </div>
@@ -24696,11 +24726,21 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
         // 入力ごとに即 render すると 57 タスク × トークン数のスコアリングが連射される。
         // クリア/チップ即時実行はそのまま、文字入力時だけ 120ms debounce する。
         var _taskSearchDebounceTimer = null;
+        var _taskSearchComposing = false;
+        function _onTaskSearchComposition(isComposing) {
+            _taskSearchComposing = !!isComposing;
+            if (!isComposing) {
+                // IME 確定直後に最新状態で再描画（compositionend は input より後に発火）
+                _onTaskSearchInput();
+            }
+        }
         function _onTaskSearchInput(immediate) {
             var input = document.getElementById('taskSearchInput');
             var clearBtn = document.getElementById('taskSearchClearBtn');
             var query = input ? input.value : '';
             if (clearBtn) clearBtn.style.display = query.length > 0 ? 'inline-flex' : 'none';
+            // IME 変換中は再描画スキップ（未確定文字列で検索しても無意味で重い）
+            if (_taskSearchComposing && immediate !== true) return;
             if (immediate === true) {
                 if (_taskSearchDebounceTimer) clearTimeout(_taskSearchDebounceTimer);
                 _taskSearchDebounceTimer = null;
@@ -24809,7 +24849,14 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
 
             if (standardMatches.length === 0 && customMatches.length === 0) {
                 container.innerHTML = filterChip
-                    + '<div class="task-search-empty">「' + escapeHtml(raw) + '」に一致するタスクはありません。<br><span class="task-search-empty-sub">別のことばや、ひらがな/カタカナをお試しください。</span></div>';
+                    + '<div class="task-search-empty">「' + escapeHtml(raw) + '」に一致するタスクはありません。<br><span class="task-search-empty-sub">別のことばや、ひらがな/カタカナをお試しください。</span></div>'
+                    + '<div class="task-search-empty-cta-wrap">'
+                    +   '<button type="button" class="task-search-empty-cta" data-q="' + escapeHtml(raw) + '" onclick="_addCustomTaskFromSearch(this.getAttribute(\'data-q\'))">'
+                    +     '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>'
+                    +     '<span>「' + escapeHtml(raw) + '」をカスタムタスクとして追加</span>'
+                    +   '</button>'
+                    +   '<div class="task-search-empty-cta-hint">マスターに無い手続きでも、自分専用タスクとして管理できます。</div>'
+                    + '</div>';
                 return;
             }
 
@@ -24904,6 +24951,22 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
             // 結果リストも更新
             var input = document.getElementById('taskSearchInput');
             _renderTaskSearchResults(input ? input.value : '');
+        }
+
+        // 検索語そのままでカスタムタスク追加シートを開く
+        function _addCustomTaskFromSearch(query) {
+            closeTaskSearch();
+            // openAddCustomTaskSheet は input を空にしてから開くので、その後に値を入れる
+            openAddCustomTaskSheet();
+            setTimeout(function() {
+                var input = document.getElementById('customTaskTitleInput');
+                if (input) {
+                    input.value = (query || '').trim();
+                    _onCustomTaskInput();
+                    input.focus();
+                    try { input.setSelectionRange(input.value.length, input.value.length); } catch (e) {}
+                }
+            }, 150);
         }
 
         function openAddCustomTaskSheet() {
