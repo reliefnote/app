@@ -3627,6 +3627,74 @@
             color: var(--text-primary);
             font-weight: 700;
         }
+        /* 士業タブ（primary filter, scroll-x possible on narrow screens） */
+        .local-experts-tabs {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 6px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 4px 2px 6px;
+        }
+        .local-experts-tabs::-webkit-scrollbar { display: none; }
+        .local-experts-tab {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 9px 14px;
+            background: #FFFFFF;
+            border: 1px solid var(--border-light);
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-family: inherit;
+            white-space: nowrap;
+            -webkit-tap-highlight-color: transparent;
+            flex-shrink: 0;
+        }
+        .local-experts-tab .local-experts-tab-count {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-tertiary);
+            background: var(--bg-secondary);
+            padding: 1px 7px;
+            border-radius: 999px;
+        }
+        .local-experts-tab.active {
+            background: var(--text-primary);
+            color: #FFFFFF;
+            border-color: var(--text-primary);
+        }
+        .local-experts-tab.active .local-experts-tab-count {
+            background: rgba(255,255,255,0.25);
+            color: #FFFFFF;
+        }
+        .local-experts-blurb {
+            font-size: 11.5px;
+            color: var(--text-tertiary);
+            margin: 0 2px 10px;
+            line-height: 1.5;
+        }
+        .local-experts-card-prof {
+            display: inline-block;
+            font-size: 10.5px;
+            font-weight: 700;
+            padding: 1px 7px;
+            margin-right: 6px;
+            border-radius: 999px;
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            vertical-align: 2px;
+        }
+        .local-experts-card-note {
+            font-size: 11.5px;
+            color: var(--text-tertiary);
+            line-height: 1.5;
+            margin: -4px 0 10px;
+        }
+
         .local-experts-filter {
             display: flex;
             gap: 6px;
@@ -13034,14 +13102,14 @@
                 <!-- ===== 北竜町版（非表示、?ch=hokuryuで表示） ===== -->
                 <div id="expertHokuryuContent" style="display:none">
 
-                <!-- 近隣の相続対応司法書士を探すエントリ -->
+                <!-- 近隣の士業を探すエントリ -->
                 <button type="button" class="local-experts-cta" onclick="openLocalExpertsScreen()">
                     <div class="local-experts-cta-icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
                     </div>
                     <div class="local-experts-cta-body">
-                        <div class="local-experts-cta-title">📍 近隣の相続対応 司法書士を探す</div>
-                        <div class="local-experts-cta-sub">深川・滝川・砂川・旭川・留萌の司法書士 12 件を掲載（紹介料 0 円）</div>
+                        <div class="local-experts-cta-title">📍 近隣の士業（相続・遺言・年金）を探す</div>
+                        <div class="local-experts-cta-sub">深川・滝川・砂川・旭川・留萌の 5 士業 37 件を掲載（紹介料 0 円）</div>
                     </div>
                     <svg class="local-experts-cta-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
                 </button>
@@ -13347,13 +13415,13 @@
             </div>
         </div>
 
-        <!-- 近隣の司法書士一覧画面 -->
+        <!-- 近隣の士業一覧画面 -->
         <div id="screen-local-experts" class="screen">
             <div class="expert-screen-header">
                 <button class="expert-back-btn" onclick="closeLocalExpertsScreen()" aria-label="戻る">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
                 </button>
-                <span class="expert-screen-title">近隣の相続対応 司法書士</span>
+                <span class="expert-screen-title">近隣の士業（相続・遺言・年金）</span>
                 <span style="width:24px;"></span>
             </div>
             <div class="expert-screen-body">
@@ -13362,11 +13430,13 @@
                     金銭のやり取りはありません。中立の立場でご案内しています。
                     料金や対応範囲は、直接各事務所にご確認ください。
                 </div>
+                <div class="local-experts-tabs" id="localExpertsProfessionTabs"></div>
+                <div class="local-experts-blurb" id="localExpertsBlurb"></div>
                 <div class="local-experts-filter" id="localExpertsFilter"></div>
                 <div id="localExpertsList"></div>
                 <div class="local-experts-footnote">
-                    情報は旭川・札幌司法書士会の公式会員名簿（2026 年時点）をもとに掲載。
-                    事務所の移転・閉業等は各公式情報をご確認ください。
+                    出典: 旭川・札幌司法書士会、旭川弁護士会、各事務所公式サイト（2026 年時点）<br>
+                    事務所の移転・閉業等がある場合は各公式情報をご確認ください。
                 </div>
             </div>
         </div>
@@ -22817,13 +22887,16 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
                     +   '<svg class="task-expert-row-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>'
                     + '</div>';
 
-                // 北竜町 × 司法書士のときだけ近隣事務所リストへの直接導線を追加
-                if (_isHokuryu && ex.profession === '司法書士') {
-                    html += '<button type="button" class="task-expert-local-link" onclick="event.stopPropagation(); openLocalExpertsScreen()">'
-                        +   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>'
-                        +   '<span>📍 北竜町近隣の司法書士 12 件を見る</span>'
-                        +   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>'
-                        + '</button>';
+                // 北竜町チャネル限定: その士業の近隣事務所が 1 件以上あればショートカット表示
+                if (_isHokuryu && typeof LOCAL_EXPERTS_LIST !== 'undefined') {
+                    var localCount = LOCAL_EXPERTS_LIST.filter(function(x) { return x.profession === ex.profession; }).length;
+                    if (localCount > 0) {
+                        html += '<button type="button" class="task-expert-local-link" onclick="event.stopPropagation(); openLocalExpertsScreen(\'' + escapeHtml(ex.profession) + '\')">'
+                            +   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>'
+                            +   '<span>📍 北竜町近隣の' + escapeHtml(ex.profession) + ' ' + localCount + ' 件を見る</span>'
+                            +   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>'
+                            + '</button>';
+                    }
                 }
             });
 
@@ -22831,60 +22904,164 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
             return html;
         }
 
-        // 近隣の相続対応 司法書士リスト（北竜町から行ける距離圏）
-        // 出典: 旭川司法書士会・札幌司法書士会 公式会員名簿（2026年時点）
+        // 近隣の士業（5 職種 × 5 エリア）リスト
+        // 出典: 旭川司法書士会・札幌司法書士会・旭川弁護士会 公式会員名簿、各事務所公式サイト
         // 紹介料ゼロ・キックバックなしで中立掲載
-        var LOCAL_SHOSHI_LIST = [
-            { id: 'fk-aoki', area: '深川', name: '青木裕幸司法書士事務所',
-              address: '深川市西町 8-44', phone: '0164-22-3820', phoneDial: '0164223820',
-              tag: '相続登記対応' },
-            { id: 'fk-ono', area: '深川', name: '大野事務所（大野仁）',
-              address: '深川市 2 条 18-5', phone: '0164-23-3837', phoneDial: '0164233837',
-              tag: '相続登記対応' },
-            { id: 'fk-ueda', area: '深川', name: 'うえだ司法書士事務所（上田景康）',
-              address: '深川市 3 条 8-20 シマビル 2F', phone: '0164-37-1966', phoneDial: '0164371966',
-              tag: '相続登記対応' },
-            { id: 'tk-hatakeyama', area: '滝川', name: '畠山かおる司法書士事務所',
+        var LOCAL_EXPERTS_LIST = [
+            // ===== 司法書士 =====
+            { id: 'fk-aoki', profession: '司法書士', area: '深川', name: '青木裕幸司法書士事務所',
+              address: '深川市西町 8-44', phone: '0164-22-3820', phoneDial: '0164223820', tag: '相続登記対応' },
+            { id: 'fk-ono', profession: '司法書士', area: '深川', name: '大野事務所（大野仁）',
+              address: '深川市 2 条 18-5', phone: '0164-23-3837', phoneDial: '0164233837', tag: '相続登記対応' },
+            { id: 'fk-ueda', profession: '司法書士', area: '深川', name: 'うえだ司法書士事務所（上田景康）',
+              address: '深川市 3 条 8-20 シマビル 2F', phone: '0164-37-1966', phoneDial: '0164371966', tag: '相続登記対応' },
+            { id: 'tk-hatakeyama', profession: '司法書士', area: '滝川', name: '畠山かおる司法書士事務所',
               address: '滝川市明神町 3-9-13', phone: '0125-22-2666', phoneDial: '0125222666',
               tag: '相続・遺言・民事信託', url: 'https://takikawa.mypl.net/shop/00000359948/' },
-            { id: 'tk-sugawara', area: '滝川', name: '菅原宏司法書士事務所',
-              address: '滝川市新町 1 丁目 11-10', phone: '0125-22-2225', phoneDial: '0125222225',
-              tag: '相続登記対応' },
-            { id: 'tk-matsubara', area: '滝川', name: '松原弘枝司法書士事務所',
-              address: '滝川市大町 2 丁目 5-23 振興公社管理ビル 2F', phone: '0125-23-8186', phoneDial: '0125238186',
-              tag: '相続登記対応' },
-            { id: 'sn-saito', area: '砂川', name: '齊藤智基司法書士・行政書士事務所',
-              address: '砂川市西 1 条南 10 丁目 2-6-1', phone: '0125-74-4866', phoneDial: '0125744866',
-              tag: '相続登記対応' },
-            { id: 'as-nakamura', area: '旭川', name: '中村孝俊司法書士事務所',
+            { id: 'tk-sugawara', profession: '司法書士', area: '滝川', name: '菅原宏司法書士事務所',
+              address: '滝川市新町 1 丁目 11-10', phone: '0125-22-2225', phoneDial: '0125222225', tag: '相続登記対応' },
+            { id: 'tk-matsubara', profession: '司法書士', area: '滝川', name: '松原弘枝司法書士事務所',
+              address: '滝川市大町 2 丁目 5-23 振興公社管理ビル 2F', phone: '0125-23-8186', phoneDial: '0125238186', tag: '相続登記対応' },
+            { id: 'sn-saito', profession: '司法書士', area: '砂川', name: '齊藤智基司法書士・行政書士事務所',
+              address: '砂川市西 1 条南 10 丁目 2-6-1', phone: '0125-74-4866', phoneDial: '0125744866', tag: '相続登記対応' },
+            { id: 'as-nakamura', profession: '司法書士', area: '旭川', name: '中村孝俊司法書士事務所',
               address: '旭川市 3 条通 9 丁目 551-2 ダイメックスビル 2F', phone: '0166-25-6606', phoneDial: '0166256606',
               tag: '相続専門', url: 'https://syoshinakamura.com/' },
-            { id: 'as-nojima', area: '旭川', name: '野嶋司法書士事務所',
+            { id: 'as-nojima', profession: '司法書士', area: '旭川', name: '野嶋司法書士事務所',
               address: '旭川市豊岡 4 条 1 丁目 2-21', phone: '0166-37-9911', phoneDial: '0166379911',
               tag: '相続・遺言', url: 'https://www.nojimaoffice.com/' },
-            { id: 'as-kawakami', area: '旭川', name: '河上合同事務所',
+            { id: 'as-kawakami', profession: '司法書士', area: '旭川', name: '河上合同事務所',
               address: '旭川市花咲町 4 丁目（裁判所横）', phone: '0166-51-6368', phoneDial: '0166516368',
               tag: '相続登記', url: 'https://www.kawakami-godo.com/' },
-            { id: 'rm-ito-t', area: '留萌', name: '伊藤徳彦司法書士事務所',
-              address: '留萌市花園町 2 丁目 2-13 信和商事ビル 2F', phone: '0164-42-6978', phoneDial: '0164426978',
-              tag: '相続登記対応' },
-            { id: 'rm-suzuki', area: '留萌', name: '鈴木直樹司法書士事務所',
-              address: '留萌市沖見町 1 丁目 81-2', phone: '0164-44-4191', phoneDial: '0164444191',
-              tag: '相続登記対応' }
+            { id: 'rm-ito-t', profession: '司法書士', area: '留萌', name: '伊藤徳彦司法書士事務所',
+              address: '留萌市花園町 2 丁目 2-13 信和商事ビル 2F', phone: '0164-42-6978', phoneDial: '0164426978', tag: '相続登記対応' },
+            { id: 'rm-suzuki', profession: '司法書士', area: '留萌', name: '鈴木直樹司法書士事務所',
+              address: '留萌市沖見町 1 丁目 81-2', phone: '0164-44-4191', phoneDial: '0164444191', tag: '相続登記対応' },
+
+            // ===== 弁護士 =====
+            { id: 'fk-fukagawalo', profession: '弁護士', area: '深川', name: '深川総合法律事務所',
+              address: '深川市 3 条 5-26', phone: '0164-34-5961', phoneDial: '0164345961',
+              tag: '相続・遺言・遺産分割', url: 'https://fukagawa-lo.com/',
+              note: '深川地裁管内唯一の法律事務所（滝川・砂川・留萌もカバー）' },
+            { id: 'as-gojo', profession: '弁護士', area: '旭川', name: '旭川五条法律事務所',
+              address: '旭川市 5 条通 9 丁目 1163-1 旭川 59 レンガビルディング 4F',
+              phone: '0166-76-5407', phoneDial: '0166765407',
+              tag: '相続・遺言・相続放棄', url: 'https://www.a-gojo-law.com/' },
+            { id: 'as-asaso', profession: '弁護士', area: '旭川', name: '旭川総合法律事務所',
+              address: '旭川市 3 条通 9 丁目 551-2 ダイメックスビル 2F',
+              phone: '0166-76-1087', phoneDial: '0166761087',
+              tag: '相続・交通事故・企業法務', url: 'http://www.asaso-law.com/' },
+            { id: 'as-rindo', profession: '弁護士', area: '旭川', name: 'りんどう法律事務所',
+              address: '旭川市 7 条通 21 丁目 1972-2', phone: '0166-74-6858', phoneDial: '0166746858',
+              tag: '相続・高齢者財産管理', url: 'http://rindo-law.jp/' },
+            { id: 'as-ohashi', profession: '弁護士', area: '旭川', name: '大箸法律事務所',
+              address: '旭川市 6 条通 8 丁目 37-22 68 ビル 4F', phone: '0166-73-4893', phoneDial: '0166734893',
+              tag: '遺言・相続・後見', url: 'https://ohashilaw.jp/' },
+            { id: 'as-chiba', profession: '弁護士', area: '旭川', name: '弁護士法人 千葉総合法律事務所',
+              address: '旭川市末広 4 条 6 丁目 7-8', phone: '0166-73-4477', phoneDial: '0166734477',
+              tag: '相続・成年後見・離婚', url: 'https://c-law.jp/' },
+            { id: 'as-kawakami-law', profession: '弁護士', area: '旭川', name: '川上法律事務所',
+              address: '旭川市神楽 1 条 1 丁目 ネオビル 2F', phone: '0166-73-3490', phoneDial: '0166733490',
+              tag: '遺産・相続・離婚', url: 'https://lawyer-kawakami.com/' },
+            { id: 'tk-maruyama', profession: '弁護士', area: '滝川', name: '丸山健法律事務所',
+              address: '滝川市大町 1-8-1 産経会館 2F', phone: '0125-23-8502', phoneDial: '0125238502',
+              tag: '一般民事・家事' },
+            { id: 'tk-nanohana', profession: '弁護士', area: '滝川', name: '滝川なのはな法律事務所',
+              address: '滝川市栄町 3 丁目 4-24', phone: '0125-74-4260', phoneDial: '0125744260',
+              tag: '相続・離婚・債務整理', url: 'https://www.takikawa-nanohana-law.com/' },
+
+            // ===== 税理士 =====
+            { id: 'as-futaba-tax', profession: '税理士', area: '旭川', name: 'ふたば税理士法人 旭川オフィス',
+              address: '旭川市 2 条通 8 丁目 144-2 旭川二条通ビル 7F', phone: '0166-27-8000', phoneDial: '0166278000',
+              tag: '相続税申告・事業承継', url: 'https://futaba-tax.co.jp/' },
+            { id: 'as-takamatsu', profession: '税理士', area: '旭川', name: '髙松隆夫税理士事務所',
+              address: '旭川市永山 4 条 11 丁目 5-17', phone: '0166-47-9066', phoneDial: '0166479066',
+              tag: '相続税・贈与税・遺言書作成', url: 'https://www.takamatsuzeirishijimusyo.com/' },
+            { id: 'as-hokuto', profession: '税理士', area: '旭川', name: '税理士法人 北都会計',
+              address: '旭川市 1 条通 12 丁目右 10 号 化成ビル 3F', phone: '0166-24-4067', phoneDial: '0166244067',
+              tag: '相続税・贈与税・譲渡所得申告', url: 'https://www.hokutokaikei.com/' },
+            { id: 'as-watanabe', profession: '税理士', area: '旭川', name: 'ワタナベ会計事務所',
+              address: '旭川市宮前 1 条 4 丁目 15-20 ワタナベビル 2F', phone: '0166-35-7171', phoneDial: '0166357171',
+              tag: '相続税・贈与税・個人確定申告', url: 'https://www.kaikei-home.com/watanabekaikei/' },
+            { id: 'as-taisetsu', profession: '税理士', area: '旭川', name: '税理士法人 たいせつ',
+              address: '旭川市西御料 5 条 1 丁目 2-14', phone: '0166-76-1020', phoneDial: '0166761020',
+              tag: '事業承継・M&A', url: 'https://www.taisetsu-office.jp/' },
+            { id: 'as-sato-tax', profession: '税理士', area: '旭川', name: '佐藤裕則税理士事務所',
+              address: '旭川市 1 条通 11 丁目 2076-1 エステートビル 3F', phone: '0166-73-3379', phoneDial: '0166733379',
+              tag: '相続税申告相談センター併設' },
+            { id: 'fk-kojima', profession: '税理士', area: '深川', name: '税理士法人 小島会計',
+              address: '深川市（本店。札幌・旭川・留萌に支店）', phone: '0164-23-4305', phoneDial: '0164234305',
+              tag: '相続税対策・事業承継', url: 'https://kojimakaikei.pro/' },
+            { id: 'tk-yahata', profession: '税理士', area: '滝川', name: '八幡税理士事務所',
+              address: '滝川市大町 3 丁目 1-34', phone: '0125-23-3371', phoneDial: '0125233371',
+              tag: '事業承継・相続・税務申告', url: 'https://yahata-kaikei.tkcnf.com/' },
+
+            // ===== 行政書士 =====
+            { id: 'as-futaba-gyo', profession: '行政書士', area: '旭川', name: '旭川相続遺言相談室（ふたば行政書士事務所）',
+              address: '旭川市 2 条通 8 丁目 144-2 旭川二条通ビル 7F', phone: '0166-73-9033', phoneDial: '0166739033',
+              tag: '相続手続代行・遺言・葬送支援', url: 'https://fsouzoku.com/' },
+            { id: 'as-yorisoi', profession: '行政書士', area: '旭川', name: '旭川相続よりそい相談室',
+              address: '旭川市 6 条通 8 丁目 36-25 セントラル旭川ビル 7F-A', phone: '0166-74-4655', phoneDial: '0166744655',
+              tag: '相続・遺言・身元保証・死後事務', url: 'https://www.yorisoi-souzoku.com/' },
+            { id: 'as-sato', profession: '行政書士', area: '旭川', name: '佐藤聡事務所（行政書士・社労士）',
+              address: '旭川市大町 2 条 2 丁目 5-51', phone: '0166-59-7770', phoneDial: '0166597770',
+              tag: '相続・遺言・建設業許可', url: 'https://www.office-satosatoshi.com/' },
+            { id: 'tk-sugawara-gyo', profession: '行政書士', area: '滝川', name: '行政書士菅原事務所',
+              address: '滝川市新町 1 丁目 11-10', phone: '0125-22-0379', phoneDial: '0125220379',
+              tag: '自動車登録・車庫証明・名義変更', url: 'https://sugawara-jimusho.com/' },
+
+            // ===== 社労士 =====
+            { id: 'as-matsumura', profession: '社労士', area: '旭川', name: '松村社会保険労務士事務所',
+              address: '旭川市末広 3 条 9 丁目 2-14', phone: '0166-57-9855', phoneDial: '0166579855',
+              tag: '障がい年金・老齢年金・遺族年金', url: 'https://www.matsumura-shougainenkin.com/' },
+            { id: 'as-nakano', profession: '社労士', area: '旭川', name: '中野則武社会保険労務士事務所',
+              address: '旭川市 3 条通 16 丁目 468-2', phone: '0166-24-3070', phoneDial: '0166243070',
+              tag: '公的年金・給与計算・労務管理', url: 'http://nakano-sr-office.com/' },
+            { id: 'as-imamura', profession: '社労士', area: '旭川', name: '今村速人社会保険労務士事務所',
+              address: '旭川市忠和 8 条 5 丁目 1-2', phone: '0166-73-8721', phoneDial: '0166738721',
+              tag: '労務相談・助成金申請', url: 'https://www.imamura-sr.jp/' },
+            { id: 'as-plusone', profession: '社労士', area: '旭川', name: '社会保険労務士法人プラスワン',
+              address: '旭川市東光 15 条 7 丁目 4-9', phone: '0166-74-4815', phoneDial: '0166744815',
+              tag: '労使トラブル・就業規則', url: 'https://www.hagawa.info/' }
+        ];
+        // 士業定義（タブ表示順）
+        var LOCAL_EXPERTS_PROFESSIONS = [
+            { key: '司法書士', label: '司法書士', blurb: '相続登記・遺言執行' },
+            { key: '弁護士',   label: '弁護士',   blurb: '相続トラブル・遺産分割' },
+            { key: '税理士',   label: '税理士',   blurb: '相続税申告・贈与税' },
+            { key: '行政書士', label: '行政書士', blurb: '遺言書作成・戸籍収集' },
+            { key: '社労士',   label: '社労士',   blurb: '遺族年金・労災' }
         ];
         // エリア定義（北竜町から近い順）
-        var LOCAL_SHOSHI_AREAS = [
+        var LOCAL_EXPERTS_AREAS = [
             { key: '深川', label: '深川', drive: '車で約 15 分' },
             { key: '滝川', label: '滝川', drive: '車で約 30 分' },
             { key: '砂川', label: '砂川', drive: '車で約 45 分' },
             { key: '旭川', label: '旭川', drive: '車で約 60 分' },
             { key: '留萌', label: '留萌', drive: '車で約 60 分' }
         ];
-        var _localExpertsFilter = 'all'; // 'all' / 'favorites' / area key
-        var _LOCAL_SHOSHI_FAV_KEY = 'rn_local_shoshi_favorites';
+        // 互換エイリアス（既存コード参照を壊さないため）
+        var LOCAL_SHOSHI_LIST = LOCAL_EXPERTS_LIST;
+        var LOCAL_SHOSHI_AREAS = LOCAL_EXPERTS_AREAS;
+        // フィルタ state
+        // areaFilter: 'all' or エリアキー（深川/滝川/...）
+        // professionFilter: '司法書士'/'弁護士'/.../'favorites'
+        var _localExpertsProfession = '司法書士';
+        var _localExpertsFilter = 'all'; // area filter: 'all' or エリアキー
+        var _LOCAL_SHOSHI_FAV_KEY = 'rn_local_experts_favorites';
+        var _LOCAL_SHOSHI_FAV_KEY_LEGACY = 'rn_local_shoshi_favorites';
         function _loadLocalShoshiFavs() {
-            var arr = safeParseJSON(localStorage.getItem(_LOCAL_SHOSHI_FAV_KEY), []);
-            return Array.isArray(arr) ? arr : [];
+            var arr = safeParseJSON(localStorage.getItem(_LOCAL_SHOSHI_FAV_KEY), null);
+            if (!Array.isArray(arr)) {
+                // 旧キーからのマイグレーション（司法書士のみの時期の state）
+                var legacy = safeParseJSON(localStorage.getItem(_LOCAL_SHOSHI_FAV_KEY_LEGACY), []);
+                if (Array.isArray(legacy) && legacy.length > 0) {
+                    safeSetItem(_LOCAL_SHOSHI_FAV_KEY, JSON.stringify(legacy));
+                    return legacy;
+                }
+                return [];
+            }
+            return arr;
         }
         function _saveLocalShoshiFavs(arr) {
             safeSetItem(_LOCAL_SHOSHI_FAV_KEY, JSON.stringify(arr));
@@ -22902,9 +23079,13 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
             _renderLocalExpertsList();
         }
 
-        function openLocalExpertsScreen() {
+        function openLocalExpertsScreen(profession) {
             showScreen('screen-local-experts');
+            if (profession && LOCAL_EXPERTS_PROFESSIONS.some(function(p) { return p.key === profession; })) {
+                _localExpertsProfession = profession;
+            }
             _localExpertsFilter = 'all';
+            _renderLocalExpertsProfessionTabs();
             _renderLocalExpertsFilter();
             _renderLocalExpertsList();
             setTimeout(function() {
@@ -22915,28 +23096,61 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
         function closeLocalExpertsScreen() {
             showScreen('screen-experts');
         }
+        function _setLocalExpertsProfession(prof) {
+            _localExpertsProfession = prof;
+            // 士業切り替え時は気になるフィルタは解除する（士業と独立に動作するがUI上 1 つの士業に絞って見せる方が自然）
+            if (_localExpertsFilter === 'favorites') _localExpertsFilter = 'all';
+            _renderLocalExpertsProfessionTabs();
+            _renderLocalExpertsFilter();
+            _renderLocalExpertsList();
+            // タブ切替時にスクロールトップへ
+            var body = document.querySelector('#screen-local-experts .expert-screen-body');
+            if (body) { try { body.scrollTo({ top: 0, behavior: 'smooth' }); } catch (e) { body.scrollTop = 0; } }
+        }
         function _setLocalExpertsFilter(key) {
             _localExpertsFilter = key;
             _renderLocalExpertsFilter();
             _renderLocalExpertsList();
         }
+        // 士業タブ（primary filter）
+        function _renderLocalExpertsProfessionTabs() {
+            var el = document.getElementById('localExpertsProfessionTabs');
+            if (!el) return;
+            var html = '';
+            LOCAL_EXPERTS_PROFESSIONS.forEach(function(p) {
+                var count = LOCAL_EXPERTS_LIST.filter(function(x) { return x.profession === p.key; }).length;
+                if (count === 0) return;
+                html += '<button type="button" class="local-experts-tab' + (_localExpertsProfession === p.key ? ' active' : '') + '" onclick="_setLocalExpertsProfession(\'' + p.key + '\')">'
+                    + '<span class="local-experts-tab-label">' + escapeHtml(p.label) + '</span>'
+                    + '<span class="local-experts-tab-count">' + count + '</span>'
+                    + '</button>';
+            });
+            el.innerHTML = html;
+            // 現在の士業ブルーブを更新
+            var blurbEl = document.getElementById('localExpertsBlurb');
+            if (blurbEl) {
+                var cur = LOCAL_EXPERTS_PROFESSIONS.find(function(p) { return p.key === _localExpertsProfession; });
+                blurbEl.textContent = cur ? cur.blurb : '';
+            }
+        }
+
         function _renderLocalExpertsFilter() {
             var el = document.getElementById('localExpertsFilter');
             if (!el) return;
             var favs = _loadLocalShoshiFavs();
+            // 現在選択中の士業のリスト
+            var listForProf = LOCAL_EXPERTS_LIST.filter(function(x) { return x.profession === _localExpertsProfession; });
             var html = '';
-            html += '<button type="button" class="local-experts-chip' + (_localExpertsFilter === 'all' ? ' active' : '') + '" onclick="_setLocalExpertsFilter(\'all\')">すべて (' + LOCAL_SHOSHI_LIST.length + ')</button>';
-            // 気になる（1 件以上あるときだけ表示）
+            html += '<button type="button" class="local-experts-chip' + (_localExpertsFilter === 'all' ? ' active' : '') + '" onclick="_setLocalExpertsFilter(\'all\')">すべて (' + listForProf.length + ')</button>';
             if (favs.length > 0) {
                 html += '<button type="button" class="local-experts-chip local-experts-chip-fav' + (_localExpertsFilter === 'favorites' ? ' active' : '') + '" onclick="_setLocalExpertsFilter(\'favorites\')">'
                     + '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" style="width:12px;height:12px;vertical-align:-2px;margin-right:4px;"><polygon points="12 2 15 9 22 9.3 16.5 14 18 21 12 17.3 6 21 7.5 14 2 9.3 9 9"/></svg>'
                     + '気になる (' + favs.length + ')</button>';
             } else if (_localExpertsFilter === 'favorites') {
-                // すでに favorites フィルタ中に全部外された場合は all に戻す
                 _localExpertsFilter = 'all';
             }
-            LOCAL_SHOSHI_AREAS.forEach(function(a) {
-                var count = LOCAL_SHOSHI_LIST.filter(function(s) { return s.area === a.key; }).length;
+            LOCAL_EXPERTS_AREAS.forEach(function(a) {
+                var count = listForProf.filter(function(s) { return s.area === a.key; }).length;
                 if (count === 0) return;
                 html += '<button type="button" class="local-experts-chip' + (_localExpertsFilter === a.key ? ' active' : '') + '" onclick="_setLocalExpertsFilter(\'' + a.key + '\')">' + escapeHtml(a.label) + ' (' + count + ')</button>';
             });
@@ -22948,9 +23162,9 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
             var favs = _loadLocalShoshiFavs();
             var html = '';
 
-            // 「気になる」フィルタ: エリア見出しなしで一枚にまとめる
+            // 「気になる」フィルタ: 全士業・全エリアを跨ぎ、1 グループにまとめる
             if (_localExpertsFilter === 'favorites') {
-                var favOffices = LOCAL_SHOSHI_LIST.filter(function(o) { return favs.indexOf(o.id) >= 0; });
+                var favOffices = LOCAL_EXPERTS_LIST.filter(function(o) { return favs.indexOf(o.id) >= 0; });
                 if (favOffices.length === 0) {
                     el.innerHTML = '<div style="padding:48px 20px; text-align:center; color:var(--text-tertiary); font-size:13px; line-height:1.7;">'
                         + '☆ を押すと「相談候補」として保存できます。<br><span style="font-size:11.5px;">3 社から見積もりを取ると料金の相場感が掴めます。</span></div>';
@@ -22960,38 +23174,44 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
                     +   '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><polygon points="12 2 15 9 22 9.3 16.5 14 18 21 12 17.3 6 21 7.5 14 2 9.3 9 9"/></svg>'
                     +   '<span>相談候補（' + favOffices.length + ' 件）</span>'
                     + '</div>';
-                favOffices.forEach(function(o) { html += _buildLocalShoshiCardHtml(o, true); });
+                favOffices.forEach(function(o) { html += _buildLocalShoshiCardHtml(o, true, true); });
                 el.innerHTML = html;
                 return;
             }
 
-            LOCAL_SHOSHI_AREAS.forEach(function(area) {
+            // 士業 × エリアで絞り込み
+            var listForProf = LOCAL_EXPERTS_LIST.filter(function(x) { return x.profession === _localExpertsProfession; });
+            LOCAL_EXPERTS_AREAS.forEach(function(area) {
                 if (_localExpertsFilter !== 'all' && _localExpertsFilter !== area.key) return;
-                var offices = LOCAL_SHOSHI_LIST.filter(function(s) { return s.area === area.key; });
+                var offices = listForProf.filter(function(s) { return s.area === area.key; });
                 if (offices.length === 0) return;
                 html += '<div class="local-experts-area-heading">'
                     +   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>'
                     +   '<span>' + escapeHtml(area.label) + '（' + escapeHtml(area.drive) + '）</span>'
                     + '</div>';
-                offices.forEach(function(o) { html += _buildLocalShoshiCardHtml(o, favs.indexOf(o.id) >= 0); });
+                offices.forEach(function(o) { html += _buildLocalShoshiCardHtml(o, favs.indexOf(o.id) >= 0, false); });
             });
             if (!html) {
-                html = '<div style="padding:24px; text-align:center; color:var(--text-tertiary); font-size:13px;">このエリアには掲載事務所がありません。</div>';
+                html = '<div style="padding:32px 20px; text-align:center; color:var(--text-tertiary); font-size:13px; line-height:1.7;">'
+                    + 'この士業・エリアの組み合わせでは掲載事務所がありません。<br><span style="font-size:11.5px;">別のエリアまたは士業タブをお試しください。</span></div>';
             }
             el.innerHTML = html;
         }
 
-        function _buildLocalShoshiCardHtml(o, isFav) {
-            var tagClass = (o.tag && (o.tag.indexOf('専門') >= 0 || o.tag.indexOf('遺言') >= 0 || o.tag.indexOf('民事信託') >= 0 || o.tag.indexOf('相続登記') === 0)) ? '' : ' general';
+        function _buildLocalShoshiCardHtml(o, isFav, showProfession) {
+            var tagClass = (o.tag && (o.tag.indexOf('専門') >= 0 || o.tag.indexOf('遺言') >= 0 || o.tag.indexOf('民事信託') >= 0 || o.tag.indexOf('相続') === 0 || o.tag.indexOf('相続') > 0)) ? '' : ' general';
             var starSvg = isFav
                 ? '<svg viewBox="0 0 24 24" fill="#F5CD67" stroke="#D4A835" stroke-width="1.5" stroke-linejoin="round"><polygon points="12 2 15 9 22 9.3 16.5 14 18 21 12 17.3 6 21 7.5 14 2 9.3 9 9"/></svg>'
                 : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><polygon points="12 2 15 9 22 9.3 16.5 14 18 21 12 17.3 6 21 7.5 14 2 9.3 9 9"/></svg>';
+            var profChip = showProfession ? '<span class="local-experts-card-prof">' + escapeHtml(o.profession) + '</span>' : '';
+            var noteHtml = o.note ? '<div class="local-experts-card-note">※ ' + escapeHtml(o.note) + '</div>' : '';
             return '<div class="local-experts-card">'
                 +   '<div class="local-experts-card-head">'
-                +     '<div class="local-experts-card-name">' + escapeHtml(o.name) + '</div>'
+                +     '<div class="local-experts-card-name">' + profChip + escapeHtml(o.name) + '</div>'
                 +     (o.tag ? '<span class="local-experts-card-tag' + tagClass + '">' + escapeHtml(o.tag) + '</span>' : '')
                 +   '</div>'
                 +   '<div class="local-experts-card-addr">' + escapeHtml(o.address) + '</div>'
+                +   noteHtml
                 +   '<div class="local-experts-card-actions">'
                 +     '<a class="local-experts-call" href="tel:' + escapeHtml(o.phoneDial) + '">'
                 +       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>'
