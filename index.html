@@ -24072,10 +24072,17 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
                     if (_activeMun.length === 0) return;
 
                     var _isDone = (_mYakubaStatus === 'DONE');
-                    var _destTotal = _activeMun.length;
-                    var _destDone = _activeMun.filter(function(t) {
+                    // ユーザーが実際に行動する必要がある分だけをカウント。
+                    // AUTO_DONE はオンボーディング回答等で自動的に「該当なし／既済」と判定された
+                    // タスクなので、ユーザーから見れば「役場で対応する 1 件」ではない。
+                    var _userActMun = _activeMun.filter(function(t) {
                         var s = taskStatuses[t.id] || determineTaskStatus(t);
-                        return s === 'DONE' || s === 'AUTO_DONE';
+                        return s !== 'AUTO_DONE';
+                    });
+                    var _destTotal = _userActMun.length;
+                    var _destDone = _userActMun.filter(function(t) {
+                        var s = taskStatuses[t.id] || determineTaskStatus(t);
+                        return s === 'DONE';
                     }).length;
                     var _destPct = _destTotal > 0 ? Math.round((_destDone / _destTotal) * 100) : 0;
 
@@ -24192,8 +24199,11 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
                 const isCompletedOpen = window._accordionState[completedKey] || false;
                 const completedOpenClass = isCompletedOpen ? ' open' : '';
 
-                const destTotalCount = groupTasks.length;
-                const destDoneCount = completedTasks.length;
+                // 進捗カウントは「ユーザーが行動した数 / 行動が必要な数」基準。
+                // AUTO_DONE はオンボーディング回答等で自動判定された分なので両方から除外。
+                const destUserActTasks = groupTasks.filter(t => t.status !== 'AUTO_DONE');
+                const destTotalCount = destUserActTasks.length;
+                const destDoneCount = destUserActTasks.filter(t => t.status === 'DONE').length;
                 const destPercent = destTotalCount > 0 ? Math.round((destDoneCount / destTotalCount) * 100) : 0;
 
                 html += `
