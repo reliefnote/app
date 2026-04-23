@@ -3542,6 +3542,29 @@
         }
 
         .task-expert-panel > .task-expert-row:last-child { margin-bottom: 2px; }
+        /* 北竜町 × 司法書士のとき出る近隣事務所リストへのショートカット */
+        .task-expert-local-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            margin: 2px 0 8px;
+            padding: 10px 12px;
+            background: #FAF6F0;
+            border: 1px dashed var(--accent, #B95F3E);
+            border-radius: 10px;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--accent, #B95F3E);
+            cursor: pointer;
+            font-family: inherit;
+            text-align: left;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .task-expert-local-link:active { background: #F5EFE5; }
+        .task-expert-local-link > span { flex: 1; }
+        .task-expert-local-link > svg:first-child { width: 14px; height: 14px; flex-shrink: 0; }
+        .task-expert-local-link > svg:last-child { width: 12px; height: 12px; flex-shrink: 0; }
         /* タスク → 専門家画面遷移時のカードハイライト */
         .expert-card-highlight {
             animation: expertCardFlash 2.4s ease-out;
@@ -3717,6 +3740,36 @@
             text-decoration: none;
         }
         .local-experts-link svg { width: 12px; height: 12px; }
+        .local-experts-fav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 9px 12px;
+            background: #FFFFFF;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .local-experts-fav-btn svg { width: 13px; height: 13px; }
+        .local-experts-fav-btn.is-fav {
+            background: #FEF7EC;
+            color: #A77100;
+            border-color: #F5CD67;
+        }
+        .local-experts-chip.local-experts-chip-fav {
+            border-color: #F5CD67;
+            color: #A77100;
+        }
+        .local-experts-chip.local-experts-chip-fav.active {
+            background: #F5CD67;
+            color: #3A3F32;
+            border-color: #F5CD67;
+        }
         .local-experts-footnote {
             font-size: 11px;
             color: var(--text-tertiary);
@@ -22735,6 +22788,11 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
                 + '</div>'
                 + '<p class="task-expert-panel-sub">手続きを自分で進めるのが難しいと感じたら、専門家に任せることもできます。</p>';
 
+            // 北竜町チャネルかつ司法書士カードには近隣 12 件への直接ショートカットを追加
+            var _rnCh = 'direct';
+            try { _rnCh = localStorage.getItem('relief_note_channel') || 'direct'; } catch (e) {}
+            var _isHokuryu = (_rnCh === 'hokuryu');
+
             experts.forEach(function(ex) {
                 var feeText = ex.feeLow === ex.feeHigh
                     ? (ex.feeLow / 10000).toFixed(1).replace(/\.0$/, '') + '万' + ex.feeUnit
@@ -22758,6 +22816,15 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
                     +   '</div>'
                     +   '<svg class="task-expert-row-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>'
                     + '</div>';
+
+                // 北竜町 × 司法書士のときだけ近隣事務所リストへの直接導線を追加
+                if (_isHokuryu && ex.profession === '司法書士') {
+                    html += '<button type="button" class="task-expert-local-link" onclick="event.stopPropagation(); openLocalExpertsScreen()">'
+                        +   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>'
+                        +   '<span>📍 北竜町近隣の司法書士 12 件を見る</span>'
+                        +   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>'
+                        + '</button>';
+                }
             });
 
             html += '</div>';
@@ -22813,7 +22880,27 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
             { key: '旭川', label: '旭川', drive: '車で約 60 分' },
             { key: '留萌', label: '留萌', drive: '車で約 60 分' }
         ];
-        var _localExpertsFilter = 'all'; // 'all' or area key
+        var _localExpertsFilter = 'all'; // 'all' / 'favorites' / area key
+        var _LOCAL_SHOSHI_FAV_KEY = 'rn_local_shoshi_favorites';
+        function _loadLocalShoshiFavs() {
+            var arr = safeParseJSON(localStorage.getItem(_LOCAL_SHOSHI_FAV_KEY), []);
+            return Array.isArray(arr) ? arr : [];
+        }
+        function _saveLocalShoshiFavs(arr) {
+            safeSetItem(_LOCAL_SHOSHI_FAV_KEY, JSON.stringify(arr));
+        }
+        function _isLocalShoshiFav(id) {
+            return _loadLocalShoshiFavs().indexOf(id) >= 0;
+        }
+        function _toggleLocalShoshiFav(id, evt) {
+            if (evt) { evt.stopPropagation(); evt.preventDefault(); }
+            var favs = _loadLocalShoshiFavs();
+            var i = favs.indexOf(id);
+            if (i >= 0) favs.splice(i, 1); else favs.push(id);
+            _saveLocalShoshiFavs(favs);
+            _renderLocalExpertsFilter();
+            _renderLocalExpertsList();
+        }
 
         function openLocalExpertsScreen() {
             showScreen('screen-local-experts');
@@ -22836,8 +22923,18 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
         function _renderLocalExpertsFilter() {
             var el = document.getElementById('localExpertsFilter');
             if (!el) return;
+            var favs = _loadLocalShoshiFavs();
             var html = '';
             html += '<button type="button" class="local-experts-chip' + (_localExpertsFilter === 'all' ? ' active' : '') + '" onclick="_setLocalExpertsFilter(\'all\')">すべて (' + LOCAL_SHOSHI_LIST.length + ')</button>';
+            // 気になる（1 件以上あるときだけ表示）
+            if (favs.length > 0) {
+                html += '<button type="button" class="local-experts-chip local-experts-chip-fav' + (_localExpertsFilter === 'favorites' ? ' active' : '') + '" onclick="_setLocalExpertsFilter(\'favorites\')">'
+                    + '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" style="width:12px;height:12px;vertical-align:-2px;margin-right:4px;"><polygon points="12 2 15 9 22 9.3 16.5 14 18 21 12 17.3 6 21 7.5 14 2 9.3 9 9"/></svg>'
+                    + '気になる (' + favs.length + ')</button>';
+            } else if (_localExpertsFilter === 'favorites') {
+                // すでに favorites フィルタ中に全部外された場合は all に戻す
+                _localExpertsFilter = 'all';
+            }
             LOCAL_SHOSHI_AREAS.forEach(function(a) {
                 var count = LOCAL_SHOSHI_LIST.filter(function(s) { return s.area === a.key; }).length;
                 if (count === 0) return;
@@ -22848,7 +22945,26 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
         function _renderLocalExpertsList() {
             var el = document.getElementById('localExpertsList');
             if (!el) return;
+            var favs = _loadLocalShoshiFavs();
             var html = '';
+
+            // 「気になる」フィルタ: エリア見出しなしで一枚にまとめる
+            if (_localExpertsFilter === 'favorites') {
+                var favOffices = LOCAL_SHOSHI_LIST.filter(function(o) { return favs.indexOf(o.id) >= 0; });
+                if (favOffices.length === 0) {
+                    el.innerHTML = '<div style="padding:48px 20px; text-align:center; color:var(--text-tertiary); font-size:13px; line-height:1.7;">'
+                        + '☆ を押すと「相談候補」として保存できます。<br><span style="font-size:11.5px;">3 社から見積もりを取ると料金の相場感が掴めます。</span></div>';
+                    return;
+                }
+                html += '<div class="local-experts-area-heading">'
+                    +   '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><polygon points="12 2 15 9 22 9.3 16.5 14 18 21 12 17.3 6 21 7.5 14 2 9.3 9 9"/></svg>'
+                    +   '<span>相談候補（' + favOffices.length + ' 件）</span>'
+                    + '</div>';
+                favOffices.forEach(function(o) { html += _buildLocalShoshiCardHtml(o, true); });
+                el.innerHTML = html;
+                return;
+            }
+
             LOCAL_SHOSHI_AREAS.forEach(function(area) {
                 if (_localExpertsFilter !== 'all' && _localExpertsFilter !== area.key) return;
                 var offices = LOCAL_SHOSHI_LIST.filter(function(s) { return s.area === area.key; });
@@ -22857,30 +22973,39 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
                     +   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>'
                     +   '<span>' + escapeHtml(area.label) + '（' + escapeHtml(area.drive) + '）</span>'
                     + '</div>';
-                offices.forEach(function(o) {
-                    var tagClass = (o.tag && (o.tag.indexOf('専門') >= 0 || o.tag.indexOf('遺言') >= 0 || o.tag.indexOf('民事信託') >= 0 || o.tag.indexOf('相続登記') === 0)) ? '' : ' general';
-                    html += '<div class="local-experts-card">'
-                        +   '<div class="local-experts-card-head">'
-                        +     '<div class="local-experts-card-name">' + escapeHtml(o.name) + '</div>'
-                        +     (o.tag ? '<span class="local-experts-card-tag' + tagClass + '">' + escapeHtml(o.tag) + '</span>' : '')
-                        +   '</div>'
-                        +   '<div class="local-experts-card-addr">' + escapeHtml(o.address) + '</div>'
-                        +   '<div class="local-experts-card-actions">'
-                        +     '<a class="local-experts-call" href="tel:' + escapeHtml(o.phoneDial) + '">'
-                        +       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>'
-                        +       escapeHtml(o.phone)
-                        +     '</a>'
-                        +     (o.url ? '<a class="local-experts-link" href="' + escapeHtml(o.url) + '" target="_blank" rel="noopener noreferrer">'
-                            + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>'
-                            + 'サイトを見る</a>' : '')
-                        +   '</div>'
-                        + '</div>';
-                });
+                offices.forEach(function(o) { html += _buildLocalShoshiCardHtml(o, favs.indexOf(o.id) >= 0); });
             });
             if (!html) {
                 html = '<div style="padding:24px; text-align:center; color:var(--text-tertiary); font-size:13px;">このエリアには掲載事務所がありません。</div>';
             }
             el.innerHTML = html;
+        }
+
+        function _buildLocalShoshiCardHtml(o, isFav) {
+            var tagClass = (o.tag && (o.tag.indexOf('専門') >= 0 || o.tag.indexOf('遺言') >= 0 || o.tag.indexOf('民事信託') >= 0 || o.tag.indexOf('相続登記') === 0)) ? '' : ' general';
+            var starSvg = isFav
+                ? '<svg viewBox="0 0 24 24" fill="#F5CD67" stroke="#D4A835" stroke-width="1.5" stroke-linejoin="round"><polygon points="12 2 15 9 22 9.3 16.5 14 18 21 12 17.3 6 21 7.5 14 2 9.3 9 9"/></svg>'
+                : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><polygon points="12 2 15 9 22 9.3 16.5 14 18 21 12 17.3 6 21 7.5 14 2 9.3 9 9"/></svg>';
+            return '<div class="local-experts-card">'
+                +   '<div class="local-experts-card-head">'
+                +     '<div class="local-experts-card-name">' + escapeHtml(o.name) + '</div>'
+                +     (o.tag ? '<span class="local-experts-card-tag' + tagClass + '">' + escapeHtml(o.tag) + '</span>' : '')
+                +   '</div>'
+                +   '<div class="local-experts-card-addr">' + escapeHtml(o.address) + '</div>'
+                +   '<div class="local-experts-card-actions">'
+                +     '<a class="local-experts-call" href="tel:' + escapeHtml(o.phoneDial) + '">'
+                +       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>'
+                +       escapeHtml(o.phone)
+                +     '</a>'
+                +     (o.url ? '<a class="local-experts-link" href="' + escapeHtml(o.url) + '" target="_blank" rel="noopener noreferrer">'
+                    + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>'
+                    + 'サイトを見る</a>' : '')
+                +     '<button type="button" class="local-experts-fav-btn' + (isFav ? ' is-fav' : '') + '" onclick="_toggleLocalShoshiFav(\'' + escapeHtml(o.id) + '\', event)" aria-label="' + (isFav ? '気になるから外す' : '気になるに追加') + '" aria-pressed="' + (isFav ? 'true' : 'false') + '">'
+                +       starSvg
+                +       '<span>' + (isFav ? '追加済み' : '気になる') + '</span>'
+                +     '</button>'
+                +   '</div>'
+                + '</div>';
         }
 
         // 士業ごとの公式検索/相談サイト
