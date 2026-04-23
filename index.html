@@ -21402,6 +21402,8 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
         function switchTab(tab) {
             _returnToTaskId = null;
             _returnTaskStack = [];
+            // フッターナビで別タブに遷移した時点で、検索→詳細の戻り遷移はキャンセル
+            if (typeof _returnFromSearch !== 'undefined') _returnFromSearch = false;
             if (tab === 'home') {
                 showScreen('screen-home');
             } else if (tab === 'guide') {
@@ -24938,10 +24940,13 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
             return out;
         }
 
+        // 検索 → タスク詳細経由で戻った時に検索画面を再オープンするためのフラグ
+        var _returnFromSearch = false;
         function _openTaskFromSearch(taskId) {
             closeTaskSearch();
+            _returnFromSearch = true;
             if (typeof showTaskDetail === 'function') {
-                // detailReturnScreen を設定して正しい戻り先を伝える
+                // detailReturnScreen は検索オーバーレイの裏側にあるガイド画面
                 if (typeof detailReturnScreen !== 'undefined') detailReturnScreen = 'screen-guide';
                 showTaskDetail(taskId);
             }
@@ -25453,7 +25458,16 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
                 requestAnimationFrame(function() { window.scrollTo(0, prev.scrollY); });
                 return;
             }
+            var shouldReopenSearch = _returnFromSearch;
+            _returnFromSearch = false;
             showScreen(detailReturnScreen || 'screen-guide');
+            if (shouldReopenSearch) {
+                // 裏側の screen-guide が active になった後で検索オーバーレイを再表示
+                // （input の値は維持されているので前回のクエリと結果がそのまま戻る）
+                setTimeout(function() {
+                    if (typeof openTaskSearch === 'function') openTaskSearch();
+                }, 30);
+            }
         }
 
         var _taskStartedThisSession = {};
