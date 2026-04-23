@@ -2384,9 +2384,10 @@
         }
 
         .task-confirm-hint {
-            font-size: 13px;
+            font-size: 11.5px;
             color: var(--text-tertiary);
-            line-height: 1.5;
+            line-height: 1.45;
+            opacity: 0.85;
         }
 
         .task-name.done {
@@ -4165,6 +4166,22 @@
             border-bottom: 1px solid var(--border-light);
             overflow: hidden;
         }
+        .detail-faq-more-btn {
+            display: block;
+            width: 100%;
+            margin: 10px auto 0;
+            padding: 10px 14px;
+            background: #FFFFFF;
+            border: 1px dashed var(--border);
+            border-radius: 10px;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--accent, #B95F3E);
+            cursor: pointer;
+            font-family: inherit;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .detail-faq-more-btn:active { background: #FAF6F0; }
 
         .detail-faq-item:last-child {
             border-bottom: none;
@@ -12059,6 +12076,34 @@
 <body>
     <div id="toast" class="toast"></div>
     <div style="position:fixed; top:0; left:0; right:0; z-index:9999; background:#3A3F32; color:#F5CD67; text-align:center; padding:4px 8px; font-size:10.5px; font-weight:700; letter-spacing:0.1em;">DEMO（認知負荷削減プレビュー）｜本番は index.html</div>
+    <!-- DEMO 専用: 認知負荷を下げるためのサブカードコンパクト化 -->
+    <style>
+        /* ホーム画面: 主要情報（次にやること・確認が必要）以外は視覚的に落ち着かせる */
+        #screen-home .home-care-team-card,
+        #screen-home .home-healing-card,
+        #screen-home .home-expert-entry {
+            padding: 10px 14px;
+        }
+        #screen-home .care-team-icon,
+        #screen-home .healing-icon {
+            width: 34px; height: 34px; margin-right: 10px;
+        }
+        #screen-home .care-team-icon svg,
+        #screen-home .healing-icon svg { width: 18px; height: 18px; }
+        #screen-home .home-expert-entry-icon { width: 32px; height: 32px; }
+        #screen-home .home-expert-entry-icon svg { width: 16px; height: 16px; }
+        #screen-home .care-team-title,
+        #screen-home .healing-title { font-size: 13.5px; font-weight: 600; }
+        #screen-home .care-team-sub,
+        #screen-home .healing-sub,
+        #screen-home .home-expert-entry-sub { font-size: 11px; }
+        #screen-home .home-expert-entry-title { font-size: 13.5px; }
+        /* タスクカード: 下位情報を subtle に */
+        .task-item .task-confirm-hint { margin-top: 2px; }
+        .task-item .legal-due-badge { font-size: 10.5px; opacity: 0.9; }
+        /* タスク詳細: 装飾的アイコンのうち実情報ではないものを控えめに */
+        .task-expert-panel-header { opacity: 0.95; }
+    </style>
     <div class="app-container" style="padding-top:22px;">
         <!-- 画面0: スプラッシュ -->
         <div id="screen-splash" class="screen active">
@@ -12226,7 +12271,7 @@
                 <div class="header-greeting" id="greetingText" style="display:none;">こんにちは、</div>
                 <div>
                     <span class="header-name" id="headerName"></span>
-                    <span class="header-weeks" id="weeksDisplay" style="display:none;">--週目</span>
+                    <span class="header-weeks" id="weeksDisplay">--週目</span>
                 </div>
                 <p id="homeMessageText" class="home-message" style="display: none;"></p>
             </div>
@@ -12268,11 +12313,11 @@
             <!-- 4. 確認が必要な手続き -->
             <div id="unansweredQuestionsCard" class="unanswered-questions-card" onclick="openConfirmFromHome()" style="display: none;"></div>
 
-            <!-- 家族と分担バナー -->
-            <div id="homeFamilyBanner"></div>
+            <!-- 家族と分担バナー（DEMO: 初期状態で非表示化し認知負荷を下げる。設定から復元可能な想定） -->
+            <div id="homeFamilyBanner" style="display:none;"></div>
 
-            <!-- レビュー（フィードバック）カード -->
-            <div id="homeReviewCard"></div>
+            <!-- レビュー（フィードバック）カード（DEMO: 非表示） -->
+            <div id="homeReviewCard" style="display:none;"></div>
 
             <!-- 5. きょうのきもち + 専門家相談 -->
             <div class="home-healing-card" onclick="_griefReturnScreen='screen-home'; _griefCareScrollPosition=0; showScreen('screen-grief-care')">
@@ -25192,9 +25237,9 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
                         const remainText = legalStatus.remaining < 0
                             ? `${Math.abs(legalStatus.remaining)}日超過`
                             : legalStatus.remaining === 0 ? '今日が期限' : `あと${legalStatus.remaining}日`;
-                        legalBadgeHtml = `<div class="legal-due-badge ${legalStatus.status}">⚖ 法定期限: ${lm}/${ld}（${remainText}）</div>`;
+                        legalBadgeHtml = `<div class="legal-due-badge ${legalStatus.status}">期限:${lm}/${ld}（${remainText}）</div>`;
                     } else {
-                        legalBadgeHtml = `<div class="legal-due-badge">⚖ 法定期限あり（${t.legalDueDays}日）</div>`;
+                        legalBadgeHtml = `<div class="legal-due-badge">期限あり（${t.legalDueDays}日）</div>`;
                     }
                 }
 
@@ -26613,10 +26658,34 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
                     `;
                 }
 
-                // アコーディオン: よくある質問
+                // アコーディオン: Q&A（2件超は「さらに表示」で展開）
                 if (hasFaqContent) {
                     const faqList = chFaq.split(/(?=Q\.)/).filter(f => f.trim() !== '');
                     if (faqList.length > 0) {
+                        const faqInitialLimit = 2;
+                        const faqHiddenCount = Math.max(0, faqList.length - faqInitialLimit);
+                        const faqItemsHtml = faqList.map((faqItem, faqIdx) => {
+                            const parts = faqItem.split('→');
+                            if (parts.length >= 2) {
+                                const question = parts[0].trim();
+                                let answer = parts.slice(1).join('→').trim();
+                                answer = answer.replace(/\/\s*$/, '').trim();
+                                const hiddenAttr = faqIdx >= faqInitialLimit ? ' data-faq-hidden="1" style="display:none;"' : '';
+                                return `
+                                    <div class="detail-faq-item"${hiddenAttr} onclick="toggleFAQ(this)">
+                                        <div class="detail-faq-question">
+                                            <span>${escapeHtml(question)}</span>
+                                            <span class="detail-faq-arrow">▼</span>
+                                        </div>
+                                        <div class="detail-faq-answer">${replaceTaskIdLinks(markGlossaryTerms(escapeHtml(answer)))}</div>
+                                    </div>
+                                `;
+                            }
+                            return '';
+                        }).join('');
+                        const moreBtnHtml = faqHiddenCount > 0
+                            ? `<button type="button" class="detail-faq-more-btn" onclick="_expandAllFaq(this)">さらに ${faqHiddenCount} 件の Q&amp;A を見る</button>`
+                            : '';
                         html += `
                             <div class="detail-accordion-section" data-accordion="faq">
                                 <div class="detail-accordion-header" onclick="toggleAccordion('faq')">
@@ -26625,24 +26694,8 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
                                 </div>
                                 <div class="detail-accordion-content">
                                     <div class="detail-accordion-inner">
-                                        ${faqList.map(faqItem => {
-                                            const parts = faqItem.split('→');
-                                            if (parts.length >= 2) {
-                                                const question = parts[0].trim();
-                                                let answer = parts.slice(1).join('→').trim();
-                                                answer = answer.replace(/\/\s*$/, '').trim();
-                                                return `
-                                                    <div class="detail-faq-item" onclick="toggleFAQ(this)">
-                                                        <div class="detail-faq-question">
-                                                            <span>${escapeHtml(question)}</span>
-                                                            <span class="detail-faq-arrow">▼</span>
-                                                        </div>
-                                                        <div class="detail-faq-answer">${replaceTaskIdLinks(markGlossaryTerms(escapeHtml(answer)))}</div>
-                                                    </div>
-                                                `;
-                                            }
-                                            return '';
-                                        }).join('')}
+                                        ${faqItemsHtml}
+                                        ${moreBtnHtml}
                                     </div>
                                 </div>
                             </div>
@@ -26995,6 +27048,17 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
                 // 開く
                 element.classList.add('open');
             }
+        }
+        // 「さらに N 件の Q&A を見る」ボタンから隠れた FAQ を一括展開
+        function _expandAllFaq(btn) {
+            var wrap = btn.parentElement;
+            if (!wrap) return;
+            var hidden = wrap.querySelectorAll('.detail-faq-item[data-faq-hidden="1"]');
+            hidden.forEach(function(el) {
+                el.style.display = '';
+                el.removeAttribute('data-faq-hidden');
+            });
+            btn.style.display = 'none';
         }
 
         // NEED_CONFIRMタスク用: 未回答質問を取得
