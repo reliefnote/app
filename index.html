@@ -18365,10 +18365,8 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
             var list = _loadYakubaChecklist();
             list[idx] = !list[idx];
             _saveYakubaChecklist(list);
-            // 4 項目すべてチェックでマスタータスクを完了
-            if (list.every(function(v) { return v; })) {
-                _completeMasterYakuba();
-            }
+            // チェックリストは準備状況の可視化のみ。完了トリガーにはしない
+            // （マスタータスクの DONE 化は既存の一番下の「完了にする」ボタン経由のみ）
             _showMasterYakubaDetail();
         }
 
