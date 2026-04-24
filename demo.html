@@ -12437,6 +12437,118 @@
             font-size: 13px !important;
             letter-spacing: 0.04em;
         }
+
+        /* === ラウンド 4-1: フェーズカラーの強化 === */
+        /* 既存の 4px 帯 → 6px に拡大、彩度を少し上げて視認性 UP */
+        :root {
+            --phase-H24: #D9B5A4 !important; /* 暖色強め */
+            --phase-D7:  #C9B080 !important; /* 桑茶 */
+            --phase-D14: #B8A674 !important;
+            --phase-D49: #B5C794 !important; /* 緑寄り */
+            --phase-M3:  #9DBA86 !important;
+            --phase-M4:  #93B0A6 !important;
+            --phase-M10: #8AA4A8 !important;
+            --phase-Y3:  #8B91B0 !important; /* 青藤 */
+        }
+        .phase-card::before { width: 6px !important; }
+        /* phase-title の左に丸ドットを追加して時間軸を強調 */
+        .phase-section[data-phase-id] .phase-title::before {
+            content: "";
+            display: inline-block;
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            margin-right: 8px;
+            vertical-align: 1px;
+            background: var(--text-tertiary);
+        }
+        .phase-section[data-phase-id="H24"] .phase-title::before { background: var(--phase-H24); }
+        .phase-section[data-phase-id="D7"]  .phase-title::before { background: var(--phase-D7); }
+        .phase-section[data-phase-id="D14"] .phase-title::before { background: var(--phase-D14); }
+        .phase-section[data-phase-id="D49"] .phase-title::before { background: var(--phase-D49); }
+        .phase-section[data-phase-id="M3"]  .phase-title::before { background: var(--phase-M3); }
+        .phase-section[data-phase-id="M4"]  .phase-title::before { background: var(--phase-M4); }
+        .phase-section[data-phase-id="M10"] .phase-title::before { background: var(--phase-M10); }
+        .phase-section[data-phase-id="Y3"]  .phase-title::before { background: var(--phase-Y3); }
+
+        /* === ラウンド 4-2: ケアチーム FAB （ホーム以外で常時アクセス可） === */
+        .demo-care-fab {
+            position: fixed;
+            bottom: calc(70px + env(safe-area-inset-bottom, 0px));
+            right: 14px;
+            width: 52px; height: 52px;
+            border-radius: 50%;
+            background: var(--accent, #B95F3E);
+            color: #FFFFFF;
+            border: none;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.18), 0 2px 6px rgba(0,0,0,0.10);
+            z-index: 1500;
+            cursor: pointer;
+            font-family: inherit;
+            transition: transform 0.18s ease, box-shadow 0.18s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .demo-care-fab:active { transform: scale(0.94); }
+        .demo-care-fab svg { width: 24px; height: 24px; }
+        .demo-care-fab.show { display: flex; }
+        .demo-care-fab-tooltip {
+            position: absolute;
+            bottom: 120%;
+            right: 0;
+            background: #3A3F32;
+            color: #FFFFFF;
+            font-size: 11.5px;
+            font-weight: 600;
+            padding: 6px 10px;
+            border-radius: 8px;
+            white-space: nowrap;
+            opacity: 0;
+            transform: translateY(4px);
+            pointer-events: none;
+            transition: opacity 0.2s, transform 0.2s;
+        }
+        .demo-care-fab.show .demo-care-fab-tooltip {
+            opacity: 1; transform: translateY(0);
+        }
+
+        /* === ラウンド 4-3: タスク詳細セクション ジャンプバー === */
+        .demo-section-nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            display: flex;
+            gap: 4px;
+            padding: 8px 12px;
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border-light);
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .demo-section-nav::-webkit-scrollbar { display: none; }
+        .demo-section-nav-btn {
+            flex-shrink: 0;
+            padding: 6px 12px;
+            background: transparent;
+            border: 1px solid var(--border-light);
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-family: inherit;
+            white-space: nowrap;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .demo-section-nav-btn:active { background: var(--bg-secondary); }
+
+        /* === ラウンド 4-4: タスクカード のフェーズ識別ドット === */
+        .task-item[data-task-phase] {
+            position: relative;
+        }
     </style>
     <div class="app-container" style="padding-top:22px;">
         <!-- 画面0: スプラッシュ -->
@@ -32348,7 +32460,13 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
         </div>
     </div>
 
-    <!-- ===== DEMO ラウンド 3: 構造的大改造の上書きスクリプト ===== -->
+    <!-- ===== DEMO ラウンド 3-4: 構造的改造 + FAB ===== -->
+    <button id="demoCareFab" class="demo-care-fab" type="button" onclick="showScreen('screen-concierge')" aria-label="遺族支援チームに相談">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+        </svg>
+        <span class="demo-care-fab-tooltip">相談</span>
+    </button>
     <script>
     (function() {
         // 専門家パネルをデフォルト折り畳みに（クリック展開）
@@ -32357,7 +32475,6 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
             window.buildTaskExpertPanelHtml = function(taskId) {
                 var html = _origBuildExpertPanel(taskId);
                 if (!html) return html;
-                // class に collapsible を付与し、初期は折り畳み
                 return html.replace(
                     '<div class="task-expert-panel">',
                     '<div class="task-expert-panel demo-collapsible" data-expanded="false">'
@@ -32367,7 +32484,6 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
                 );
             };
         }
-        // ヘッダー click でトグル
         window._demoToggleExpertPanel = function(headerEl) {
             var panel = headerEl.closest('.task-expert-panel');
             if (!panel) return;
@@ -32375,12 +32491,11 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
             panel.dataset.expanded = expanded ? 'false' : 'true';
         };
 
-        // 検索結果 0 件時に空状態 component を表示
+        // 検索 0 件 empty state 装飾
         if (typeof _renderTaskSearchResults === 'function') {
             var _origRenderSearch = _renderTaskSearchResults;
             window._renderTaskSearchResults = function(rawQuery) {
                 _origRenderSearch(rawQuery);
-                // すでに「に一致するタスクはありません」テキストがある場合のみ装飾
                 var container = document.getElementById('taskSearchResults');
                 if (!container) return;
                 var emptyEl = container.querySelector('.task-search-empty');
@@ -32389,6 +32504,86 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
                     var iconHtml = '<div class="demo-empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg></div>';
                     emptyEl.insertAdjacentHTML('afterbegin', iconHtml);
                 }
+            };
+        }
+
+        // ===== ラウンド 4-2: ケアチーム FAB の表示制御 =====
+        // ホーム以外の主要画面 (guide / detail / experts / settings) で表示
+        // confirm/concierge/grief は非表示
+        function _demoUpdateCareFab() {
+            var fab = document.getElementById('demoCareFab');
+            if (!fab) return;
+            var active = document.querySelector('.screen.active');
+            var id = active ? active.id : '';
+            var showOn = ['screen-guide', 'screen-detail', 'screen-experts', 'screen-local-experts', 'screen-settings'];
+            if (showOn.indexOf(id) >= 0) fab.classList.add('show');
+            else fab.classList.remove('show');
+        }
+        // showScreen を hook してタイミング良く更新
+        if (typeof showScreen === 'function') {
+            var _origShowScreen = showScreen;
+            window.showScreen = function(id) {
+                _origShowScreen.apply(this, arguments);
+                setTimeout(_demoUpdateCareFab, 50);
+            };
+        }
+        // 初回も実行
+        setTimeout(_demoUpdateCareFab, 600);
+
+        // ===== ラウンド 4-3: タスク詳細にセクション・ジャンプバーを inject =====
+        function _demoInjectSectionNav() {
+            var detail = document.getElementById('screen-detail');
+            if (!detail) return;
+            var detailContent = detail.querySelector('.detail-content');
+            if (!detailContent) return;
+            // 既に挿入済みなら更新 (タスク切り替え時)
+            var existingNav = detailContent.querySelector('.demo-section-nav');
+            if (existingNav) existingNav.remove();
+
+            // タスクの主要セクションを検出
+            var sections = [];
+            var hero = detailContent.querySelector('.detail-hero, .detail-title-area');
+            if (hero) sections.push({ label: '概要', target: hero });
+            var dueSection = detailContent.querySelector('.legal-due-section');
+            if (dueSection) sections.push({ label: '期限', target: dueSection });
+            var docsAcc = detailContent.querySelector('[data-accordion="docs"]');
+            if (docsAcc) sections.push({ label: '必要なもの', target: docsAcc });
+            var whyAcc = detailContent.querySelector('[data-accordion="why"]');
+            if (whyAcc) sections.push({ label: 'なぜ', target: whyAcc });
+            var faqAcc = detailContent.querySelector('[data-accordion="faq"]');
+            if (faqAcc) sections.push({ label: 'Q&A', target: faqAcc });
+            var expert = detailContent.querySelector('.task-expert-panel');
+            if (expert) sections.push({ label: '相談', target: expert });
+
+            if (sections.length < 3) return; // セクションが少なければ表示しない
+
+            var nav = document.createElement('div');
+            nav.className = 'demo-section-nav';
+            sections.forEach(function(s, idx) {
+                var btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'demo-section-nav-btn';
+                btn.textContent = s.label;
+                btn.onclick = function() {
+                    s.target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    // expand if accordion is closed
+                    if (s.target.classList.contains('detail-accordion-section') && !s.target.classList.contains('open')) {
+                        s.target.classList.add('open');
+                    }
+                    if (s.target.classList.contains('task-expert-panel')) {
+                        s.target.dataset.expanded = 'true';
+                    }
+                };
+                nav.appendChild(btn);
+            });
+            detailContent.insertBefore(nav, detailContent.firstChild);
+        }
+        // showTaskDetail を hook
+        if (typeof showTaskDetail === 'function') {
+            var _origShowDetail = showTaskDetail;
+            window.showTaskDetail = function(taskId) {
+                _origShowDetail.apply(this, arguments);
+                setTimeout(_demoInjectSectionNav, 100);
             };
         }
     })();
