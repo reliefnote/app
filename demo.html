@@ -12326,6 +12326,121 @@
         .btn-complete:not(.done) { box-shadow: none !important; }
         /* expert-neutrality-banner のテキスト左 margin */
         .expert-neutrality-banner span { margin-left: 8px !important; }
+
+        /* === ラウンド 3 大改造: タスク詳細・専門家パネルを折り畳み === */
+        .task-expert-panel.demo-collapsible {
+            transition: max-height 0.3s ease;
+            overflow: hidden;
+        }
+        .task-expert-panel.demo-collapsible[data-expanded="false"] {
+            max-height: 64px; /* header だけ見える高さ */
+        }
+        .task-expert-panel.demo-collapsible[data-expanded="true"] {
+            max-height: 2400px;
+        }
+        .task-expert-panel.demo-collapsible .task-expert-panel-header {
+            cursor: pointer;
+            position: relative;
+        }
+        .task-expert-panel.demo-collapsible .task-expert-panel-header::after {
+            content: "▾";
+            margin-left: auto;
+            color: var(--text-tertiary);
+            font-size: 12px;
+            transition: transform 0.2s;
+            padding-left: 6px;
+        }
+        .task-expert-panel.demo-collapsible[data-expanded="true"] .task-expert-panel-header::after {
+            transform: rotate(180deg);
+        }
+
+        /* === ラウンド 3 大改造: ホーム画面の更なる集約 === */
+        /* care-team / healing / expert / family を「サポート」セクションとして
+           ビジュアル的にグループ化（横線 + ヘッダー文字） */
+        #screen-home .home-care-team-card { display: none !important; }
+        /* care-team は重要だが頻度低いので fix-bottom-right に floating button にできる
+           ※ DEMO ではシンプルに非表示で代用。実装時は floating button 化 */
+        #screen-home .home-healing-card,
+        #screen-home .home-expert-entry,
+        #screen-home .home-family-card {
+            margin-left: 16px !important;
+            margin-right: 16px !important;
+            margin-top: 6px !important;
+        }
+        /* サポートセクションの見出しを inject (CSS でできる範囲) */
+        #screen-home #homeFamilyBanner::before,
+        #screen-home .home-healing-card::before { content: ""; }
+
+        /* === ラウンド 3: 検索結果 0 件 + その他空状態の component 化 === */
+        .demo-empty-styled {
+            padding: 36px 16px 20px !important;
+        }
+        .demo-empty-icon {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 12px;
+            color: var(--text-tertiary);
+        }
+        .demo-empty-icon svg {
+            width: 36px;
+            height: 36px;
+            opacity: 0.6;
+        }
+
+        /* === ラウンド 3: detail-footer をより薄く、コンテンツに余白圧迫しない === */
+        .detail-footer {
+            padding: 6px 12px !important;
+            background: rgba(255,255,255,0.96) !important;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border-top: 1px solid var(--border-light) !important;
+        }
+        .detail-footer .btn-complete { min-height: 44px !important; }
+
+        /* === ラウンド 3: スクロール終端マーカー === */
+        .detail-content::after {
+            content: "ここまでです";
+            display: block;
+            text-align: center;
+            color: var(--text-tertiary);
+            font-size: 11px;
+            padding: 24px 0 8px;
+            opacity: 0.6;
+        }
+
+        /* === ラウンド 3: タスクカード行をさらに低密度化 === */
+        .task-item {
+            min-height: 56px !important;  /* タップ領域確保 */
+            padding: 12px 14px !important;
+            gap: 12px !important;
+        }
+        .task-item .task-name {
+            font-size: 14.5px !important;
+            line-height: 1.45 !important;
+        }
+
+        /* === ラウンド 3: アコーディオンヘッダーを 44px 確保 === */
+        .detail-accordion-header {
+            min-height: 44px !important;
+            padding: 10px 14px !important;
+        }
+
+        /* === ラウンド 3: AI チャット導線を視覚的に縮小 === */
+        .detail-ai-chat-button { padding: 8px 12px !important; font-size: 12.5px !important; }
+
+        /* === ラウンド 3: ホームの「次にやること」を hero として強調 === */
+        #screen-home .home-today-section {
+            margin-top: 4px !important;
+        }
+        #screen-home .home-today-card {
+            border: 1.5px solid var(--accent-light, #F3EEE9) !important;
+            box-shadow: 0 2px 8px rgba(185, 95, 62, 0.05);
+        }
+        #screen-home .home-today-card .section-title {
+            color: var(--accent, #B95F3E) !important;
+            font-size: 13px !important;
+            letter-spacing: 0.04em;
+        }
     </style>
     <div class="app-container" style="padding-top:22px;">
         <!-- 画面0: スプラッシュ -->
@@ -32236,5 +32351,51 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
             <button id="revertConfirmBtn" style="flex:1; height:44px; background:#3A3F32; border:none; border-radius:10px; font-size:14px; font-weight:600; color:#FFFFFF; cursor:pointer;">戻す</button>
         </div>
     </div>
+
+    <!-- ===== DEMO ラウンド 3: 構造的大改造の上書きスクリプト ===== -->
+    <script>
+    (function() {
+        // 専門家パネルをデフォルト折り畳みに（クリック展開）
+        if (typeof buildTaskExpertPanelHtml === 'function') {
+            var _origBuildExpertPanel = buildTaskExpertPanelHtml;
+            window.buildTaskExpertPanelHtml = function(taskId) {
+                var html = _origBuildExpertPanel(taskId);
+                if (!html) return html;
+                // class に collapsible を付与し、初期は折り畳み
+                return html.replace(
+                    '<div class="task-expert-panel">',
+                    '<div class="task-expert-panel demo-collapsible" data-expanded="false">'
+                ).replace(
+                    '<div class="task-expert-panel-header">',
+                    '<div class="task-expert-panel-header" onclick="window._demoToggleExpertPanel(this)">'
+                );
+            };
+        }
+        // ヘッダー click でトグル
+        window._demoToggleExpertPanel = function(headerEl) {
+            var panel = headerEl.closest('.task-expert-panel');
+            if (!panel) return;
+            var expanded = panel.dataset.expanded === 'true';
+            panel.dataset.expanded = expanded ? 'false' : 'true';
+        };
+
+        // 検索結果 0 件時に空状態 component を表示
+        if (typeof _renderTaskSearchResults === 'function') {
+            var _origRenderSearch = _renderTaskSearchResults;
+            window._renderTaskSearchResults = function(rawQuery) {
+                _origRenderSearch(rawQuery);
+                // すでに「に一致するタスクはありません」テキストがある場合のみ装飾
+                var container = document.getElementById('taskSearchResults');
+                if (!container) return;
+                var emptyEl = container.querySelector('.task-search-empty');
+                if (emptyEl && !emptyEl.classList.contains('demo-empty-styled')) {
+                    emptyEl.classList.add('demo-empty-styled');
+                    var iconHtml = '<div class="demo-empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg></div>';
+                    emptyEl.insertAdjacentHTML('afterbegin', iconHtml);
+                }
+            };
+        }
+    })();
+    </script>
 </body>
 </html>
