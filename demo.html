@@ -12158,6 +12158,50 @@
         /* タスク詳細: 装飾的アイコンのうち実情報ではないものを控えめに */
         .task-expert-panel-header { opacity: 0.95; }
 
+        /* レビューモーダル: モバイル収まり調整 */
+        @media (max-width: 480px) {
+            .review-modal-overlay { padding: 14px; }
+            .review-modal-panel {
+                padding: 22px 14px 16px;
+                border-radius: 16px;
+                max-height: 92vh;
+            }
+            .review-modal-panel .home-review-title {
+                font-size: 15px;
+                line-height: 1.45;
+                margin-bottom: 12px;
+            }
+            .review-modal-panel .home-review-options { gap: 6px; margin-bottom: 8px; }
+            .review-modal-panel .home-review-option {
+                padding: 8px 4px;
+                border-width: 1.5px;
+                border-radius: 10px;
+            }
+            .review-modal-panel .home-review-option-icon { width: 26px; height: 26px; }
+            .review-modal-panel .home-review-option-icon svg { width: 26px; height: 26px; }
+            .review-modal-panel .home-review-option-label {
+                font-size: 11px;
+                line-height: 1.3;
+                min-height: calc(1.3em * 2);
+            }
+            .review-modal-panel .home-review-comment textarea {
+                min-height: 48px; font-size: 13px;
+            }
+            .review-modal-panel .home-review-actions { margin-top: 8px; }
+            .review-modal-panel .home-review-submit { padding: 10px 18px; font-size: 14px; }
+            .review-modal-panel .home-review-links { margin-top: 8px; gap: 14px; }
+            .review-modal-panel .home-review-link { font-size: 12px; padding: 4px 6px; }
+            .review-modal-close { top: 6px; right: 6px; width: 32px; height: 32px; }
+        }
+        /* 360px 未満の極小画面はさらに圧縮 */
+        @media (max-width: 360px) {
+            .review-modal-panel { padding: 18px 12px 14px; }
+            .review-modal-panel .home-review-option { padding: 6px 3px; }
+            .review-modal-panel .home-review-option-icon { width: 22px; height: 22px; }
+            .review-modal-panel .home-review-option-icon svg { width: 22px; height: 22px; }
+            .review-modal-panel .home-review-option-label { font-size: 10.5px; }
+        }
+
         /* === DEMO 大物 1: タスクカードのバッジ最大 2 個 === */
         /* 一覧では「タイトル + 状態 (期限 or hint)」のみに集約。
            担当者バッジは詳細画面に委ね、ピンは大幅に控えめにする */
@@ -12412,8 +12456,8 @@
             <!-- 4. 確認が必要な手続き -->
             <div id="unansweredQuestionsCard" class="unanswered-questions-card" onclick="openConfirmFromHome()" style="display: none;"></div>
 
-            <!-- 家族と分担バナー（DEMO: 初期状態で非表示化し認知負荷を下げる。設定から復元可能な想定） -->
-            <div id="homeFamilyBanner" style="display:none;"></div>
+            <!-- 家族と分担バナー -->
+            <div id="homeFamilyBanner"></div>
 
             <!-- レビュー（フィードバック）カード（DEMO: 非表示） -->
             <div id="homeReviewCard" style="display:none;"></div>
@@ -12653,6 +12697,20 @@
                             <div>
                                 <div class="data-mgmt-item-title">控えを PDF で残す</div>
                                 <div class="data-mgmt-item-desc">これまでの回答や進捗を 1 枚の書類にまとめます。印刷やメール添付にも使えます。</div>
+                            </div>
+                        </div>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                    </div>
+
+                    <!-- ご意見・レビューを送る（DEMO 追加） -->
+                    <div class="data-mgmt-item" onclick="openReviewFromSettings()">
+                        <div class="data-mgmt-item-left">
+                            <div class="data-mgmt-item-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                            </div>
+                            <div>
+                                <div class="data-mgmt-item-title">ご意見・レビューを送る</div>
+                                <div class="data-mgmt-item-desc">使い心地やご要望をお聞かせください。今後の改善に活かします。</div>
                             </div>
                         </div>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
@@ -24187,6 +24245,50 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
         function _closeReviewModal() {
             var overlay = document.getElementById('reviewModalOverlay');
             if (overlay) overlay.classList.remove('show');
+        }
+        // 設定画面から強制起動: 25% 条件・dismissed/later 状態を bypass
+        function openReviewFromSettings() {
+            // 一時的に状態リセット相当の挙動でモーダルを開く
+            _selectedReviewRating = null;
+            var modalBody = document.getElementById('reviewModalContent');
+            if (!modalBody) return;
+            modalBody.innerHTML = '<div class="home-review-card">'
+                + '<p class="home-review-title">使い心地を<br>聞かせてください</p>'
+                + '<div class="home-review-options">'
+                +   '<div class="home-review-option" onclick="selectReviewRating(\'positive\')">'
+                +     '<span class="home-review-option-icon"><svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">'
+                +       '<circle cx="16" cy="16" r="13" fill="#F5CD67" stroke="#3A3F32" stroke-width="1.6"/>'
+                +       '<circle cx="11.5" cy="13.5" r="1.5" fill="#3A3F32"/>'
+                +       '<circle cx="20.5" cy="13.5" r="1.5" fill="#3A3F32"/>'
+                +       '<path d="M10.5 19.5c1.5 3 4 4 5.5 4s4-1 5.5-4" fill="none" stroke="#3A3F32" stroke-width="1.6" stroke-linecap="round"/>'
+                +     '</svg></span>'
+                +     '<span class="home-review-option-label">とても<br>助かっている</span>'
+                +   '</div>'
+                +   '<div class="home-review-option" onclick="selectReviewRating(\'neutral\')">'
+                +     '<span class="home-review-option-icon"><svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">'
+                +       '<circle cx="16" cy="16" r="13" fill="#F5CD67" stroke="#3A3F32" stroke-width="1.6"/>'
+                +       '<circle cx="11.5" cy="13.5" r="1.5" fill="#3A3F32"/>'
+                +       '<circle cx="20.5" cy="13.5" r="1.5" fill="#3A3F32"/>'
+                +       '<line x1="11" y1="20" x2="21" y2="20" stroke="#3A3F32" stroke-width="1.6" stroke-linecap="round"/>'
+                +     '</svg></span>'
+                +     '<span class="home-review-option-label">ふつう</span>'
+                +   '</div>'
+                +   '<div class="home-review-option" onclick="selectReviewRating(\'needs_improvement\')">'
+                +     '<span class="home-review-option-icon"><svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">'
+                +       '<circle cx="16" cy="16" r="13" fill="#F5CD67" stroke="#3A3F32" stroke-width="1.6"/>'
+                +       '<circle cx="11.5" cy="13.5" r="1.5" fill="#3A3F32"/>'
+                +       '<circle cx="20.5" cy="13.5" r="1.5" fill="#3A3F32"/>'
+                +       '<path d="M11 21.5c1.5-2.5 3.5-3.5 5-3.5s3.5 1 5 3.5" fill="none" stroke="#3A3F32" stroke-width="1.6" stroke-linecap="round"/>'
+                +     '</svg></span>'
+                +     '<span class="home-review-option-label">改善して<br>ほしい</span>'
+                +   '</div>'
+                + '</div>'
+                + '<div id="reviewCommentArea"></div>'
+                + '<div class="home-review-links">'
+                +   '<button class="home-review-link" onclick="_closeReviewModal()">閉じる</button>'
+                + '</div>'
+                + '</div>';
+            _openReviewModal();
         }
         function _openReviewModal() {
             var overlay = document.getElementById('reviewModalOverlay');
