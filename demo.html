@@ -12087,22 +12087,25 @@
     </div>
     <!-- DEMO 専用: 認知負荷を下げるためのサブカードコンパクト化 -->
     <style>
-        /* 25%達成レビューモーダル */
+        /* 25%達成レビューモーダル（センター配置 + 周囲シャドウ） */
         .review-modal-overlay {
             position: fixed; inset: 0;
-            background: rgba(0,0,0,0.55);
-            display: none; align-items: flex-end; justify-content: center;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
+            display: none; align-items: center; justify-content: center;
             z-index: 2000;
+            padding: 20px;
         }
         .review-modal-overlay.show { display: flex; animation: reviewOverlayFade 0.22s ease; }
         .review-modal-panel {
             position: relative;
             background: #FFFFFF;
-            width: 100%; max-width: 520px;
-            border-radius: 20px 20px 0 0;
-            padding: 28px 18px 22px;
-            box-shadow: 0 -8px 32px rgba(0,0,0,0.12);
-            animation: reviewPanelSlide 0.28s cubic-bezier(.2,.8,.2,1);
+            width: 100%; max-width: 440px;
+            border-radius: 20px;
+            padding: 32px 22px 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.35), 0 8px 24px rgba(0,0,0,0.2);
+            animation: reviewPanelPop 0.28s cubic-bezier(.2,.9,.3,1.1);
             max-height: 85vh;
             overflow-y: auto;
         }
@@ -12123,9 +12126,9 @@
         @keyframes reviewOverlayFade {
             from { opacity: 0; } to { opacity: 1; }
         }
-        @keyframes reviewPanelSlide {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0); }
+        @keyframes reviewPanelPop {
+            0% { opacity: 0; transform: scale(0.88) translateY(6px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
         }
     </style>
     <style>
