@@ -32468,6 +32468,52 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
             };
         }
 
+        // ===== R8: ホーム画面の DOM を「目的駆動」順に並び替え =====
+        // 目的: 「今、私は何をすればいい？」に 5 秒で答える
+        // 並び順: header → 答え（次にやること・確認が必要）→ 文脈（行政案内・復帰）→ サポート（家族・こころ・専門家・ケアチーム）
+        function _demoReorderHome() {
+            var screenHome = document.getElementById('screen-home');
+            if (!screenHome) return;
+            // 主要要素を取得
+            var header = screenHome.querySelector('.home-header');
+            var careTeam = screenHome.querySelector('.home-care-team-card');
+            var adminBanner = document.getElementById('homeAdminBanner');
+            var bulkResume = document.getElementById('homeBulkResumeBanner');
+            var todaySection = screenHome.querySelector('.home-today-section');
+            var unanswered = document.getElementById('unansweredQuestionsCard');
+            var family = document.getElementById('homeFamilyBanner');
+            var review = document.getElementById('homeReviewCard');
+            var healing = screenHome.querySelector('.home-healing-card');
+            var expert = screenHome.querySelector('.home-expert-entry');
+
+            // 並べたい順序の配列
+            var order = [
+                header,
+                todaySection,    // ✓ 答え 1: 次にやること
+                unanswered,      // ✓ 答え 2: 確認が必要
+                bulkResume,      // 中断時の文脈（あれば）
+                adminBanner,     // チャネル文脈
+                family,          // サポート群（ここからは二次）
+                healing,
+                expert,
+                careTeam,        // ケアチームは最下部に
+                review
+            ];
+            order.forEach(function(el) {
+                if (el && el.parentElement === screenHome) screenHome.appendChild(el);
+            });
+        }
+        // renderHome 後に reorder
+        if (typeof renderHome === 'function') {
+            var _origRenderHome = renderHome;
+            window.renderHome = function() {
+                _origRenderHome.apply(this, arguments);
+                setTimeout(_demoReorderHome, 30);
+            };
+        }
+        // ホームを最初に開いた時にも実行
+        setTimeout(_demoReorderHome, 800);
+
     })();
     </script>
 </body>
