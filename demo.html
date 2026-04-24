@@ -12583,6 +12583,29 @@
         .expert-tips-title { font-size: 13px !important; color: var(--text-secondary) !important; }
         .expert-tips-subtitle { display: none !important; }
 
+        /* ── 設定画面 ──
+           目的: データ管理・PDF出力・チャネル切替
+           「よくある質問」セクションは目的外（FAQ はタスク詳細にある）→ 全削除 */
+        #screen-settings .settings-section:nth-of-type(3) { display: none !important; }
+        /* 「家族と共有」セクションの PDF ボタンはデータ管理と重複 → 非表示
+           SMS/LINE 送信は維持 */
+        .share-btn-primary { display: none !important; }
+        /* settings-section-title の装飾 SVG を subtle 化 */
+        .settings-section-title svg { opacity: 0.35 !important; }
+
+        /* ── 検索オーバーレイ ──
+           目的: 名前で目的のタスクを 3 秒で見つける
+           - section title「よく検索されるキーワード」「タスク (N)」は冗長
+             → チップや結果カードで自明 */
+        .task-search-section-title:not(.task-search-history-head) { display: none !important; }
+        /* ヒント文「スペースで区切ると〜」は遺族には伝わらない・読まれない */
+        .task-search-hint { display: none !important; }
+        /* 履歴セクションのタイトルは残すが「履歴を消す」ボタンは subtle に */
+        .task-search-history-clear {
+            opacity: 0.6 !important;
+            font-size: 11px !important;
+        }
+
     </style>
     <div class="app-container" style="padding-top:22px;">
         <!-- 画面0: スプラッシュ -->
