@@ -12867,6 +12867,127 @@
         }
         .demo-home-hero.all-done .demo-home-hero-label { color: #5B8C5A; }
 
+        /* ============================================================ */
+        /* === ラウンド 10: タスク詳細 抜本改革 === */
+        /* 目的: このタスクを完了するための具体的手順を理解する
+           原則: ステップ（手順）を最上部に。補助情報は subtle に    */
+        /* ============================================================ */
+
+        /* 巨大な法定期限カードを 1 行コンパクトに */
+        #screen-detail .legal-due-section {
+            margin: 0 16px 4px !important;
+            padding: 6px 10px !important;
+            background: transparent !important;
+            border: none !important;
+            border-left: 3px solid var(--text-tertiary) !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+            display: flex !important;
+            align-items: baseline !important;
+            gap: 8px !important;
+            font-size: 12.5px !important;
+            color: var(--text-secondary) !important;
+        }
+        #screen-detail .legal-due-section.overdue,
+        #screen-detail .legal-due-section.urgent {
+            border-left-color: var(--status-overdue, #C76D56) !important;
+            color: var(--status-overdue, #C76D56) !important;
+        }
+        #screen-detail .legal-due-section-head {
+            font-size: 11px !important;
+            font-weight: 700 !important;
+            opacity: 0.7;
+        }
+        #screen-detail .legal-due-section-head .legal-due-icon {
+            display: none !important;  /* ⚖ アイコン削除 */
+        }
+        #screen-detail .legal-due-section-main {
+            display: inline-flex !important;
+            gap: 8px !important;
+            align-items: baseline !important;
+        }
+        #screen-detail .legal-due-section-date {
+            font-size: 12.5px !important;
+            font-weight: 600 !important;
+        }
+        #screen-detail .legal-due-section-remain {
+            font-size: 11.5px !important;
+            opacity: 0.85;
+        }
+        #screen-detail .legal-due-section-note { display: none !important; }
+
+        /* 届出先 chip もコンパクトに（同じ行に近い感じで） */
+        #screen-detail .task-detail-destination {
+            margin: 0 16px 12px !important;
+            padding: 6px 10px !important;
+            background: transparent !important;
+            border: none !important;
+            border-left: 3px solid var(--text-tertiary) !important;
+            border-radius: 0 !important;
+            font-size: 12.5px !important;
+            color: var(--text-secondary) !important;
+        }
+
+        /* hero の余白圧縮 */
+        #screen-detail .detail-hero {
+            padding: 18px 16px 10px !important;
+        }
+        #screen-detail .detail-task-title {
+            font-size: 22px !important;
+            font-weight: 800 !important;
+            line-height: 1.4 !important;
+            letter-spacing: -0.005em !important;
+        }
+
+        /* ステップセクションを画面の主役に
+           （R8b で accent カード化済み、ここでは更に強調） */
+        #screen-detail .steps-section {
+            margin: 14px 16px 18px !important;
+            padding: 18px 16px !important;
+            background: #FFFFFF !important;
+            border: 2px solid var(--accent-light, #F3EEE9) !important;
+            box-shadow: 0 4px 16px rgba(185, 95, 62, 0.08) !important;
+            border-radius: 16px !important;
+        }
+        #screen-detail .steps-section .step-section-count {
+            font-size: 12px !important;
+        }
+        #screen-detail .step-text {
+            font-size: 14.5px !important;
+            font-weight: 600 !important;
+            line-height: 1.55 !important;
+        }
+
+        /* 補助セクション (background card 内のアコーディオン) を subtle に */
+        #screen-detail .detail-info-card {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            margin-top: 8px !important;
+        }
+        #screen-detail .detail-accordion-header {
+            font-size: 13px !important;
+            color: var(--text-secondary) !important;
+            font-weight: 500 !important;
+        }
+
+        /* 専門家パネルを更に subtle に
+           （既に折り畳み済みだが、デモ詳細ではまず目立たせない） */
+        #screen-detail .task-expert-panel {
+            margin-top: 16px !important;
+            border: 1px dashed var(--border-light) !important;
+        }
+        #screen-detail .task-expert-panel-label {
+            font-size: 12.5px !important;
+            color: var(--text-tertiary) !important;
+        }
+
+        /* AI チャット導線も subtle */
+        #screen-detail .detail-ai-chat-button {
+            opacity: 0.85;
+            font-size: 12px !important;
+        }
+
     </style>
     <div class="app-container" style="padding-top:22px;">
         <!-- 画面0: スプラッシュ -->
@@ -32982,6 +33103,31 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
                 +   '<span>家族で共有</span>'
                 + '</button>';
             divider.insertAdjacentElement('afterend', support);
+        }
+
+        // ===== R10: タスク詳細 抜本改革 =====
+        // ステップセクションを hero (タイトル + メタ) 直下に強制移動
+        // detail-content > detail-hero / detail-body の構造の中、
+        // legal-due / destination は hero 内、steps-section は body 内にある
+        function _demoReorderTaskDetail() {
+            var detailContent = document.getElementById('detailContent');
+            if (!detailContent) return;
+            var stepsSection = detailContent.querySelector('.steps-section');
+            if (!stepsSection) return;
+            var detailBody = detailContent.querySelector('.detail-body');
+            if (!detailBody) return;
+
+            // detail-body 内で steps-section を最上部に移動
+            // （これで「タイトル → 期限 → 場所(hero内) → ステップ(body先頭) → 残り」になる）
+            if (detailBody.firstElementChild === stepsSection) return;
+            detailBody.insertBefore(stepsSection, detailBody.firstElementChild);
+        }
+        if (typeof showTaskDetail === 'function') {
+            var _origShowTaskDetail = showTaskDetail;
+            window.showTaskDetail = function(taskId) {
+                _origShowTaskDetail.apply(this, arguments);
+                setTimeout(_demoReorderTaskDetail, 50);
+            };
         }
 
         // hero の「完了にする」ハンドラ
