@@ -12076,7 +12076,58 @@
 <body>
     <div id="toast" class="toast"></div>
     <div style="position:fixed; top:0; left:0; right:0; z-index:9999; background:#3A3F32; color:#F5CD67; text-align:center; padding:4px 8px; font-size:10.5px; font-weight:700; letter-spacing:0.1em;">DEMO（認知負荷削減プレビュー）｜本番は index.html</div>
+    <!-- DEMO: 25% 到達時フルスクリーンレビューモーダル -->
+    <div id="reviewModalOverlay" class="review-modal-overlay" onclick="_handleReviewModalBackdrop(event)">
+        <div class="review-modal-panel" onclick="event.stopPropagation()">
+            <button class="review-modal-close" onclick="laterReview()" aria-label="閉じる">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+            <div id="reviewModalContent"></div>
+        </div>
+    </div>
     <!-- DEMO 専用: 認知負荷を下げるためのサブカードコンパクト化 -->
+    <style>
+        /* 25%達成レビューモーダル */
+        .review-modal-overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.55);
+            display: none; align-items: flex-end; justify-content: center;
+            z-index: 2000;
+        }
+        .review-modal-overlay.show { display: flex; animation: reviewOverlayFade 0.22s ease; }
+        .review-modal-panel {
+            position: relative;
+            background: #FFFFFF;
+            width: 100%; max-width: 520px;
+            border-radius: 20px 20px 0 0;
+            padding: 28px 18px 22px;
+            box-shadow: 0 -8px 32px rgba(0,0,0,0.12);
+            animation: reviewPanelSlide 0.28s cubic-bezier(.2,.8,.2,1);
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        .review-modal-close {
+            position: absolute; top: 10px; right: 10px;
+            width: 36px; height: 36px; border-radius: 50%;
+            background: transparent; border: none;
+            color: var(--text-tertiary);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .review-modal-close:active { background: var(--bg-secondary); }
+        /* モーダル内のレビューカードは装飾枠を外す（背景をパネルに委ねる） */
+        .review-modal-panel .home-review-card {
+            margin: 0; border: none; padding: 0; background: transparent;
+        }
+        @keyframes reviewOverlayFade {
+            from { opacity: 0; } to { opacity: 1; }
+        }
+        @keyframes reviewPanelSlide {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+    </style>
     <style>
         /* ホーム画面: 主要情報（次にやること・確認が必要）以外は視覚的に落ち着かせる */
         #screen-home .home-care-team-card,
@@ -24083,15 +24134,36 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
         }
 
         // ===== レビュー（フィードバック）カード =====
+        // DEMO: 25% 達成時にフルスクリーンのモーダルで浮かび上がる
+
+        function _closeReviewModal() {
+            var overlay = document.getElementById('reviewModalOverlay');
+            if (overlay) overlay.classList.remove('show');
+        }
+        function _openReviewModal() {
+            var overlay = document.getElementById('reviewModalOverlay');
+            if (overlay) overlay.classList.add('show');
+        }
+        function _handleReviewModalBackdrop(e) {
+            // 背景タップで「あとで」扱い（誤タップ防止のため submit/select 中は対象外）
+            if (e.target && e.target.id === 'reviewModalOverlay') {
+                laterReview();
+            }
+        }
 
         function renderReviewCard() {
-            var el = document.getElementById('homeReviewCard');
-            if (!el) return;
+            // 旧インラインカード要素は常に空（モーダルに移行済み）
+            var inline = document.getElementById('homeReviewCard');
+            if (inline) inline.innerHTML = '';
+
+            var modalBody = document.getElementById('reviewModalContent');
+            if (!modalBody) return;
 
             // 表示条件チェック
             var status = localStorage.getItem('rn_review_status');
             if (status === 'submitted' || status === 'dismissed') {
-                el.innerHTML = '';
+                _closeReviewModal();
+                modalBody.innerHTML = '';
                 return;
             }
 
@@ -24100,11 +24172,13 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
                 var laterUntil = localStorage.getItem('rn_review_later_until');
                 var laterCount = parseInt(localStorage.getItem('rn_review_later_count') || '0', 10);
                 if (laterCount > 2) {
-                    el.innerHTML = '';
+                    _closeReviewModal();
+                    modalBody.innerHTML = '';
                     return;
                 }
                 if (laterUntil && Date.now() < parseInt(laterUntil, 10)) {
-                    el.innerHTML = '';
+                    _closeReviewModal();
+                    modalBody.innerHTML = '';
                     return;
                 }
             }
@@ -24116,12 +24190,17 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
                 if (reached[i] >= 25) { has25 = true; break; }
             }
             if (!has25) {
-                el.innerHTML = '';
+                _closeReviewModal();
+                modalBody.innerHTML = '';
                 return;
             }
 
+            // 既にモーダルが開いている場合は再描画しない（ユーザーが入力途中の可能性）
+            var overlay = document.getElementById('reviewModalOverlay');
+            if (overlay && overlay.classList.contains('show')) return;
+
             // カード描画
-            el.innerHTML = '<div class="home-review-card">'
+            modalBody.innerHTML = '<div class="home-review-card">'
                 + '<p class="home-review-title">ここまでの使い心地を<br>聞かせてください</p>'
                 + '<div class="home-review-options">'
                 +   '<div class="home-review-option" onclick="selectReviewRating(\'positive\')">'
@@ -24158,6 +24237,7 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
                 +   '<button class="home-review-link" onclick="dismissReview()">表示しない</button>'
                 + '</div>'
                 + '</div>';
+            _openReviewModal();
         }
 
         var _selectedReviewRating = null;
@@ -24226,10 +24306,10 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
 
             safeSetItem('rn_review_status', 'submitted');
 
-            // お礼メッセージに差し替え
-            var el = document.getElementById('homeReviewCard');
-            if (el) {
-                el.innerHTML = '<div class="home-review-card">'
+            // お礼メッセージに差し替え（モーダル内）
+            var modalBody = document.getElementById('reviewModalContent');
+            if (modalBody) {
+                modalBody.innerHTML = '<div class="home-review-card">'
                     + '<div class="home-review-thanks">'
                     + '<div class="home-review-thanks-icon"><svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">'
                     + '<circle cx="16" cy="16" r="13" fill="#EFE9DE" stroke="#3A3F32" stroke-width="1.6"/>'
@@ -24239,29 +24319,16 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
                     + 'ご意見ありがとうございます。<br>今後の改善に活かしてまいります。'
                     + '</div>'
                     + '</div>';
-                // 2秒後にフェードアウト
-                setTimeout(function() {
-                    var card = el.querySelector('.home-review-card');
-                    if (card) {
-                        card.style.animation = 'reviewFadeOut 0.4s ease forwards';
-                        setTimeout(function() { el.innerHTML = ''; }, 400);
-                    }
-                }, 2000);
+                // 1.8秒後にモーダルを閉じる
+                setTimeout(function() { _closeReviewModal(); modalBody.innerHTML = ''; }, 1800);
             }
         }
 
         function dismissReview() {
             safeSetItem('rn_review_status', 'dismissed');
-            var el = document.getElementById('homeReviewCard');
-            if (el) {
-                var card = el.querySelector('.home-review-card');
-                if (card) {
-                    card.style.animation = 'reviewFadeOut 0.3s ease forwards';
-                    setTimeout(function() { el.innerHTML = ''; }, 300);
-                } else {
-                    el.innerHTML = '';
-                }
-            }
+            _closeReviewModal();
+            var modalBody = document.getElementById('reviewModalContent');
+            if (modalBody) modalBody.innerHTML = '';
         }
 
         function laterReview() {
@@ -24275,6 +24342,9 @@ RN-D49-03,遺品整理業者,50000,500000,円,1Kで5〜10万円、一軒家で20
                 // 7日後に再表示
                 safeSetItem('rn_review_later_until', String(Date.now() + 7 * 24 * 60 * 60 * 1000));
             }
+            _closeReviewModal();
+            var modalBody = document.getElementById('reviewModalContent');
+            if (modalBody) modalBody.innerHTML = '';
             var el = document.getElementById('homeReviewCard');
             if (el) {
                 var card = el.querySelector('.home-review-card');
