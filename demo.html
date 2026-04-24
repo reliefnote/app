@@ -12565,6 +12565,24 @@
 
         /* 必要なものは行動に直結するので subtle 化しない */
 
+        /* ── 確認センター画面 ──
+           目的: 質問に答えて「自分に必要な手続き」を絞る
+           header に既に「確認が必要な手続き」+ counter (3/15) があるので、
+           body 側の同じ情報 (q-domain と q-sub の N/N 問) を非表示にする */
+        #screen-confirm .q-domain,
+        #screen-confirm .q-sub { display: none !important; }
+
+        /* ── 専門家画面 ──
+           目的: 「自分でやれない」と感じた時の選択肢を知る
+           「専門家選びの基本」アコーディオン 6 個は多すぎるので、
+           主要な 3 つだけ残す（複数事務所/見積確認/注意パターン） */
+        .expert-tip-item:nth-of-type(5),
+        .expert-tip-item:nth-of-type(6),
+        .expert-tip-item:nth-of-type(7) { display: none !important; }
+        /* 「専門家選びの基本」ヘッダーを subtle に（補助情報なので主役を奪わない） */
+        .expert-tips-title { font-size: 13px !important; color: var(--text-secondary) !important; }
+        .expert-tips-subtitle { display: none !important; }
+
     </style>
     <div class="app-container" style="padding-top:22px;">
         <!-- 画面0: スプラッシュ -->
