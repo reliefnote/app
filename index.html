@@ -1,5 +1,6 @@
 
 
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -9394,7 +9395,7 @@
             letter-spacing: 1px;
             z-index: 1;
         }
-        .grief-sos-btn { position: relative; z-index: 1; color: #FFFFFF !important; }
+        .grief-sos-btn { position: relative; z-index: 2; }
         .grief-screen-body {
             flex: 1;
             overflow-y: auto;
@@ -10059,20 +10060,25 @@
             cursor: pointer;
         }
 
-        /* SOSボタン */
+        /* SOSボタン (右上の相談先入口) */
         .grief-sos-btn {
-            background: none;
+            background: #F5CD67;
             border: none;
-            padding: 8px;
+            padding: 8px 14px;
             cursor: pointer;
-            color: var(--text-secondary);
-            display: flex;
+            color: #3A3E31;
+            display: inline-flex;
             align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            min-width: 40px;
+            gap: 6px;
+            border-radius: 18px;
+            font-size: 13px;
+            font-weight: 700;
+            line-height: 1;
+            white-space: nowrap;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.18);
         }
-        .grief-sos-btn:active { background: #C76D56; }
+        .grief-sos-btn svg { stroke: #3A3E31; }
+        .grief-sos-btn:active { background: #E5BD55; box-shadow: 0 1px 3px rgba(0,0,0,0.18); }
         .grief-sos-sheet {
             position: fixed;
             bottom: 0;
@@ -16860,10 +16866,11 @@
         <div id="screen-grief-care" class="screen">
             <div style="display:flex;flex-direction:column;min-height:100dvh;min-height:100vh;padding-bottom:70px;">
                 <div class="grief-header">
-                    <div style="width:40px;"></div>
+                    <div style="width:74px;flex-shrink:0;"></div>
                     <h2 class="grief-header-title">こころのケア</h2>
-                    <button class="grief-sos-btn" onclick="openSosSheet()" aria-label="相談窓口">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                    <button class="grief-sos-btn" onclick="openSosSheet()" aria-label="つらいときの相談窓口を開く">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                        <span>相談する</span>
                     </button>
                 </div>
                 <div class="grief-tabs" role="tablist">
@@ -17354,7 +17361,7 @@
             </div>
             <div class="grief-sos-item" id="griefSosLocalHokuryu" style="display:none">
                 <div>
-                    <div class="grief-sos-item-name">北竜町役場 保健福祉課</div>
+                    <div class="grief-sos-item-name">北竜町役場 子供くらし応援課</div>
                     <div class="grief-sos-item-desc">平日8:30〜17:15</div>
                 </div>
                 <a href="tel:0164-34-2111" class="grief-sos-call">
@@ -39223,7 +39230,7 @@ LIB-120,grief,160,故人の遺品をいつ・どう処分するか,自分のタ�
                 // こころのケア 記事内 窓口一覧
                 var _hlCard = document.getElementById('hotlineLocalCard');
                 if (_hlCard) {
-                    _hlCard.innerHTML = '<div class="hotline-name">北竜町役場 保健福祉課</div>'
+                    _hlCard.innerHTML = '<div class="hotline-name">北竜町役場 子供くらし応援課</div>'
                         + '<div class="hotline-info">平日8:30〜17:15・保健師に相談できます</div>'
                         + '<a href="tel:0164-34-2111" class="hotline-tel"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg> 0164-34-2111</a>';
                 }
