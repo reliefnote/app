@@ -1896,6 +1896,36 @@ body.level-advanced .section-nav a[data-level="3"] { display: none !important; }
     font-size: 12px;
 }
 
+/* ベースラインバナー（クリア後） */
+#baselineBanner {
+    background: #EFF4F7;
+    border-bottom: 1px solid #C9D5DE;
+    color: #314B5C;
+    padding: 8px 20px;
+    font-size: 13px;
+    text-align: center;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+}
+#baselineBanner .baseline-tag {
+    display: inline-block;
+    background: #314B5C;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    margin-right: 10px;
+    letter-spacing: 0.06em;
+}
+#baselineBanner a.baseline-clear {
+    margin-left: 12px;
+    color: #314B5C;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 12px;
+}
+
 /* 空状態のオンボーディング装飾 */
 .empty-state.guide::before {
     content: '✨';
@@ -1929,6 +1959,11 @@ body.level-advanced .section-nav a[data-level="3"] { display: none !important; }
 <div id="demoBanner" style="display:none;">
     <span class="demo-tag">DEMO</span>ダミーデータで表示中。実データに切り替えるには
     <a class="demo-exit" onclick="exitDemo()">こちら</a>
+</div>
+
+<div id="baselineBanner" style="display:none;">
+    <span class="baseline-tag">CLEARED</span><span id="baselineBannerText"></span>
+    <a class="baseline-clear" onclick="clearBaseline()">解除</a>
 </div>
 
 <div class="brand-bar">
@@ -1968,6 +2003,7 @@ body.level-advanced .section-nav a[data-level="3"] { display: none !important; }
                 <option value="180">直近 180 日</option>
             </select>
             <button class="primary" onclick="render()">更新</button>
+            <button onclick="setBaselineNow()" title="現在のイベントを非表示にし、これ以降のアプリ利用だけを表示します">クリア</button>
         </div>
     </div>
 </header>
@@ -2576,9 +2612,41 @@ function buildDemoFollowups() {
     }));
 }
 
+// ============================================================
+// ベースライン（クリア機能）: channel別に「これ以降のイベントだけ表示」を localStorage で管理
+// ============================================================
+function baselineKey(channel) { return `relief_funeral_console_baseline_${channel}`; }
+function getBaselineISO() {
+    return localStorage.getItem(baselineKey(currentChannel())) || null;
+}
+function setBaselineNow() {
+    const ch = currentChannel();
+    const label = ch === 'hokuryu' ? 'channel = hokuryu' : `channel = ${ch}`;
+    if (!confirm(`${label} の現在のイベント表示をクリアします。\nこれ以降に記録されたアプリ利用だけが表示されるようになります。\n（解除すれば再表示できます）\n\n実行しますか？`)) return;
+    localStorage.setItem(baselineKey(ch), new Date().toISOString());
+    applyBaselineBanner();
+    render();
+}
+function clearBaseline() {
+    localStorage.removeItem(baselineKey(currentChannel()));
+    applyBaselineBanner();
+    render();
+}
+function applyBaselineBanner() {
+    const banner = document.getElementById('baselineBanner');
+    const text = document.getElementById('baselineBannerText');
+    if (!banner || !text) return;
+    const iso = getBaselineISO();
+    if (!iso) { banner.style.display = 'none'; return; }
+    banner.style.display = 'block';
+    const d = new Date(iso);
+    text.textContent = `${currentChannel()} は ${fmtDateTime(d)} 以降のアプリ利用だけを表示中`;
+}
+
 async function fetchAllEvents() {
     if (_isDemo) return buildDemoEvents();
-    const since = daysAgoISO(FETCH_LOOKBACK_DAYS);
+    const baseline = getBaselineISO();
+    const since = baseline || daysAgoISO(FETCH_LOOKBACK_DAYS);
     const url = `${SUPABASE_URL}/rest/v1/event_logs`
         + `?select=user_id,event_type,event_data,created_at`
         + `&event_data->>channel=eq.${currentChannel()}`
@@ -3520,9 +3588,11 @@ async function fetchFollowups() {
         _crmAvailable = true;
         return buildDemoFollowups();
     }
+    const baseline = getBaselineISO();
     const url = `${SUPABASE_URL}/rest/v1/funeral_followups`
         + `?select=id,channel,user_id,staff_name,action_type,outcome,note,created_at`
         + `&channel=eq.${currentChannel()}`
+        + (baseline ? `&created_at=gte.${baseline}` : '')
         + `&order=created_at.desc&limit=2000`;
     try {
         const res = await fetch(url, {
@@ -4510,6 +4580,7 @@ function renderUpdated() {
 // ============================================================
 async function render() {
     renderUpdated();
+    applyBaselineBanner();
     updatePrivacyButton();
     setStatus('loading', '読み込み中…');
     showLoadingAll();
@@ -4565,6 +4636,7 @@ async function render() {
 syncOrgName();
 applyLevelClass();
 applyDemoBanner();
+applyBaselineBanner();
 render();
 </script>
 
