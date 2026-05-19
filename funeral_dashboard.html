@@ -1515,6 +1515,83 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
     line-height: 1.5;
 }
 
+/* 実名管理 クイックリスト */
+.identity-quick-section {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--brand-tint-2);
+}
+.identity-quick-section h4 {
+    font-size: 13px;
+    margin: 0 0 8px;
+    color: var(--ink-2);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.identity-quick-section h4 .count-pill {
+    display: inline-block;
+    background: var(--brand-tint-2);
+    color: var(--brand);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+}
+.identity-quick-row {
+    display: grid;
+    grid-template-columns: 90px 110px 1fr 1fr 90px 70px;
+    gap: 8px;
+    align-items: center;
+    padding: 8px 10px;
+    border-radius: 8px;
+    background: var(--surface);
+    border: 1px solid var(--surface-warm);
+    margin-bottom: 6px;
+    font-size: 12px;
+}
+.identity-quick-row.registered { background: var(--brand-tint-2); border-color: var(--brand-tint-2); }
+.identity-quick-row.unregistered { background: #FFF7EE; border-color: #F2E7D6; }
+.identity-quick-row .uid-cell {
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 11px;
+    color: var(--ink-3);
+}
+.identity-quick-row .meta-cell {
+    font-size: 11px;
+    color: var(--ink-3);
+}
+.identity-quick-row input {
+    width: 100%;
+    padding: 5px 8px;
+    border: 1px solid var(--surface-warm);
+    border-radius: 5px;
+    font-size: 12px;
+    background: white;
+    font-family: inherit;
+}
+.identity-quick-row input:focus { outline: none; border-color: var(--brand-2); }
+.identity-quick-row .save-btn {
+    padding: 5px 10px;
+    background: var(--brand);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 11px;
+    cursor: pointer;
+    font-weight: 500;
+}
+.identity-quick-row .save-btn:hover { background: var(--brand-2); }
+.identity-quick-row .save-btn.saved { background: var(--positive); }
+@media (max-width: 720px) {
+    .identity-quick-row {
+        grid-template-columns: 1fr 1fr;
+        row-gap: 6px;
+    }
+    .identity-quick-row .uid-cell, .identity-quick-row .meta-cell { grid-column: 1 / -1; }
+}
+
 /* ============================================================
    CRM: フォローアップ
    ============================================================ */
@@ -2220,6 +2297,7 @@ body.level-advanced .section-nav a[data-level="3"] { display: none !important; }
             <span class="desc">CSV ヘッダ: <code>user_id,deceased,deceased_age,chief,relation,phone,email,funeral_date,memo</code>（user_id 必須、他は任意）</span>
         </div>
         <div id="identitySummary" style="margin-top:12px;font-size:12px;color:var(--ink-3);"></div>
+        <div id="identityQuickList" style="margin-top:16px;"></div>
     </section>
 
     <!-- 機能別 -->
@@ -4512,6 +4590,79 @@ function renderIdentitySummary() {
         / アプリ利用中ご遺族との突合: <strong>${matched}/${_allUsers.length}</strong> 名
         / プライバシーモード: <strong>${getPrivacyMode() ? 'ON（実名表示）' : 'OFF（匿名表示）'}</strong>
     `;
+    renderIdentityQuickList();
+}
+
+function renderIdentityQuickList() {
+    const el = document.getElementById('identityQuickList');
+    if (!el) return;
+    if (!_allUsers || _allUsers.length === 0) {
+        el.innerHTML = '';
+        return;
+    }
+    const map = getIdentityMap();
+    const sorted = _allUsers.slice().sort((a, b) => (a.firstSeen < b.firstSeen ? 1 : -1));
+    const unregistered = sorted.filter(u => !map[u.user_id]);
+    const registered = sorted.filter(u => map[u.user_id]);
+
+    function rowHtml(u, isReg) {
+        const id = map[u.user_id] || {};
+        const phase = computePhase(u.firstSeen);
+        const firstDate = fmtDate(u.firstSeen);
+        const cls = isReg ? 'registered' : 'unregistered';
+        const safeUid = esc(u.user_id);
+        return `
+            <div class="identity-quick-row ${cls}">
+                <div class="uid-cell" title="${safeUid}">…${esc(shortUid(u.user_id))}</div>
+                <div class="meta-cell">${esc(firstDate)} 開始<br>${esc(phase.label.split(' / ')[0])}</div>
+                <input type="text" placeholder="故人氏名（例: 山田 太郎）" value="${esc(id.deceased||'')}" data-uid="${safeUid}" data-field="deceased">
+                <input type="text" placeholder="喪主氏名（例: 山田 花子）" value="${esc(id.chief||'')}" data-uid="${safeUid}" data-field="chief">
+                <input type="text" placeholder="続柄" value="${esc(id.relation||'')}" data-uid="${safeUid}" data-field="relation">
+                <button class="save-btn" onclick="saveIdentityQuick('${safeUid}', this)">保存</button>
+            </div>`;
+    }
+
+    el.innerHTML = `
+        <div class="identity-quick-section">
+            <h4>未登録のご遺族 <span class="count-pill">${unregistered.length}</span><span style="font-weight:400;font-size:11px;color:var(--ink-3);">— 故人氏名を入れて保存すると、自動で実名表示に切替わります</span></h4>
+            ${unregistered.length === 0 ? '<div style="font-size:12px;color:var(--ink-3);padding:6px 0;">全ご遺族が登録済みです。</div>' : unregistered.map(u => rowHtml(u, false)).join('')}
+        </div>
+        ${registered.length > 0 ? `
+        <div class="identity-quick-section">
+            <h4>登録済み <span class="count-pill">${registered.length}</span></h4>
+            ${registered.map(u => rowHtml(u, true)).join('')}
+        </div>` : ''}
+    `;
+}
+
+function saveIdentityQuick(user_id, btn) {
+    const row = btn.closest('.identity-quick-row');
+    if (!row) return;
+    const inputs = row.querySelectorAll('input[data-uid]');
+    const data = {};
+    inputs.forEach(i => { data[i.dataset.field] = i.value.trim(); });
+    if (!data.deceased && !data.chief) {
+        alert('故人氏名または喪主氏名を入力してください。');
+        return;
+    }
+    // 既存値を保持しつつマージ
+    const existing = getIdentity(user_id) || {};
+    setIdentity(user_id, { ...existing, ...data });
+    // 初回登録時、自動で実名表示に切替
+    if (!getPrivacyMode()) {
+        localStorage.setItem('rn_privacy_mode', 'on');
+        updatePrivacyButton();
+    }
+    btn.textContent = '✓ 保存';
+    btn.classList.add('saved');
+    setTimeout(() => {
+        renderIdentitySummary();
+        renderQueue(_events, _allUsers);
+        renderHero(_events, _allUsers);
+        renderFamilies(_allUsers);
+        renderTouchpoints(_allUsers);
+        renderAlerts(_allUsers);
+    }, 350);
 }
 
 // ============================================================
