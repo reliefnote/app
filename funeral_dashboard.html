@@ -2288,7 +2288,7 @@ body.level-advanced .section-nav a[data-level="3"] { display: none !important; }
             <h2>ご遺族 実名管理<span class="phase-badge phase-3">Phase 3</span></h2>
             <span class="panel-meta">localStorage / 端末内のみ</span>
         </div>
-        <p class="desc">ご遺族の実名・連絡先を登録しておくと、ヘッダーの「匿名表示」を切替えた時に user_id の代わりに故人氏名・喪主氏名が表示されます。<strong>これらの情報は Supabase 等クラウドへ送信されず、ご使用の端末内（localStorage）のみに保存されます。</strong></p>
+        <p class="desc">ご遺族がアプリ起動時に自分で入力した表示名は、自動的に各画面で「◯◯様」として表示されます。さらに故人氏名・喪主氏名・連絡先を登録しておくと、「匿名表示」を切替えた時に「故 ◯◯様 / 喪主 ◯◯様」表示に切り替わります。<strong>こちらで登録する情報は Supabase 等クラウドへ送信されず、ご使用の端末内（localStorage）のみに保存されます。</strong></p>
         <div class="csv-import-row">
             <label for="csvFile">CSV を取込</label>
             <input id="csvFile" type="file" accept=".csv" onchange="if(this.files[0])importIdentityCSV(this.files[0])">
@@ -2748,6 +2748,24 @@ async function fetchAllEvents() {
 // ============================================================
 // 集計
 // ============================================================
+function buildSelfNameMap(events) {
+    // event_data.user_name の最新値を user_id ごとに採用
+    const latest = {};
+    for (const ev of events) {
+        const uid = ev.user_id;
+        const nm = ev.event_data && typeof ev.event_data.user_name === 'string'
+            ? ev.event_data.user_name.trim() : '';
+        if (!uid || !nm) continue;
+        const prev = latest[uid];
+        if (!prev || ev.created_at > prev.at) {
+            latest[uid] = { name: nm, at: ev.created_at };
+        }
+    }
+    const out = {};
+    for (const uid in latest) out[uid] = latest[uid].name;
+    return out;
+}
+
 function aggregateUsers(events) {
     const users = new Map();
     for (const ev of events) {
@@ -2821,6 +2839,7 @@ function userStatus(u) {
 let _events = [];
 let _allUsers = [];
 let _allUsersMap = {};
+let _selfNameMap = {}; // user_id → アプリでご遺族自身が入力した表示名（event_data.user_name の最新値）
 let familyFilter = '全て';
 
 // ============================================================
@@ -3550,6 +3569,10 @@ function updatePrivacyButton() {
 }
 
 // 表示名ヘルパー
+// 優先順位:
+//  1) localStorage の実名管理（getPrivacyMode() ON かつ故人氏名登録あり）= 端末内で葬儀社が登録した 故 ◯◯様
+//  2) アプリでご遺族自身が入力した表示名（event_data.user_name = _selfNameMap）
+//  3) 匿名 ID 末尾4桁
 function displayName(user_id, opt) {
     opt = opt || {};
     const id = getIdentity(user_id);
@@ -3560,11 +3583,18 @@ function displayName(user_id, opt) {
         if (compact) return esc(dec || `…${shortUid(user_id)}`);
         return `<span class="identity-display"><span class="deceased-name">${esc(dec)}</span>${chf ? ' ' + chf : ''}</span>`;
     }
+    const selfName = _selfNameMap[user_id];
+    if (selfName) {
+        if (opt.compact) return esc(selfName) + '様';
+        return `<span class="identity-display"><span class="deceased-name">${esc(selfName)}様</span> <span style="font-size:11px;color:var(--ink-3);">（アプリ入力名）</span></span>`;
+    }
     return `<span class="uid">…${esc(shortUid(user_id))}</span>`;
 }
 function displayNamePlain(user_id) {
     const id = getIdentity(user_id);
     if (getPrivacyMode() && id && id.deceased) return `故 ${id.deceased}様`;
+    const selfName = _selfNameMap[user_id];
+    if (selfName) return `${selfName}様`;
     return `…${shortUid(user_id)}`;
 }
 
@@ -4611,10 +4641,14 @@ function renderIdentityQuickList() {
         const firstDate = fmtDate(u.firstSeen);
         const cls = isReg ? 'registered' : 'unregistered';
         const safeUid = esc(u.user_id);
+        const selfName = _selfNameMap[u.user_id] || '';
+        const selfNameLine = selfName
+            ? `<br><strong style="color:var(--brand);">アプリ入力: ${esc(selfName)}様</strong>`
+            : '';
         return `
             <div class="identity-quick-row ${cls}">
                 <div class="uid-cell" title="${safeUid}">…${esc(shortUid(u.user_id))}</div>
-                <div class="meta-cell">${esc(firstDate)} 開始<br>${esc(phase.label.split(' / ')[0])}</div>
+                <div class="meta-cell">${esc(firstDate)} 開始<br>${esc(phase.label.split(' / ')[0])}${selfNameLine}</div>
                 <input type="text" placeholder="故人氏名（例: 山田 太郎）" value="${esc(id.deceased||'')}" data-uid="${safeUid}" data-field="deceased">
                 <input type="text" placeholder="喪主氏名（例: 山田 花子）" value="${esc(id.chief||'')}" data-uid="${safeUid}" data-field="chief">
                 <input type="text" placeholder="続柄" value="${esc(id.relation||'')}" data-uid="${safeUid}" data-field="relation">
@@ -4745,6 +4779,7 @@ async function render() {
         _events = events;
         _followups = followups || [];
         _followupsByUser = buildFollowupsByUser(_followups);
+        _selfNameMap = buildSelfNameMap(_events);
         _allUsers = aggregateUsers(_events);
         _allUsersMap = {};
         _allUsers.forEach(u => { _allUsersMap[u.user_id] = u; });
@@ -4772,7 +4807,7 @@ async function render() {
     } catch (e) {
         setStatus('err', '接続エラー');
         showError(e.message);
-        _events = []; _allUsers = []; _allUsersMap = {}; _followups = []; _followupsByUser = {};
+        _events = []; _allUsers = []; _allUsersMap = {}; _followups = []; _followupsByUser = {}; _selfNameMap = {};
         renderCrmStatus();
         renderHero([], []); renderQueue([], []); renderStaffSummary(30);
         renderROI([], [], 30); renderImpact([], [], 30);

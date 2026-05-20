@@ -1,6 +1,5 @@
 
 
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -24367,6 +24366,15 @@ RN-D14-60,行政書士,20000,50000,円,公営住宅の名義承継申請書類�
                 }
                 data.channel = channel;
                 data.partner = window.currentPartnerId || '';
+                // ユーザーが自己申告した表示名（onboarding の submitNameInFlow で localStorage に保存）。
+                // 葬儀社コンソールで「誰が何をしたか」を識別するため、全チャネルで送信する。
+                // 未入力／ゲストの場合は省略。
+                try {
+                    var _uname = (localStorage.getItem('rn_user_name') || '').trim();
+                    if (_uname && _uname !== 'ゲスト' && _uname !== '自分' && _uname !== '利用者') {
+                        data.user_name = _uname.slice(0, 40);
+                    }
+                } catch (e) {}
 
                 // localStorage にも保存（オフライン対策。sent: false で未送信扱い）
                 var logs = safeParseJSON(localStorage.getItem('relief_note_event_logs'), []);
@@ -28817,7 +28825,7 @@ LIB-121,grief,95,自死で親しい方を亡くされたあなたへ,自然な�
             const name = nameInput.value.trim();
             if (name) {
                 safeSetItem('rn_user_name', name);
-                // 実名を Supabase に送らない。登録経路と入力長だけ記録する
+                // 表示名は logEvent が event_data.user_name として自動同梱する（葬儀社コンソールで識別用）
                 logEvent('user_registered', { has_name: true, name_length: name.length });
                 nextQuestion(); // Move to first question
             }
