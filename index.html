@@ -21860,6 +21860,8 @@ RN-D14-60,行政書士,20000,50000,円,公営住宅の名義承継申請書類�
             var _done = _doneMun.length;
             var _pct = _total > 0 ? Math.round((_done / _total) * 100) : 0;
             var _isDone = (masterStatus === 'DONE');
+            // 北竜町チャネル判定: 係名・住所・電話は自治体固有のため hokuryu 以外では出さない
+            var _isHk = (window.currentChannelId === 'hokuryu');
             var html = '';
 
             // Hero
@@ -21867,7 +21869,7 @@ RN-D14-60,行政書士,20000,50000,円,公営住宅の名義承継申請書類�
             // 場所ラベル
             html += '<div style="display:flex; align-items:center; gap:6px; margin-bottom:14px;">';
             html += '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3A3E31" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>';
-            html += '<span style="font-size:12px; color:#3A3E31; font-weight:600;">北竜町役場 こども・くらし応援課</span>';
+            html += '<span style="font-size:12px; color:#3A3E31; font-weight:600;">' + (_isHk ? '北竜町役場 こども・くらし応援課' : '市区町村役場の窓口') + '</span>';
             if (_isDone) {
                 html += '<span style="margin-left:auto; font-size:11px; font-weight:600; color:#3A3E31; background:#F5F3EC; padding:3px 10px; border-radius:12px;">完了</span>';
             }
@@ -21903,7 +21905,8 @@ RN-D14-60,行政書士,20000,50000,円,公営住宅の名義承継申請書類�
             });
             html += '</div>';
 
-            // ── 担当する係（カード） ──
+            // ── 担当する係（カード）── 係名は自治体固有のため hokuryu のみ表示
+            if (_isHk) {
             html += '<div style="font-size:13px; font-weight:600; color:var(--text-secondary); margin-bottom:12px;">担当する係</div>';
             html += '<div style="background:var(--bg-primary); border-radius:14px; padding:12px; margin-bottom:20px; border:1px solid var(--border-light);">';
 
@@ -21923,11 +21926,13 @@ RN-D14-60,行政書士,20000,50000,円,公営住宅の名義承継申請書類�
                 html += '</div>';
             });
             html += '</div>';
+            } // end if(_isHk): 担当する係
 
             // ── お問い合わせ（カード） ──
             html += '<div style="font-size:13px; font-weight:600; color:var(--text-secondary); margin-bottom:12px;">お問い合わせ</div>';
             html += '<div style="background:var(--bg-primary); border-radius:14px; padding:16px; margin-bottom:20px; border:1px solid var(--border-light);">';
 
+            if (_isHk) {
             // 電話・地図を横並び
             html += '<div style="display:flex; gap:8px; margin-bottom:10px;">';
             // 電話ボタン
@@ -21947,6 +21952,9 @@ RN-D14-60,行政書士,20000,50000,円,公営住宅の名義承継申請書類�
             html += '0164-34-7030 ／ 平日 8:30〜17:15<br>';
             html += '北海道雨竜郡北竜町字和11-1';
             html += '</div>';
+            } else {
+            html += '<div style="text-align:center; font-size:12px; color:var(--text-secondary); line-height:1.7;">お住まいの市区町村役場の窓口で、上記をまとめて手続きできます。<br>住所・電話番号は自治体の公式サイトでご確認ください。</div>';
+            }
             html += '</div>';
 
             html += '</div>'; // close detail-body
